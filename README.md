@@ -1,2 +1,2 @@
 # Lib.Common
-Basic .Net Core lib
+Basic .NET Core library

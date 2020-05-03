@@ -1,0 +1,63 @@
+# NOTE: Requires **VS2019 16.3** or later
+
+# Rules for Erlin.Lib.Common
+# Description: Code analysis rules for Erlin.Lib.Common.csproj.
+
+# Code files
+[*.{cs,vb}]
+
+
+# Default severity for analyzer diagnostics - Requires **VS2019 16.5** or later
+dotnet_analyzer_diagnostic.severity = warning
+
+dotnet_diagnostic.CA1000.severity = warning
+
+dotnet_diagnostic.CA1002.severity = none
+
+dotnet_diagnostic.CA1008.severity = none
+
+dotnet_diagnostic.CA1014.severity = warning
+
+dotnet_diagnostic.CA1020.severity = none
+
+dotnet_diagnostic.CA1024.severity = none
+
+dotnet_diagnostic.CA1026.severity = none
+
+dotnet_diagnostic.CA1032.severity = none
+
+dotnet_diagnostic.CA1303.severity = none
+
+dotnet_diagnostic.CA1502.severity = none
+
+dotnet_diagnostic.CA1704.severity = none
+
+dotnet_diagnostic.CA1707.severity = none
+
+dotnet_diagnostic.CA1709.severity = none
+
+dotnet_diagnostic.CA1714.severity = none
+
+dotnet_diagnostic.CA1716.severity = none
+
+dotnet_diagnostic.CA2204.severity = none
+
+dotnet_diagnostic.CA2210.severity = none
+
+dotnet_diagnostic.IDE0005.severity = none
+dotnet_diagnostic.IDE0010.severity = none
+dotnet_diagnostic.IDE0017.severity = none
+dotnet_diagnostic.IDE0025.severity = none
+dotnet_diagnostic.IDE0027.severity = none
+dotnet_diagnostic.IDE0041.severity = none
+dotnet_diagnostic.IDE0045.severity = none
+dotnet_diagnostic.IDE0046.severity = none
+dotnet_diagnostic.IDE0048.severity = none
+dotnet_diagnostic.IDE0055.severity = none
+dotnet_diagnostic.IDE0058.severity = none
+dotnet_diagnostic.IDE0059.severity = none
+dotnet_diagnostic.IDE0063.severity = none
+dotnet_diagnostic.IDE0066.severity = none
+
+
+dotnet_diagnostic.RCS1008.severity = none
