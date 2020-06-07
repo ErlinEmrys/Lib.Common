@@ -44,6 +44,11 @@ namespace Erlin.Lib.Common
         public static Type TypeTimespan { get; } = typeof(TimeSpan);
 
         /// <summary>
+        /// Timespan runtime type
+        /// </summary>
+        public static Type TypeDateTime { get; } = typeof(DateTime);
+
+        /// <summary>
         /// Nullable runtime type
         /// </summary>
         public static Type TypeNullable { get; } = typeof(Nullable<>);
@@ -54,14 +59,44 @@ namespace Erlin.Lib.Common
         public static Type TypeGuid { get; } = typeof(Guid);
 
         /// <summary>
+        /// Int16 runtime type
+        /// </summary>
+        public static Type TypeInt16 { get; } = typeof(short);
+
+        /// <summary>
         /// Int32 runtime type
         /// </summary>
         public static Type TypeInt32 { get; } = typeof(int);
 
         /// <summary>
+        /// Int64 runtime type
+        /// </summary>
+        public static Type TypeInt64 { get; } = typeof(long);
+
+        /// <summary>
+        /// UInt16 runtime type
+        /// </summary>
+        public static Type TypeUInt16 { get; } = typeof(ushort);
+
+        /// <summary>
+        /// UInt32 runtime type
+        /// </summary>
+        public static Type TypeUInt32 { get; } = typeof(uint);
+
+        /// <summary>
+        /// UInt64 runtime type
+        /// </summary>
+        public static Type TypeUInt64 { get; } = typeof(ulong);
+
+        /// <summary>
         /// Byte runtime type
         /// </summary>
         public static Type TypeByte { get; } = typeof(byte);
+
+        /// <summary>
+        /// SByte runtime type
+        /// </summary>
+        public static Type TypeSByte { get; } = typeof(sbyte);
 
         /// <summary>
         /// IList runtime type
