@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<NeutralLanguage>C#</NeutralLanguage>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+		<DebugType>embedded</DebugType>
+		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+		<RunAnalyzers>True</RunAnalyzers>
+		<RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+		<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<DocumentationFile>bin\$(AssemblyName).xml</DocumentationFile>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<OutputPath>bin\</OutputPath>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Authors>Erlin Emrys</Authors>
+		<Copyright>© Erlin Emrys</Copyright>
+		<Description>A one`s man basic common library for .NET Core 8</Description>
+		<PackageProjectUrl>https://github.com/ErlinEmrys/Lib.Common</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ErlinEmrys/Lib.Common.git</RepositoryUrl>
+		<RepositoryType>GitHub</RepositoryType>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageTags>.NetCore</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="$(SolutionDir)LICENSE.md" Pack="true" PackagePath="" Visible="false" />
+		<None Include="$(SolutionDir)LICENSE_THIRD_PARTY.md" Pack="true" PackagePath="" Visible="false" />
+		<None Include="$(SolutionDir)README.md" Pack="true" PackagePath="" Visible="false" />
+		<None Include="Assets\icon.png" Pack="true" PackagePath="" />
+		<None Include="..\Erlin.Lib.Common.SourceGenerator\bin\Erlin.Lib.Common.SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Serilog" Version="3.0.1" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Erlin.Lib.Common.SourceGenerator\Erlin.Lib.Common.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
+</Project>

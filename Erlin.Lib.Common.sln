@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29311.281
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Erlin.Lib.Common", "Erlin.Lib.Common\Erlin.Lib.Common.csproj", "{3DA352FF-A44B-49EC-978B-82A0D30E9379}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{8B543978-B2AA-4441-A0F3-004D190A6678}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+		.github\workflows\release.yml = .github\workflows\release.yml
+		.editorconfig = .editorconfig
+		LICENSE.md = LICENSE.md
+		LICENSE_THIRD_PARTY.md = LICENSE_THIRD_PARTY.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erlin.Lib.Common.SourceGenerator", "Erlin.Lib.Common.SourceGenerator\Erlin.Lib.Common.SourceGenerator.csproj", "{40F9CC62-C66E-4607-9AD3-F6DC72D4A4DF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DA352FF-A44B-49EC-978B-82A0D30E9379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DA352FF-A44B-49EC-978B-82A0D30E9379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DA352FF-A44B-49EC-978B-82A0D30E9379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DA352FF-A44B-49EC-978B-82A0D30E9379}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40F9CC62-C66E-4607-9AD3-F6DC72D4A4DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40F9CC62-C66E-4607-9AD3-F6DC72D4A4DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40F9CC62-C66E-4607-9AD3-F6DC72D4A4DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40F9CC62-C66E-4607-9AD3-F6DC72D4A4DF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E209653D-234A-4776-BA61-61C66146F730}
+	EndGlobalSection
+EndGlobal
