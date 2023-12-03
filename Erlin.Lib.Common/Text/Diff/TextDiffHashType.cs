@@ -6,9 +6,9 @@
 public enum TextDiffHashType
 {
 	/// <summary>
-	///    Unknown/Error
+	///    Empty
 	/// </summary>
-	Error = 0,
+	EnumEmptyError = 0,
 
 	/// <summary>
 	///    By hash code

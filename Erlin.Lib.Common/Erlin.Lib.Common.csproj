@@ -1,21 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<RootNamespace>Erlin.Lib.Common</RootNamespace>
+		<AssemblyName>Erlin.Lib.Common</AssemblyName>
 		<TargetFramework>net8.0</TargetFramework>
-		<NeutralLanguage>C#</NeutralLanguage>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<OutputType>Library</OutputType>
+
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
 		<DebugType>embedded</DebugType>
+		<IncludeSymbols>true</IncludeSymbols>
+		<EmbedAllSources>true</EmbedAllSources>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
 		<RunAnalyzers>True</RunAnalyzers>
 		<RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
 		<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
 		<InvariantGlobalization>true</InvariantGlobalization>
-		<DocumentationFile>bin\$(AssemblyName).xml</DocumentationFile>
+		<DocumentationFile>$(OutDir)\$(AssemblyName).xml</DocumentationFile>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<OutputPath>bin\</OutputPath>
+
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Authors>Erlin Emrys</Authors>
@@ -27,7 +33,7 @@
 		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageTags>.NetCore</PackageTags>
+		<PackageTags>Erlin;.NetCore</PackageTags>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -35,7 +41,7 @@
 		<None Include="$(SolutionDir)LICENSE_THIRD_PARTY.md" Pack="true" PackagePath="" Visible="false" />
 		<None Include="$(SolutionDir)README.md" Pack="true" PackagePath="" Visible="false" />
 		<None Include="Assets\icon.png" Pack="true" PackagePath="" />
-		<None Include="..\Erlin.Lib.Common.SourceGenerator\bin\Erlin.Lib.Common.SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="..\Erlin.Lib.Common.SourceGenerator\bin\$(Configuration)\Erlin.Lib.Common.SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 	</ItemGroup>
 
 	<ItemGroup>

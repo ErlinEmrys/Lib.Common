@@ -9,7 +9,6 @@
 		<EmbedAllSources>true</EmbedAllSources>
 		<DebugType>embedded</DebugType>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<OutputPath>bin\</OutputPath>
 		<IsPackable>false</IsPackable>
 		<Authors>Erlin Emrys</Authors>
 		<Copyright>© Erlin Emrys</Copyright>
