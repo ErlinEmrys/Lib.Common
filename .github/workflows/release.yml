@@ -30,7 +30,7 @@ jobs:
                echo "gitShortVersion=$VERSION" >> $GITHUB_OUTPUT
 
          -  name: Build
-            run: dotnet build --configuration Release -p:AssemblyVersion=${{ steps.gitVersion.outputs.gitShortVersion }} -p:FileVersion=${{ steps.gitVersion.outputs.gitShortVersion }} -p:InformationalVersion=${{ steps.gitVersion.outputs.gitFullVersion }} -p:PackageVersion=${{ steps.gitVersion.outputs.gitShortVersion }}
+            run: dotnet pack --configuration Release -p:AssemblyVersion=${{ steps.gitVersion.outputs.gitShortVersion }} -p:FileVersion=${{ steps.gitVersion.outputs.gitShortVersion }} -p:InformationalVersion=${{ steps.gitVersion.outputs.gitFullVersion }} -p:PackageVersion=${{ steps.gitVersion.outputs.gitShortVersion }}
 
          -  name: Publish nuget
             run: dotnet nuget push "Erlin.Lib.Common/bin/Release/*.nupkg" -k ${{secrets.NugetOrgToken}} -s https://api.nuget.org/v3/index.json
