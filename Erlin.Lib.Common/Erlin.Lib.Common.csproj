@@ -10,7 +10,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
-		<DebugType>embedded</DebugType>
+		<DebugType>portable</DebugType>
 		<IncludeSymbols>true</IncludeSymbols>
 		<EmbedAllSources>true</EmbedAllSources>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
