@@ -8,7 +8,7 @@ public enum TextDiffHashType
 	/// <summary>
 	///    Empty
 	/// </summary>
-	EnumEmptyError = 0,
+	EnumNullError = 0,
 
 	/// <summary>
 	///    By hash code
