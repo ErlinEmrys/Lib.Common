@@ -5,12 +5,11 @@ namespace Erlin.Lib.Common.Xml;
 /// <summary>
 ///    Xml reader that allows read xml without checking the namespace
 /// </summary>
-public class IgnoreNamespaceXmlReader : XmlTextReader
+public class IgnoreNamespaceXmlReader
+(
+	TextReader reader
+) : XmlTextReader( reader )
 {
-	public IgnoreNamespaceXmlReader( TextReader reader ) : base( reader )
-	{
-	}
-
 	/// <summary>
 	///    Gets the namespace URI (as defined in the W3C Namespace specification) of the node on
 	///    which the reader is positioned.

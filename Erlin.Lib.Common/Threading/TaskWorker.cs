@@ -323,7 +323,11 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	/// <summary>
 	///    Internal worker item
 	/// </summary>
-	private sealed class WorkItem<TT>( TT item, Task work )
+	private sealed class WorkItem<TT>
+	(
+		TT item,
+		Task work
+	)
 		where TT : notnull
 	{
 		/// <summary>

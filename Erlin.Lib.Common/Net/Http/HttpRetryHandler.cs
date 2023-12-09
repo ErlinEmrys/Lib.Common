@@ -3,7 +3,11 @@ namespace System.Net.Http;
 /// <summary>
 ///    Simple HTTP multiple retry handler
 /// </summary>
-public class HttpRetryHandler( int _maxRetries, HttpMessageHandler innerHandler )
+public class HttpRetryHandler
+(
+	int _maxRetries,
+	HttpMessageHandler innerHandler
+)
 	: DelegatingHandler( innerHandler )
 {
 	/// <summary>

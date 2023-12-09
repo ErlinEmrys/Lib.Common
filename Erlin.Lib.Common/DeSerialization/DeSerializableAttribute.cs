@@ -4,21 +4,19 @@ namespace Erlin.Lib.Common.DeSerialization;
 ///    Attribute for all De/Serializable records
 /// </summary>
 [AttributeUsage( AttributeTargets.Class | AttributeTargets.Struct, Inherited = false )]
-public class DeSerializableAttribute : Attribute
+public class DeSerializableAttribute
+(
+	ushort version,
+	string identifier
+) : Attribute
 {
 	/// <summary>
 	///    Unique identifier for record runtime type
 	/// </summary>
-	public Guid Identifier { get; }
+	public Guid Identifier { get; } = new( identifier );
 
 	/// <summary>
 	///    Current version of De/Serialization
 	/// </summary>
-	public ushort Version { get; }
-
-	public DeSerializableAttribute( ushort version, string identifier )
-	{
-		Version = version;
-		Identifier = new Guid( identifier );
-	}
+	public ushort Version { get; } = version;
 }

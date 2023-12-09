@@ -5,19 +5,25 @@ namespace Erlin.Lib.Common.DeSerialization.ReadWrite;
 /// <summary>
 ///    DeSerializer for both complex and primitive data
 /// </summary>
-public partial class DeSerializer : IDeSerializer
+public partial class DeSerializer
+(
+	IDeSerializeTypeProvider typeProvider,
+	IDeSerializeWriter writer,
+	IDeSerializeReader reader
+)
+	: IDeSerializer
 {
 	private Stack<ushort> ShortRuntimeTypes { get; } = new();
 
 	/// <summary>
 	///    Reader or Writer of elementary values
 	/// </summary>
-	public IDeSerializeReader Reader { get; }
+	public IDeSerializeReader Reader { get; } = reader;
 
 	/// <summary>
 	///    Reader or Writer of elementary values
 	/// </summary>
-	public IDeSerializeWriter Writer { get; }
+	public IDeSerializeWriter Writer { get; } = writer;
 
 	/// <summary>
 	///    Indicates that DeSerializer is reading
@@ -47,20 +53,12 @@ public partial class DeSerializer : IDeSerializer
 	/// <summary>
 	///    Provider of runtime types
 	/// </summary>
-	public IDeSerializeTypeProvider TypeProvider { get; }
+	public IDeSerializeTypeProvider TypeProvider { get; } = typeProvider;
 
 	/// <summary>
 	///    Optional parameters of De/Serialization
 	/// </summary>
 	public Dictionary<string, string> Params { get; } = new();
-
-	public DeSerializer(
-		IDeSerializeTypeProvider typeProvider, IDeSerializeWriter writer, IDeSerializeReader reader )
-	{
-		TypeProvider = typeProvider;
-		Writer = writer;
-		Reader = reader;
-	}
 
 	/// <summary>
 	///    Release all resources

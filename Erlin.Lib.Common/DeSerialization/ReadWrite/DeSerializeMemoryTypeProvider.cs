@@ -3,7 +3,10 @@ using System.Linq.Expressions;
 
 namespace Erlin.Lib.Common.DeSerialization.ReadWrite;
 
-public class DeSerializeMemoryTypeProvider( List<DeSerializeType> table ) : DeSerializeBaseTypeProvider
+public class DeSerializeMemoryTypeProvider
+(
+	List<DeSerializeType> table
+) : DeSerializeBaseTypeProvider
 {
 	private int _typeTableIdGenerator;
 

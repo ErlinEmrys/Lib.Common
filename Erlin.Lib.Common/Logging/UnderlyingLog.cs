@@ -10,17 +10,15 @@ namespace Erlin.Lib.Common;
 ///    Logger implementation that logs to underlying logger
 /// </summary>
 [SuppressMessage( "ReSharper", "TemplateIsNotCompileTimeConstantProblem" )]
-public class UnderlyingLog : ILog
+public class UnderlyingLog
+(
+	ILogger underlyingLogger
+) : ILog
 {
 	/// <summary>
 	///    Underlying logger
 	/// </summary>
-	public ILogger Logger { get; }
-
-	public UnderlyingLog( ILogger underlyingLogger )
-	{
-		Logger = underlyingLogger;
-	}
+	public ILogger Logger { get; } = underlyingLogger;
 
 	/// <summary>
 	///    Write to underlying logging system

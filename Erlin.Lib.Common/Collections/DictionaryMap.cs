@@ -55,24 +55,20 @@ public class DictionaryMap<TKey, TValue>
 	/// <typeparam name="TK"></typeparam>
 	/// <typeparam name="TV"></typeparam>
 	public class MapIndexer<TK, TV>
+	(
+		IDictionary<TK, TV> dictionary
+	)
 		where TK : notnull
 		where TV : notnull
 	{
-		private readonly Dictionary<TK, TV> _dictionary;
-
-		public MapIndexer( Dictionary<TK, TV> dictionary )
-		{
-			_dictionary = dictionary;
-		}
-
 		/// <summary>
 		///    Accessor
 		/// </summary>
 		/// <param name="key"></param>
 		public TV this[ TK key ]
 		{
-			get { return _dictionary[ key ]; }
-			set { _dictionary[ key ] = value; }
+			get { return dictionary[ key ]; }
+			set { dictionary[ key ] = value; }
 		}
 
 		/// <summary>
@@ -80,7 +76,7 @@ public class DictionaryMap<TKey, TValue>
 		/// </summary>
 		public bool TryGetValue( TK key, [MaybeNullWhen( false )]out TV value )
 		{
-			return _dictionary.TryGetValue( key, out value );
+			return dictionary.TryGetValue( key, out value );
 		}
 	}
 

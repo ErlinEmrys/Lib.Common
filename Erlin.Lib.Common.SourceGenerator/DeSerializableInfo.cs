@@ -5,50 +5,47 @@ namespace Erlin.Lib.Common.SourceGenerator;
 /// <summary>
 ///    Cacheable type symbol for code generation
 /// </summary>
-public class DeSerializableInfo : IEquatable<DeSerializableInfo>
+public class DeSerializableInfo
+(
+	string name,
+	string nameSpace,
+	bool isBottomImplementation,
+	bool isAbstract,
+	bool implementDeSerializeCtor,
+	bool implementParamlessCtor
+)
+	: IEquatable<DeSerializableInfo>
 {
 	/// <summary>
 	///    Type name
 	/// </summary>
-	public string Name { get; init; }
+	public string Name { get; init; } = name;
 
 	/// <summary>
 	///    Type namespace
 	/// </summary>
-	public string NameSpace { get; init; }
+	public string NameSpace { get; init; } = nameSpace;
 
 	/// <summary>
 	///    Whether is this type the first one that implements DeSerializable method in inheritance
 	///    hierarchy
 	/// </summary>
-	public bool IsBottomImplementation { get; init; }
+	public bool IsBottomImplementation { get; init; } = isBottomImplementation;
 
 	/// <summary>
 	///    Whether is this type abstract
 	/// </summary>
-	public bool IsAbstract { get; init; }
+	public bool IsAbstract { get; init; } = isAbstract;
 
 	/// <summary>
 	///    Whether is DeSerialize constructor implemented manually
 	/// </summary>
-	public bool ImplementDeSerializeCtor { get; init; }
+	public bool ImplementDeSerializeCtor { get; init; } = implementDeSerializeCtor;
 
 	/// <summary>
 	///    Whether is parameterless constructor implemented manually
 	/// </summary>
-	public bool ImplementParamlessCtor { get; init; }
-
-	public DeSerializableInfo(
-		string name, string nameSpace, bool isBottomImplementation, bool isAbstract,
-		bool implementDeSerializeCtor, bool implementParamlessCtor )
-	{
-		Name = name;
-		NameSpace = nameSpace;
-		IsBottomImplementation = isBottomImplementation;
-		IsAbstract = isAbstract;
-		ImplementDeSerializeCtor = implementDeSerializeCtor;
-		ImplementParamlessCtor = implementParamlessCtor;
-	}
+	public bool ImplementParamlessCtor { get; init; } = implementParamlessCtor;
 
 	/// <summary>
 	///    Equality comparer
