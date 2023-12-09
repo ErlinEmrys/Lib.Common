@@ -19,13 +19,14 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 	/// </summary>
 	private static HashSet<string> IgnoredProps { get; } =
 	[
-		"HasBeenThrown",
-		"Source",
-		"TargetSite",
-		"Message",
-		"InnerException",
-		"StackTrace",
 		"Data",
+		"HasBeenThrown",
+		"HResult",
+		"InnerException",
+		"Message",
+		"Source",
+		"StackTrace",
+		"TargetSite",
 		"WaitHandle"
 	];
 
@@ -83,8 +84,11 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 
 		serializer.Serialize( writer, stackArr, stackArr.GetType() );
 
-		writer.WritePropertyName( "Data" );
-		serializer.Serialize( writer, data, data.GetType() );
+		if( data.Count > 0 )
+		{
+			writer.WritePropertyName( "Data" );
+			serializer.Serialize( writer, data, data.GetType() );
+		}
 
 		List<PropertyInfo> properties = exceptionType.GetProperties().ToList();
 
