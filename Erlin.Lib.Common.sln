@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		.github\workflows\release.yml = .github\workflows\release.yml
 		.editorconfig = .editorconfig
 		LICENSE.md = LICENSE.md
-		LICENSE_THIRD_PARTY.md = LICENSE_THIRD_PARTY.md
+		LICENSE_THIRD_PARTIES.md = LICENSE_THIRD_PARTIES.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Erlin.Lib.Common.SourceGenerator", "Erlin.Lib.Common.SourceGenerator\Erlin.Lib.Common.SourceGenerator.csproj", "{40F9CC62-C66E-4607-9AD3-F6DC72D4A4DF}"
