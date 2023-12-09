@@ -17,8 +17,8 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 	/// <summary>
 	///    Exception properties, that should be ignored from reflection reading
 	/// </summary>
-	private static HashSet<string> IgnoredProps { get; } = new()
-	{
+	private static HashSet<string> IgnoredProps { get; } =
+	[
 		"HasBeenThrown",
 		"Source",
 		"TargetSite",
@@ -27,7 +27,7 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 		"StackTrace",
 		"Data",
 		"WaitHandle"
-	};
+	];
 
 	/// <summary>Writes the JSON representation of the object.</summary>
 	/// <param name="writer">The Newtonsoft.Json.JsonWriter to write to.</param>

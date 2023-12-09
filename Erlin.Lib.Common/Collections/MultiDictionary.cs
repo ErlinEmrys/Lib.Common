@@ -38,7 +38,7 @@ public class MultiDictionary<TKey, TValue>
 	{
 		get
 		{
-			return _innerDic.TryGetValue( key, out List<TValue>? item ) ? item : new List<TValue>();
+			return _innerDic.TryGetValue( key, out List<TValue>? item ) ? item : [];
 		}
 	}
 

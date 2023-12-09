@@ -58,7 +58,7 @@ public class DeSerializeFileWriter : IDisposable
 	/// <summary>
 	///    Type table
 	/// </summary>
-	private List<DeSerializeType> TypeTable { get; } = new();
+	private List<DeSerializeType> TypeTable { get; } = [];
 
 	/// <summary>
 	///    Ctor

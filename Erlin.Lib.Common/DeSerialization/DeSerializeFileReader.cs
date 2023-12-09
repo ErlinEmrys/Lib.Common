@@ -38,7 +38,7 @@ public class DeSerializeFileReader : IDisposable
 	/// <summary>
 	///    Type table
 	/// </summary>
-	private List<DeSerializeType> TypeTable { get; } = new();
+	private List<DeSerializeType> TypeTable { get; } = [];
 
 	/// <summary>
 	///    Ctor

@@ -389,7 +389,7 @@ public static class ExtensionMethods
 	/// <returns>Withdrew items as list</returns>
 	public static List<TSource> Withdraw<TSource>( this IList<TSource> source, Func<TSource, bool> selector )
 	{
-		List<TSource> result = new();
+		List<TSource> result = [];
 		for( int i = 0; i < source.Count; )
 		{
 			TSource item = source[ i ];
@@ -441,6 +441,9 @@ public static class ExtensionMethods
 		where TKey : IComparable
 	{
 		List<TSource> result = new();
+
+		result.Capacity = 1;
+
 		TKey? minKey = default;
 		bool firstItem = true;
 		foreach( TSource fItem in source )
@@ -478,7 +481,7 @@ public static class ExtensionMethods
 		this IEnumerable<TSource> source, Func<TSource, TKey> selector )
 		where TKey : IComparable
 	{
-		List<TSource> result = new();
+		List<TSource> result = [];
 		TKey? maxKey = default;
 		bool firstItem = true;
 		foreach( TSource fItem in source )

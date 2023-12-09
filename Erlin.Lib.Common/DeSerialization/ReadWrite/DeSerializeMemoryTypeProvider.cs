@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Erlin.Lib.Common.DeSerialization.ReadWrite;
 
-public class DeSerializeMemoryTypeProvider : DeSerializeBaseTypeProvider
+public class DeSerializeMemoryTypeProvider( List<DeSerializeType> table ) : DeSerializeBaseTypeProvider
 {
 	private int _typeTableIdGenerator;
 
@@ -13,15 +13,10 @@ public class DeSerializeMemoryTypeProvider : DeSerializeBaseTypeProvider
 	/// <summary>
 	///    Runtime type table
 	/// </summary>
-	private List<DeSerializeType> Table { get; }
+	private List<DeSerializeType> Table { get; } = table;
 
-	public DeSerializeMemoryTypeProvider() : this( new List<DeSerializeType>() )
+	public DeSerializeMemoryTypeProvider() : this( [] )
 	{
-	}
-
-	public DeSerializeMemoryTypeProvider( List<DeSerializeType> table )
-	{
-		Table = table;
 	}
 
 	protected override DeSerializeType? FindById( ushort shortTypeId )

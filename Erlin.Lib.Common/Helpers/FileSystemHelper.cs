@@ -54,9 +54,9 @@ public static class FileSystemHelper
 	/// </summary>
 	/// <param name="path">Path to file</param>
 	/// <param name="contents">Content to be written</param>
-	public static async Task WriteAllText( string path, string contents )
+	public static Task WriteAllText( string path, string contents )
 	{
-		await FileSystemHelper.WriteAllText( path, contents, Encoding.UTF8 );
+		return FileSystemHelper.WriteAllText( path, contents, Encoding.UTF8 );
 	}
 
 	/// <summary>
@@ -65,10 +65,10 @@ public static class FileSystemHelper
 	/// <param name="path">Path to file</param>
 	/// <param name="contents">Content to be written</param>
 	/// <param name="encoding">Encoding of file</param>
-	public static async Task WriteAllText( string path, string contents, Encoding encoding )
+	public static Task WriteAllText( string path, string contents, Encoding encoding )
 	{
 		FileSystemHelper.DirectoryEnsure( path );
-		await File.WriteAllTextAsync( path, contents, encoding );
+		return File.WriteAllTextAsync( path, contents, encoding );
 	}
 
 	/// <summary>
@@ -76,10 +76,10 @@ public static class FileSystemHelper
 	/// </summary>
 	/// <param name="path">Path to file</param>
 	/// <param name="content">Content to be written</param>
-	public static async Task WriteAllBytes( string path, byte[] content )
+	public static Task WriteAllBytes( string path, byte[] content )
 	{
 		FileSystemHelper.DirectoryEnsure( path );
-		await File.WriteAllBytesAsync( path, content );
+		return File.WriteAllBytesAsync( path, content );
 	}
 
 	/// <summary>

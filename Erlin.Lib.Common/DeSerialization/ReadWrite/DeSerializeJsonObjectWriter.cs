@@ -497,7 +497,7 @@ public class DeSerializeJsonObjectWriter : IDeSerializeWriter
 
 	public void WriteCollectionStart( string? fieldName, int count, bool isPrimitive = false )
 	{
-		JArray arr = new();
+		JArray arr = [];
 		WriteValue( fieldName, arr );
 
 		Parents.Push( Current );

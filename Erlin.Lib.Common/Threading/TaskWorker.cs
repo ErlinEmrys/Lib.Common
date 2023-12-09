@@ -16,7 +16,7 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	private readonly bool _cancelOnDispose;
 	private readonly Func<T, CancellationToken, Task> _handler;
 	private readonly ConcurrentQueue<T> _queue = new();
-	private readonly HashSet<WorkItem<T>> _work = new();
+	private readonly HashSet<WorkItem<T>> _work = [];
 	private CancellationTokenSource _cancelSource = new();
 
 	public TaskWorker(
@@ -307,7 +307,7 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	/// </summary>
 	private HashSet<Task> GetAllWorkTasks()
 	{
-		HashSet<Task> workTasks = new();
+		HashSet<Task> workTasks = [];
 		lock( _work )
 		{
 			foreach( WorkItem<T> fWork in _work )
@@ -323,30 +323,24 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	/// <summary>
 	///    Internal worker item
 	/// </summary>
-	private sealed class WorkItem<TT>
+	private sealed class WorkItem<TT>( TT item, Task work )
 		where TT : notnull
 	{
 		/// <summary>
 		///    Item we are working on
 		/// </summary>
 
-		// ReSharper disable once UnusedAutoPropertyAccessor.Local
-		public TT Item { get; init; }
+		// ReSharper disable once UnusedMember.Local
+		public TT Item { get; init; } = item;
 
 		/// <summary>
 		///    Task representing working on item
 		/// </summary>
-		public Task Work { get; }
+		public Task Work { get; } = work;
 
 		/// <summary>
 		///    Task representing continuation after work is completed
 		/// </summary>
 		public Task Continuation { get; set; } = default!;
-
-		public WorkItem( TT item, Task work )
-		{
-			Item = item;
-			Work = work;
-		}
 	}
 }

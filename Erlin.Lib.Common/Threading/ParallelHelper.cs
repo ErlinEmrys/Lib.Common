@@ -87,7 +87,7 @@ public static class ParallelHelper
 		}
 		else
 		{
-			HashSet<int> values = new();
+			HashSet<int> values = [];
 			for( int i = fromInclusive; i < toExclusive; i++ )
 			{
 				values.Add( i );
@@ -172,7 +172,7 @@ public static class ParallelHelper
 		}
 		else
 		{
-			HashSet<int> values = new();
+			HashSet<int> values = [];
 			for( int i = 0; i < count; i++ )
 			{
 				values.Add( i );

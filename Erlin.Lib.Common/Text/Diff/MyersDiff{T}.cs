@@ -52,7 +52,7 @@ public sealed class MyersDiff<T>
 	/// <returns>Complete edit script</returns>
 	public EditScript Execute()
 	{
-		List<Point2D<int>> matchPoints = new();
+		List<Point2D<int>> matchPoints = [];
 
 		SubArray<T> subArrayA = new( _listA );
 		SubArray<T> subArrayB = new( _listB );
@@ -80,7 +80,7 @@ public sealed class MyersDiff<T>
 	/// <returns>LCS of entered sequences</returns>
 	public IList<T> GetLongestCommonSubsequence()
 	{
-		List<T> result = new();
+		List<T> result = [];
 
 		GetLcs( new SubArray<T>( _listA ), new SubArray<T>( _listB ), result );
 

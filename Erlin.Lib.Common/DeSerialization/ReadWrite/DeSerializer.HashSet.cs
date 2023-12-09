@@ -58,13 +58,11 @@ partial class DeSerializer
 				T item = itemDeSerialization(
 					new DeSerializeContext<T>( this, default, i, valueType, argumentName ) );
 
-				if( value.Contains( item ) )
+				if( !value.Add( item ) )
 				{
 					throw new DeSerializeException(
 						$"Attempt to add existing value {item} to HashSet during deserialization! " );
 				}
-
-				value.Add( item );
 			}
 
 			Reader.ReadCollectionEnd( argumentName, value.GetType(), isPrimitive );
