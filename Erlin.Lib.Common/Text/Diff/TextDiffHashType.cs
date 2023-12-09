@@ -23,5 +23,5 @@ public enum TextDiffHashType
 	/// <summary>
 	///    Unique
 	/// </summary>
-	Unique = 3,
+	Unique = 3
 }

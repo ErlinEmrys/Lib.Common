@@ -15,7 +15,7 @@ public static class EnvHelper
 	/// </summary>
 	public static string[] NewLineBreakers { get; } =
 	{
-		"\r\n", "\n", "\r",
+		"\r\n", "\n", "\r"
 	};
 
 	/// <summary>

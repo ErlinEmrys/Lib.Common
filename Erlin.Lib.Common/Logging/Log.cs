@@ -39,69 +39,69 @@ public static class Log
 			{
 				[ ConsoleThemeStyle.Text ] = new()
 				{
-					Foreground = ConsoleColor.White,
+					Foreground = ConsoleColor.White
 				},
 				[ ConsoleThemeStyle.SecondaryText ] = new()
 				{
-					Foreground = ConsoleColor.Gray,
+					Foreground = ConsoleColor.Gray
 				},
 				[ ConsoleThemeStyle.TertiaryText ] = new()
 				{
-					Foreground = ConsoleColor.DarkGray,
+					Foreground = ConsoleColor.DarkGray
 				},
 				[ ConsoleThemeStyle.Invalid ] = new()
 				{
-					Foreground = ConsoleColor.Yellow,
+					Foreground = ConsoleColor.Yellow
 				},
 				[ ConsoleThemeStyle.Null ] = new()
 				{
-					Foreground = ConsoleColor.Blue,
+					Foreground = ConsoleColor.Blue
 				},
 				[ ConsoleThemeStyle.Name ] = new()
 				{
-					Foreground = ConsoleColor.Gray,
+					Foreground = ConsoleColor.Gray
 				},
 				[ ConsoleThemeStyle.String ] = new()
 				{
-					Foreground = ConsoleColor.Cyan,
+					Foreground = ConsoleColor.Cyan
 				},
 				[ ConsoleThemeStyle.Number ] = new()
 				{
-					Foreground = ConsoleColor.Magenta,
+					Foreground = ConsoleColor.Magenta
 				},
 				[ ConsoleThemeStyle.Boolean ] = new()
 				{
-					Foreground = ConsoleColor.Blue,
+					Foreground = ConsoleColor.Blue
 				},
 				[ ConsoleThemeStyle.Scalar ] = new()
 				{
-					Foreground = ConsoleColor.Green,
+					Foreground = ConsoleColor.Green
 				},
 				[ ConsoleThemeStyle.LevelVerbose ] = new()
 				{
-					Foreground = ConsoleColor.Gray,
+					Foreground = ConsoleColor.Gray
 				},
 				[ ConsoleThemeStyle.LevelDebug ] = new()
 				{
-					Foreground = ConsoleColor.Blue,
+					Foreground = ConsoleColor.Blue
 				},
 				[ ConsoleThemeStyle.LevelInformation ] = new()
 				{
-					Foreground = ConsoleColor.DarkGreen,
+					Foreground = ConsoleColor.DarkGreen
 				},
 				[ ConsoleThemeStyle.LevelWarning ] = new()
 				{
-					Foreground = ConsoleColor.DarkYellow,
+					Foreground = ConsoleColor.DarkYellow
 				},
 				[ ConsoleThemeStyle.LevelError ] =
 					new()
 					{
-						Foreground = ConsoleColor.White, Background = ConsoleColor.Red,
+						Foreground = ConsoleColor.White, Background = ConsoleColor.Red
 					},
 				[ ConsoleThemeStyle.LevelFatal ] = new()
 				{
-					Foreground = ConsoleColor.White, Background = ConsoleColor.DarkRed,
-				},
+					Foreground = ConsoleColor.White, Background = ConsoleColor.DarkRed
+				}
 			} );
 
 #endregion

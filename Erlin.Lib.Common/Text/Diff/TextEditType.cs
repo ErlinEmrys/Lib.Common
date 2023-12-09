@@ -20,5 +20,5 @@ public enum TextEditType
 	/// <summary>
 	///    Change
 	/// </summary>
-	Change = 3,
+	Change = 3
 }

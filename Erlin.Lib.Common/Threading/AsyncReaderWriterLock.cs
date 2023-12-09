@@ -549,7 +549,7 @@ public class AsyncReaderWriterLock : IDisposable
 				WriteLockState? lockState = currentWriteLockState;
 				if( lockState is
 					{
-						ReadLockReleaseSemaphoreReleased: false,
+						ReadLockReleaseSemaphoreReleased: false
 					} )
 				{
 					readLockReleaseSemaphore.Release();

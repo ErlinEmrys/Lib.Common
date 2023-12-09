@@ -172,7 +172,7 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 		Enqueue(
 			new[]
 			{
-				item,
+				item
 			} );
 	}
 

@@ -44,7 +44,7 @@ public class UnderlyingLog : ILog
 				messageTemplate = "Logging of empty {Level}{NewLine}{Stack}";
 				values = new object?[]
 				{
-					level, Environment.NewLine, EnvHelper.GetStackTrace(),
+					level, Environment.NewLine, EnvHelper.GetStackTrace()
 				};
 
 				level = LogEventLevel.Warning;

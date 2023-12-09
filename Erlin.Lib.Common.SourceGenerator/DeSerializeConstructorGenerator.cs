@@ -139,7 +139,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 									return ( m.Kind == SymbolKind.Method )
 										&& m is IMethodSymbol
 										{
-											MethodKind: MethodKind.Constructor, Parameters.Length: 1,
+											MethodKind: MethodKind.Constructor, Parameters.Length: 1
 										} methodSymbol
 										&& methodSymbol.Parameters.SingleOrDefault(
 												p =>
@@ -159,7 +159,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 								m => ( m.Kind == SymbolKind.Method )
 									&& m is IMethodSymbol
 									{
-										MethodKind: MethodKind.Constructor,
+										MethodKind: MethodKind.Constructor
 									} ctor
 									&& ( onlyParamless || ( m.DeclaringSyntaxReferences.Length > 0 ) )
 									&& ( !onlyParamless || ( ctor.Parameters.Length <= 0 ) )

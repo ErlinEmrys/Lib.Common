@@ -119,7 +119,7 @@ public partial class Win10Loop : IDisposable
 		/// <summary>
 		///    Display is required
 		/// </summary>
-		ES_DISPLAY_REQUIRED = 0x00000002,
+		ES_DISPLAY_REQUIRED = 0x00000002
 
 		//ES_AWAY_MODE_REQUIRED = 0x00000040,
 	}

@@ -186,7 +186,7 @@ public class DeSerializeFileReader : IDisposable
 					Identifier = identifier,
 					ParentId = parentId,
 					Version = version,
-					OriginalRuntimeTypeName = oldTypeName,
+					OriginalRuntimeTypeName = oldTypeName
 				};
 
 				TypeTable.Add( type );

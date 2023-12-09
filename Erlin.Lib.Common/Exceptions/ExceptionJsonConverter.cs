@@ -26,7 +26,7 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 		"InnerException",
 		"StackTrace",
 		"Data",
-		"WaitHandle",
+		"WaitHandle"
 	};
 
 	/// <summary>Writes the JSON representation of the object.</summary>

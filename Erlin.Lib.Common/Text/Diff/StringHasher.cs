@@ -269,7 +269,7 @@ internal sealed class StringHasher
 		0xB40BBE37,
 		0xC30C8EA1,
 		0x5A05DF1B,
-		0x2D02EF8D,
+		0x2D02EF8D
 	};
 
 #endregion

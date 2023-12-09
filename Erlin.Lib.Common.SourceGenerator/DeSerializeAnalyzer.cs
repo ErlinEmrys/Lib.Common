@@ -158,12 +158,11 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 				.FirstOrDefault(
 						m =>
 							( m.Kind == SymbolKind.Method )
-							&& string.Equals(
-								m.Name, Const.DE_SERIALIZABLE_METHOD_NAME, StringComparison.Ordinal )
+							&& string.Equals( m.Name, Const.DE_SERIALIZABLE_METHOD_NAME, StringComparison.Ordinal )
 							&& m
 								is IMethodSymbol
 								{
-									MethodKind: MethodKind.Ordinary, Parameters.Length: 1,
+									MethodKind: MethodKind.Ordinary, Parameters.Length: 1
 								} methodSymbol
 							&& methodSymbol.Parameters.SingleOrDefault(
 									p =>
