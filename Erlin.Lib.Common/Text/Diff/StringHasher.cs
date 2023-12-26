@@ -13,7 +13,7 @@ internal sealed class StringHasher
 #region Crc32 Code
 
 	private static readonly uint[] Crc32Code =
-	{
+	[
 		0x00000000,
 		0x77073096,
 		0xEE0E612C,
@@ -270,7 +270,7 @@ internal sealed class StringHasher
 		0xC30C8EA1,
 		0x5A05DF1B,
 		0x2D02EF8D
-	};
+	];
 
 #endregion
 

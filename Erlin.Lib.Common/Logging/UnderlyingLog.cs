@@ -40,10 +40,10 @@ public class UnderlyingLog
 			else
 			{
 				messageTemplate = "Logging of empty {Level}{NewLine}{Stack}";
-				values = new object?[]
-				{
+				values =
+				[
 					level, Environment.NewLine, EnvHelper.GetStackTrace()
-				};
+				];
 
 				level = LogEventLevel.Warning;
 			}
