@@ -197,7 +197,7 @@ public class UnderlyingLog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Wrn( Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Wrn( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Warning, ex, messageTemplate, values );
 	}
@@ -210,7 +210,7 @@ public class UnderlyingLog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Wrn( bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Wrn( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		if( condition )
 		{
@@ -255,7 +255,7 @@ public class UnderlyingLog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Err( Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Err( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Error, ex, messageTemplate, values );
 	}
@@ -268,7 +268,7 @@ public class UnderlyingLog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Err( bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Err( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		if( condition )
 		{
@@ -313,7 +313,7 @@ public class UnderlyingLog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Fatal( Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Fatal( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Fatal, ex, messageTemplate, values );
 	}
@@ -326,7 +326,7 @@ public class UnderlyingLog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Fatal( bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Fatal( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		if( condition )
 		{

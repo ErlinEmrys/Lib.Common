@@ -264,7 +264,7 @@ public static class Log
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Wrn( Exception ex, string? messageTemplate = null, params object?[] values )
+	public static void Wrn( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Wrn( ex, messageTemplate, values );
 	}
@@ -278,7 +278,7 @@ public static class Log
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
 	public static void Wrn(
-		bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+		bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Wrn( condition, ex, messageTemplate, values );
 	}
@@ -317,7 +317,7 @@ public static class Log
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Err( Exception ex, string? messageTemplate = null, params object?[] values )
+	public static void Err( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Err( ex, messageTemplate, values );
 	}
@@ -331,7 +331,7 @@ public static class Log
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
 	public static void Err(
-		bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+		bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Err( condition, ex, messageTemplate, values );
 	}
@@ -370,7 +370,7 @@ public static class Log
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Fatal( Exception ex, string? messageTemplate = null, params object?[] values )
+	public static void Fatal( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Fatal( ex, messageTemplate, values );
 	}
@@ -384,7 +384,7 @@ public static class Log
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
 	public static void Fatal(
-		bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+		bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Fatal( condition, ex, messageTemplate, values );
 	}

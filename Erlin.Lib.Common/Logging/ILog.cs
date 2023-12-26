@@ -113,7 +113,7 @@ public interface ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	void Wrn( Exception ex, string? messageTemplate = null, params object?[] values );
+	void Wrn( Exception? ex, string? messageTemplate = null, params object?[] values );
 
 	/// <summary>
 	///    Log any exception as warning
@@ -123,7 +123,7 @@ public interface ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	void Wrn( bool condition, Exception ex, string? messageTemplate = null, params object?[] values );
+	void Wrn( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values );
 
 #endregion
 
@@ -153,7 +153,7 @@ public interface ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	void Err( Exception ex, string? messageTemplate = null, params object?[] values );
+	void Err( Exception? ex, string? messageTemplate = null, params object?[] values );
 
 	/// <summary>
 	///    Log any exception
@@ -163,7 +163,7 @@ public interface ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	void Err( bool condition, Exception ex, string? messageTemplate = null, params object?[] values );
+	void Err( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values );
 
 #endregion
 
@@ -193,7 +193,7 @@ public interface ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	void Fatal( Exception ex, string? messageTemplate = null, params object?[] values );
+	void Fatal( Exception? ex, string? messageTemplate = null, params object?[] values );
 
 	/// <summary>
 	///    Log any fatal exception
@@ -203,7 +203,7 @@ public interface ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	void Fatal( bool condition, Exception ex, string? messageTemplate = null, params object?[] values );
+	void Fatal( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values );
 
 #endregion
 }

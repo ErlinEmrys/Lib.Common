@@ -132,7 +132,7 @@ public class EmptyLog : ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Wrn( Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Wrn( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 	}
 
@@ -144,7 +144,7 @@ public class EmptyLog : ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Wrn( bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Wrn( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 	}
 
@@ -180,7 +180,7 @@ public class EmptyLog : ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Err( Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Err( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 	}
 
@@ -192,7 +192,7 @@ public class EmptyLog : ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Err( bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Err( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 	}
 
@@ -228,7 +228,7 @@ public class EmptyLog : ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Fatal( Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Fatal( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 	}
 
@@ -240,7 +240,7 @@ public class EmptyLog : ILog
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Fatal( bool condition, Exception ex, string? messageTemplate = null, params object?[] values )
+	public void Fatal( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 	}
 
