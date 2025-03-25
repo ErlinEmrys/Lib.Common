@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 
 using SLog = Serilog.Log;
@@ -387,6 +388,66 @@ public static class Log
 		bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Fatal( condition, ex, messageTemplate, values );
+	}
+
+#endregion
+
+#region Any
+
+	/// <summary>
+	///    Log custom message with selected level
+	/// </summary>
+	/// <param name="level">Message event level</param>
+	/// <param name="messageTemplate">Message to log</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	public static void Any( LogEventLevel level, string messageTemplate, params object?[] values )
+	{
+		Log.Logger.Any( level, messageTemplate, values );
+	}
+
+	/// <summary>
+	///    Log custom verbose message
+	/// </summary>
+	/// <param name="condition">Dynamic condition if log this message</param>
+	/// <param name="level">Message event level</param>
+	/// <param name="messageTemplate">Message to log</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	public static void Any(
+		bool condition, LogEventLevel level, string messageTemplate, params object?[] values )
+	{
+		Log.Logger.Any( condition, level, messageTemplate, values );
+	}
+
+	/// <summary>
+	///    Log any exception as warning
+	/// </summary>
+	/// <param name="level">Message event level</param>
+	/// <param name="ex">Exception to log</param>
+	/// <param name="messageTemplate">Additional message</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	public static void Any(
+		LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values )
+	{
+		Log.Logger.Any( level, ex, messageTemplate, values );
+	}
+
+	/// <summary>
+	///    Log any exception as warning
+	/// </summary>
+	/// <param name="condition">Dynamic condition if log this message</param>
+	/// <param name="level">Message event level</param>
+	/// <param name="ex">Exception to log</param>
+	/// <param name="messageTemplate">Additional message</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	public static void Any(
+		bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null,
+		params object?[] values )
+	{
+		Log.Logger.Any( condition, level, ex, messageTemplate, values );
 	}
 
 #endregion
