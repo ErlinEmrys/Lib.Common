@@ -1,4 +1,5 @@
 using Serilog.Core;
+using Serilog.Events;
 
 namespace Erlin.Lib.Common;
 
@@ -204,6 +205,52 @@ public interface ILog
 	/// <param name="values">Additional properties</param>
 	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
 	void Fatal( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values );
+
+#endregion
+
+#region Any
+
+	/// <summary>
+	///    Log custom message with selected level
+	/// </summary>
+	/// <param name="level">Message event level</param>
+	/// <param name="messageTemplate">Message to log</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	void Any( LogEventLevel level, string messageTemplate, params object?[] values );
+
+	/// <summary>
+	///    Log custom verbose message
+	/// </summary>
+	/// <param name="condition">Dynamic condition if log this message</param>
+	/// <param name="level">Message event level</param>
+	/// <param name="messageTemplate">Message to log</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	void Any( bool condition, LogEventLevel level, string messageTemplate, params object?[] values );
+
+	/// <summary>
+	///    Log any exception as warning
+	/// </summary>
+	/// <param name="level">Message event level</param>
+	/// <param name="ex">Exception to log</param>
+	/// <param name="messageTemplate">Additional message</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	void Any( LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values );
+
+	/// <summary>
+	///    Log any exception as warning
+	/// </summary>
+	/// <param name="condition">Dynamic condition if log this message</param>
+	/// <param name="level">Message event level</param>
+	/// <param name="ex">Exception to log</param>
+	/// <param name="messageTemplate">Additional message</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	void Any(
+		bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null,
+		params object?[] values );
 
 #endregion
 }

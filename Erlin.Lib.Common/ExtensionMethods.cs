@@ -248,6 +248,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="text">Input text</param>
 	/// <returns>Text without diacritics</returns>
+	[return: NotNullIfNotNull( nameof( text ) )]
 	public static string? RemoveDiacritics( this string? text )
 	{
 		if( text.IsEmpty() )
@@ -271,11 +272,11 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	///    Check if string contains basic chars = A-z1-9
+	///    Check if string contains at least one of a basic chars = A-z1-9
 	/// </summary>
 	/// <param name="text">Input text</param>
 	/// <returns>True - string contains basic chars</returns>
-	public static bool ContainsBasicChars( this string? text )
+	public static bool ContainsBasicChar( this string? text )
 	{
 		if( text.IsEmpty() )
 		{
@@ -294,7 +295,7 @@ public static class ExtensionMethods
 	}
 
 	/// <summary>
-	///    Check if string contains basic chars = A-z1-9
+	///    Check if string contains only basic chars = A-z1-9
 	/// </summary>
 	/// <param name="text">Input text</param>
 	/// <returns>True - string contains basic chars</returns>
@@ -314,6 +315,28 @@ public static class ExtensionMethods
 		}
 
 		return true;
+	}
+
+	/// <summary>
+	///    Truncate string to a maximum length
+	/// </summary>
+	/// <param name="text">Input text</param>
+	/// <param name="maxLength">Maximum allowed length of a text</param>
+	/// <returns>Truncated text</returns>
+	[return: NotNullIfNotNull( nameof( text ) )]
+	public static string? Truncate( this string? text, int maxLength )
+	{
+		if( text.IsEmpty() )
+		{
+			return text;
+		}
+
+		if( maxLength < 0 )
+		{
+			maxLength = 0;
+		}
+
+		return text.Length <= maxLength ? text : text[ ..maxLength ];
 	}
 
 #endregion

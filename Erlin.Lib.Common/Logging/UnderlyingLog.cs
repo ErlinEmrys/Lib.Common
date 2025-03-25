@@ -13,7 +13,8 @@ namespace Erlin.Lib.Common;
 public class UnderlyingLog
 (
 	ILogger underlyingLogger
-) : ILog
+)
+	: ILog
 {
 	/// <summary>
 	///    Underlying logger
@@ -331,6 +332,71 @@ public class UnderlyingLog
 		if( condition )
 		{
 			Fatal( ex, messageTemplate, values );
+		}
+	}
+
+#endregion
+
+#region Any
+
+	/// <summary>
+	///    Log custom message with selected level
+	/// </summary>
+	/// <param name="level">Message event level</param>
+	/// <param name="messageTemplate">Message to log</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	public void Any( LogEventLevel level, string messageTemplate, params object?[] values )
+	{
+		WriteToUnderlying( level, null, messageTemplate, values );
+	}
+
+	/// <summary>
+	///    Log custom verbose message
+	/// </summary>
+	/// <param name="condition">Dynamic condition if log this message</param>
+	/// <param name="level">Message event level</param>
+	/// <param name="messageTemplate">Message to log</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	public void Any( bool condition, LogEventLevel level, string messageTemplate, params object?[] values )
+	{
+		if( condition )
+		{
+			Any( level, messageTemplate, values );
+		}
+	}
+
+	/// <summary>
+	///    Log any exception as warning
+	/// </summary>
+	/// <param name="level">Message event level</param>
+	/// <param name="ex">Exception to log</param>
+	/// <param name="messageTemplate">Additional message</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	public void Any(
+		LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values )
+	{
+		WriteToUnderlying( level, ex, messageTemplate, values );
+	}
+
+	/// <summary>
+	///    Log any exception as warning
+	/// </summary>
+	/// <param name="condition">Dynamic condition if log this message</param>
+	/// <param name="level">Message event level</param>
+	/// <param name="ex">Exception to log</param>
+	/// <param name="messageTemplate">Additional message</param>
+	/// <param name="values">Additional properties</param>
+	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	public void Any(
+		bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null,
+		params object?[] values )
+	{
+		if( condition )
+		{
+			Any( level, ex, messageTemplate, values );
 		}
 	}
 
