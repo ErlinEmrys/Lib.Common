@@ -117,6 +117,7 @@ public static class Log
 	/// <param name="underlyingLogger"></param>
 	public static void Initialize( ILogger underlyingLogger )
 	{
+		SLog.Logger = underlyingLogger;
 		Log.Logger = new UnderlyingLog( underlyingLogger );
 	}
 
