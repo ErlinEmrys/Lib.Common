@@ -1,11 +1,14 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
+using Fody;
+
 namespace Erlin.Lib.Common.Threading;
 
 /// <summary>
 ///    https://github.com/kpreisser/AsyncReaderWriterLockSlim
 /// </summary>
+[ConfigureAwait( true )]
 public class AsyncReaderWriterLock : IDisposable
 {
 	private readonly object syncRoot = new();
