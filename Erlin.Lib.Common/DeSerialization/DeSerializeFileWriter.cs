@@ -58,7 +58,7 @@ public class DeSerializeFileWriter : IDisposable
 	/// <summary>
 	///    Type table
 	/// </summary>
-	private List<DeSerializeType> TypeTable { get; } = [];
+	private List< DeSerializeType > TypeTable { get; } = [ ];
 
 	/// <summary>
 	///    Ctor
@@ -72,7 +72,7 @@ public class DeSerializeFileWriter : IDisposable
 	///    Ctor
 	/// </summary>
 	/// <param name="filePath">File path to write</param>
-	/// <param name="options"></param>
+	/// <param name="options">Options of DeSerialization</param>
 	public DeSerializeFileWriter( string filePath, DeSerializeOptions options )
 	{
 		Options = options;
@@ -90,14 +90,13 @@ public class DeSerializeFileWriter : IDisposable
 
 		WriteFileHeader();
 
-		DS = new DeSerializer(
-			new DeSerializeMemoryTypeProvider( TypeTable ), Writer, new DeSerializeEmptyReader() );
+		DS = new DeSerializer( new DeSerializeMemoryTypeProvider( TypeTable ), Writer, new DeSerializeEmptyReader() );
 	}
 
 	/// <summary>
 	///    Writes file header
 	/// </summary>
-	[MemberNotNull( nameof( DeSerializeFileWriter.Writer ) )]
+	[ MemberNotNull( nameof( DeSerializeFileWriter.Writer ) ) ]
 	private void WriteFileHeader()
 	{
 		if( Options.IsBinaryFormat )
@@ -113,18 +112,18 @@ public class DeSerializeFileWriter : IDisposable
 	/// <summary>
 	///    Writes binary file header
 	/// </summary>
-	[MemberNotNull( nameof( DeSerializeFileWriter.Writer ) )]
+	[ MemberNotNull( nameof( DeSerializeFileWriter.Writer ) ) ]
 	private void WriteBinaryFileHeader()
 	{
 		FileStream.WriteByte( DeSerializeConstants.FILE_HEADER_BINARY );
-		FileStream.WriteByte( 0 );// Version
-		FileStream.WriteByte( 0 );// Version
-		FileStream.WriteByte( ( byte )( Options.BinaryZipCompress ? 1 : 0 ) );//Compress flag
+		FileStream.WriteByte( 0 ); // Version
+		FileStream.WriteByte( 0 ); // Version
+		FileStream.WriteByte( ( byte )( Options.BinaryZipCompress ? 1 : 0 ) ); //Compress flag
 		FileStream.Flush();
 
 		BinaryTypeTablePosition = FileStream.Position;
-		byte[] typeTablePointer = new byte[ 8 ];
-		FileStream.Write( typeTablePointer, 0, typeTablePointer.Length );// Empty pointer to Type Table
+		byte[] typeTablePointer = new byte[8];
+		FileStream.Write( typeTablePointer, 0, typeTablePointer.Length ); // Empty pointer to Type Table
 
 		Stream toWrite = FileStream;
 		if( Options.BinaryZipCompress )
@@ -138,7 +137,7 @@ public class DeSerializeFileWriter : IDisposable
 	/// <summary>
 	///    Writes JSON file header
 	/// </summary>
-	[MemberNotNull( nameof( DeSerializeFileWriter.Writer ) )]
+	[ MemberNotNull( nameof( DeSerializeFileWriter.Writer ) ) ]
 	private void WriteJsonFileHeader()
 	{
 		FileStream.WriteByte( DeSerializeConstants.FILE_HEADER_JSON );
@@ -150,9 +149,7 @@ public class DeSerializeFileWriter : IDisposable
 
 		Writer = writer;
 		Writer.WriteUInt16( DeSerializeConstants.FIELD_MAIN_VERSION, 0 );
-		Writer.WriteObjectStart(
-			DeSerializeConstants.FIELD_MAIN_DATA,
-			DeSerializeConstants.TYPE_ID_MAIN_DATA );
+		Writer.WriteObjectStart( DeSerializeConstants.FIELD_MAIN_DATA, DeSerializeConstants.TYPE_ID_MAIN_DATA );
 	}
 
 	/// <summary>
@@ -194,7 +191,7 @@ public class DeSerializeFileWriter : IDisposable
 
 		byte[] typeTablePointer = BitConverter.GetBytes( typeTablePosition );
 		FileStream.Seek( BinaryTypeTablePosition, SeekOrigin.Begin );
-		FileStream.Write( typeTablePointer, 0, typeTablePointer.Length );// Pointer to Type Table
+		FileStream.Write( typeTablePointer, 0, typeTablePointer.Length ); // Pointer to Type Table
 	}
 
 	/// <summary>
@@ -202,7 +199,7 @@ public class DeSerializeFileWriter : IDisposable
 	/// </summary>
 	private void WriteJsonTypeTable()
 	{
-		Writer.WriteObjectEnd();// MAIN_DATA_FIELD_NAME
+		Writer.WriteObjectEnd(); // MAIN_DATA_FIELD_NAME
 
 		SerializeTypeTable();
 
@@ -220,11 +217,11 @@ public class DeSerializeFileWriter : IDisposable
 	/// </summary>
 	private void SerializeTypeTable()
 	{
-		Writer.WriteObjectStart(
-			DeSerializeConstants.TYPE_TABLE_FIELD_TABLE, DeSerializeConstants.TYPE_ID_TYPE_TABLE );
+		Writer.WriteObjectStart( DeSerializeConstants.TYPE_TABLE_FIELD_TABLE, DeSerializeConstants.TYPE_ID_TYPE_TABLE );
 
 		Writer.WriteByte( DeSerializeConstants.TYPE_TABLE_FIELD_VERSION, 0 );
 		Writer.WriteCollectionStart( DeSerializeConstants.TYPE_TABLE_FIELD_DATA, TypeTable.Count );
+
 		foreach( DeSerializeType fType in TypeTable )
 		{
 			Writer.WriteObjectStart( null, fType.ShortId );

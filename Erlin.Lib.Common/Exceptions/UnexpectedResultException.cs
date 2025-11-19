@@ -3,7 +3,7 @@ namespace Erlin.Lib.Common.Exceptions;
 /// <summary>
 ///    Unexpected result of an operation
 /// </summary>
-[Serializable]
+[ Serializable ]
 public class UnexpectedResultException : Exception
 {
 	/// <summary>
@@ -26,8 +26,7 @@ public class UnexpectedResultException : Exception
 	/// </summary>
 	/// <param name="message">Custom error message</param>
 	/// <param name="innerException">Original thrown exception</param>
-	public UnexpectedResultException( string? message, Exception? innerException ) : base(
-		message, innerException )
+	public UnexpectedResultException( string? message, Exception? innerException ) : base( message, innerException )
 	{
 	}
 }

@@ -9,13 +9,15 @@ using SLog = Serilog.Log;
 
 namespace Erlin.Lib.Common;
 
+#pragma warning disable CA2254 // Template should be a static expression
+
 /// <summary>
 ///    Logging class
 /// </summary>
-[SuppressMessage( "ReSharper", "TemplateIsNotCompileTimeConstantProblem" )]
+[ SuppressMessage( "ReSharper", "TemplateIsNotCompileTimeConstantProblem" ) ]
 public static class Log
 {
-#region Defaults
+	#region Defaults
 
 	/// <summary>
 	///    Default file path to log files
@@ -28,84 +30,32 @@ public static class Log
 	/// <summary>
 	///    Default output template
 	/// </summary>
-	public static string DefaultOutputTemplate { get; } =
-		$"[{{Level:u3}} {{Timestamp:HH:mm:ss}}] {{Message:lj}}{{NewLine}}{{{ExceptionLogEnricher.PROP_FULL_EXCEPTION}}}";
+	public static string DefaultOutputTemplate { get; } = $"[{{Level:u3}} {{Timestamp:HH:mm:ss}}] {{Message:lj}}{{NewLine}}{{{ExceptionLogEnricher.PROP_FULL_EXCEPTION}}}";
 
 	/// <summary>
 	///    Default console color theme for logging
 	/// </summary>
-	public static SystemConsoleTheme DefaultConsoleColorTheme { get; } =
-		new(
-			new Dictionary<ConsoleThemeStyle, SystemConsoleThemeStyle>
-			{
-				[ ConsoleThemeStyle.Text ] = new()
-				{
-					Foreground = ConsoleColor.White
-				},
-				[ ConsoleThemeStyle.SecondaryText ] = new()
-				{
-					Foreground = ConsoleColor.Gray
-				},
-				[ ConsoleThemeStyle.TertiaryText ] = new()
-				{
-					Foreground = ConsoleColor.DarkGray
-				},
-				[ ConsoleThemeStyle.Invalid ] = new()
-				{
-					Foreground = ConsoleColor.Yellow
-				},
-				[ ConsoleThemeStyle.Null ] = new()
-				{
-					Foreground = ConsoleColor.Blue
-				},
-				[ ConsoleThemeStyle.Name ] = new()
-				{
-					Foreground = ConsoleColor.Gray
-				},
-				[ ConsoleThemeStyle.String ] = new()
-				{
-					Foreground = ConsoleColor.Cyan
-				},
-				[ ConsoleThemeStyle.Number ] = new()
-				{
-					Foreground = ConsoleColor.Magenta
-				},
-				[ ConsoleThemeStyle.Boolean ] = new()
-				{
-					Foreground = ConsoleColor.Blue
-				},
-				[ ConsoleThemeStyle.Scalar ] = new()
-				{
-					Foreground = ConsoleColor.Green
-				},
-				[ ConsoleThemeStyle.LevelVerbose ] = new()
-				{
-					Foreground = ConsoleColor.Gray
-				},
-				[ ConsoleThemeStyle.LevelDebug ] = new()
-				{
-					Foreground = ConsoleColor.Blue
-				},
-				[ ConsoleThemeStyle.LevelInformation ] = new()
-				{
-					Foreground = ConsoleColor.DarkGreen
-				},
-				[ ConsoleThemeStyle.LevelWarning ] = new()
-				{
-					Foreground = ConsoleColor.DarkYellow
-				},
-				[ ConsoleThemeStyle.LevelError ] =
-					new()
-					{
-						Foreground = ConsoleColor.White, Background = ConsoleColor.Red
-					},
-				[ ConsoleThemeStyle.LevelFatal ] = new()
-				{
-					Foreground = ConsoleColor.White, Background = ConsoleColor.DarkRed
-				}
-			} );
+	public static SystemConsoleTheme DefaultConsoleColorTheme { get; } = new( new Dictionary< ConsoleThemeStyle, SystemConsoleThemeStyle >
+	{
+		[ ConsoleThemeStyle.Text ] = new() { Foreground = ConsoleColor.White },
+		[ ConsoleThemeStyle.SecondaryText ] = new() { Foreground = ConsoleColor.Gray },
+		[ ConsoleThemeStyle.TertiaryText ] = new() { Foreground = ConsoleColor.DarkGray },
+		[ ConsoleThemeStyle.Invalid ] = new() { Foreground = ConsoleColor.Yellow },
+		[ ConsoleThemeStyle.Null ] = new() { Foreground = ConsoleColor.Blue },
+		[ ConsoleThemeStyle.Name ] = new() { Foreground = ConsoleColor.Gray },
+		[ ConsoleThemeStyle.String ] = new() { Foreground = ConsoleColor.Cyan },
+		[ ConsoleThemeStyle.Number ] = new() { Foreground = ConsoleColor.Magenta },
+		[ ConsoleThemeStyle.Boolean ] = new() { Foreground = ConsoleColor.Blue },
+		[ ConsoleThemeStyle.Scalar ] = new() { Foreground = ConsoleColor.Green },
+		[ ConsoleThemeStyle.LevelVerbose ] = new() { Foreground = ConsoleColor.Gray },
+		[ ConsoleThemeStyle.LevelDebug ] = new() { Foreground = ConsoleColor.Blue },
+		[ ConsoleThemeStyle.LevelInformation ] = new() { Foreground = ConsoleColor.DarkGreen },
+		[ ConsoleThemeStyle.LevelWarning ] = new() { Foreground = ConsoleColor.DarkYellow },
+		[ ConsoleThemeStyle.LevelError ] = new() { Foreground = ConsoleColor.White, Background = ConsoleColor.Red },
+		[ ConsoleThemeStyle.LevelFatal ] = new() { Foreground = ConsoleColor.White, Background = ConsoleColor.DarkRed }
+	} );
 
-#endregion
+	#endregion
 
 	/// <summary>
 	///    The globally-shared logger.
@@ -153,14 +103,14 @@ public static class Log
 		return Log.Logger.ForContext( propertyName, value, destructureObjects );
 	}
 
-#region Verbose
+	#region Verbose
 
 	/// <summary>
 	///    Log custom verbose message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Vrb( string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Vrb( messageTemplate, values );
@@ -172,22 +122,22 @@ public static class Log
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Vrb( bool condition, string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Vrb( condition, messageTemplate, values );
 	}
 
-#endregion
+	#endregion
 
-#region Debug
+	#region Debug
 
 	/// <summary>
 	///    Log custom debug message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Dbg( string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Dbg( messageTemplate, values );
@@ -199,22 +149,22 @@ public static class Log
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Dbg( bool condition, string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Dbg( condition, messageTemplate, values );
 	}
 
-#endregion
+	#endregion
 
-#region Info
+	#region Info
 
 	/// <summary>
 	///    Log custom info message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Inf( string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Inf( messageTemplate, values );
@@ -226,22 +176,22 @@ public static class Log
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Inf( bool condition, string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Inf( condition, messageTemplate, values );
 	}
 
-#endregion
+	#endregion
 
-#region Warning
+	#region Warning
 
 	/// <summary>
 	///    Log custom warning message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Wrn( string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Wrn( messageTemplate, values );
@@ -253,7 +203,7 @@ public static class Log
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Wrn( bool condition, string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Wrn( condition, messageTemplate, values );
@@ -265,7 +215,7 @@ public static class Log
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Wrn( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Wrn( ex, messageTemplate, values );
@@ -278,23 +228,22 @@ public static class Log
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Wrn(
-		bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	public static void Wrn( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Wrn( condition, ex, messageTemplate, values );
 	}
 
-#endregion
+	#endregion
 
-#region Error
+	#region Error
 
 	/// <summary>
 	///    Log custom error message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Err( string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Err( messageTemplate, values );
@@ -306,7 +255,7 @@ public static class Log
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Err( bool condition, string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Err( condition, messageTemplate, values );
@@ -318,7 +267,7 @@ public static class Log
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Err( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Err( ex, messageTemplate, values );
@@ -331,23 +280,22 @@ public static class Log
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Err(
-		bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	public static void Err( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Err( condition, ex, messageTemplate, values );
 	}
 
-#endregion
+	#endregion
 
-#region Fatal
+	#region Fatal
 
 	/// <summary>
 	///    Log custom fatal message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Fatal( string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Fatal( messageTemplate, values );
@@ -359,7 +307,7 @@ public static class Log
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Fatal( bool condition, string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Fatal( condition, messageTemplate, values );
@@ -371,7 +319,7 @@ public static class Log
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Fatal( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Fatal( ex, messageTemplate, values );
@@ -384,16 +332,15 @@ public static class Log
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Fatal(
-		bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	public static void Fatal( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Fatal( condition, ex, messageTemplate, values );
 	}
 
-#endregion
+	#endregion
 
-#region Any
+	#region Any
 
 	/// <summary>
 	///    Log custom message with selected level
@@ -401,7 +348,7 @@ public static class Log
 	/// <param name="level">Message event level</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public static void Any( LogEventLevel level, string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Any( level, messageTemplate, values );
@@ -414,9 +361,8 @@ public static class Log
 	/// <param name="level">Message event level</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Any(
-		bool condition, LogEventLevel level, string messageTemplate, params object?[] values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	public static void Any( bool condition, LogEventLevel level, string messageTemplate, params object?[] values )
 	{
 		Log.Logger.Any( condition, level, messageTemplate, values );
 	}
@@ -428,9 +374,8 @@ public static class Log
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Any(
-		LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	public static void Any( LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Any( level, ex, messageTemplate, values );
 	}
@@ -443,13 +388,11 @@ public static class Log
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public static void Any(
-		bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null,
-		params object?[] values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	public static void Any( bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		Log.Logger.Any( condition, level, ex, messageTemplate, values );
 	}
 
-#endregion
+	#endregion
 }

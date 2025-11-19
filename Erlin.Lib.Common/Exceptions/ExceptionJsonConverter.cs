@@ -12,12 +12,12 @@ namespace Erlin.Lib.Common.Exceptions;
 /// <summary>
 ///    Exception object to JSON string converter
 /// </summary>
-public class ExceptionJsonConverter : JsonConverter<Exception>
+public class ExceptionJsonConverter : JsonConverter< Exception >
 {
 	/// <summary>
 	///    Exception properties, that should be ignored from reflection reading
 	/// </summary>
-	private static HashSet<string> IgnoredProps { get; } =
+	private static HashSet< string > IgnoredProps { get; } =
 	[
 		"Data",
 		"HasBeenThrown",
@@ -77,10 +77,7 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 			}
 		}
 
-		string[] stackArr = stack.ToString()
-										.Split(
-												Environment.NewLine,
-												StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries );
+		string[] stackArr = stack.ToString().Split( Environment.NewLine, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries );
 
 		serializer.Serialize( writer, stackArr, stackArr.GetType() );
 
@@ -90,9 +87,9 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 			serializer.Serialize( writer, data, data.GetType() );
 		}
 
-		List<PropertyInfo> properties = exceptionType.GetProperties().ToList();
+		List< PropertyInfo > properties = exceptionType.GetProperties().ToList();
 
-		foreach( PropertyInfo? fProperty in properties )
+		foreach( PropertyInfo fProperty in properties )
 		{
 			if( ExceptionJsonConverter.IgnoredProps.Contains( fProperty.Name ) )
 			{
@@ -100,8 +97,7 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 			}
 
 			object? propertyValue = fProperty.GetValue( value, null );
-			if( ( serializer.NullValueHandling == NullValueHandling.Ignore )
-				&& propertyValue is null )
+			if( ( serializer.NullValueHandling == NullValueHandling.Ignore ) && propertyValue is null )
 			{
 				continue;
 			}
@@ -123,9 +119,7 @@ public class ExceptionJsonConverter : JsonConverter<Exception>
 	/// <param name="hasExistingValue">The existing value has a value.</param>
 	/// <param name="serializer">The calling serializer.</param>
 	/// <returns>The object value.</returns>
-	public override Exception ReadJson(
-		JsonReader reader, Type objectType, Exception? existingValue, bool hasExistingValue,
-		JsonSerializer serializer )
+	public override Exception ReadJson( JsonReader reader, Type objectType, Exception? existingValue, bool hasExistingValue, JsonSerializer serializer )
 	{
 		throw new NotImplementedException();
 	}

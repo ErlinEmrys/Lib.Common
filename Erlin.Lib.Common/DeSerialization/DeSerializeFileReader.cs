@@ -38,7 +38,7 @@ public class DeSerializeFileReader : IDisposable
 	/// <summary>
 	///    Type table
 	/// </summary>
-	private List<DeSerializeType> TypeTable { get; } = [];
+	private List< DeSerializeType > TypeTable { get; } = [ ];
 
 	/// <summary>
 	///    Ctor
@@ -56,7 +56,7 @@ public class DeSerializeFileReader : IDisposable
 	/// <summary>
 	///    Read file header
 	/// </summary>
-	[MemberNotNull( nameof( DeSerializeFileReader.DS ) )]
+	[ MemberNotNull( nameof( DeSerializeFileReader.DS ) ) ]
 	private void ReadFileHeader()
 	{
 		try
@@ -90,22 +90,21 @@ public class DeSerializeFileReader : IDisposable
 	/// <summary>
 	///    Read binary file header
 	/// </summary>
-	[MemberNotNull( nameof( DeSerializeFileReader.DS ) )]
+	[ MemberNotNull( nameof( DeSerializeFileReader.DS ) ) ]
 	private void ReadBinaryFileHeader()
 	{
-		_ = FileStream.ReadByte();// File format flag
-		_ = FileStream.ReadByte();// Version
-		_ = FileStream.ReadByte();// Version
-		int compressFlag = FileStream.ReadByte();//Compress sign
+		_ = FileStream.ReadByte(); // File format flag
+		_ = FileStream.ReadByte(); // Version
+		_ = FileStream.ReadByte(); // Version
+		int compressFlag = FileStream.ReadByte(); //Compress sign
 		bool isCompressed = compressFlag == 1;
 
-		byte[] typeTablePointerArr = new byte[ 8 ];
+		byte[] typeTablePointerArr = new byte[8];
 		_ = FileStream.Read( typeTablePointerArr, 0, typeTablePointerArr.Length );
 		long typeTablePointer = BitConverter.ToInt64( typeTablePointerArr, 0 );
 
 		DeSerializeBinaryReader reader = new( FileStream );
-		DS = new DeSerializer(
-			new DeSerializeMemoryTypeProvider( TypeTable ), new DeSerializeEmptyWriter(), reader );
+		DS = new DeSerializer( new DeSerializeMemoryTypeProvider( TypeTable ), new DeSerializeEmptyWriter(), reader );
 
 		long dataPointer = FileStream.Position;
 
@@ -131,12 +130,11 @@ public class DeSerializeFileReader : IDisposable
 	/// <summary>
 	///    Read JSON file header
 	/// </summary>
-	[MemberNotNull( nameof( DeSerializeFileReader.DS ) )]
+	[ MemberNotNull( nameof( DeSerializeFileReader.DS ) ) ]
 	private void ReadJsonFileHeader()
 	{
 		DeSerializeJsonReader reader = new( FileStream );
-		DS = new DeSerializer(
-			new DeSerializeMemoryTypeProvider( TypeTable ), new DeSerializeEmptyWriter(), reader );
+		DS = new DeSerializer( new DeSerializeMemoryTypeProvider( TypeTable ), new DeSerializeEmptyWriter(), reader );
 
 		_ = reader.ReadUInt16( DeSerializeConstants.FIELD_MAIN_VERSION );
 		DeserializeTypeTable( reader );
@@ -158,8 +156,7 @@ public class DeSerializeFileReader : IDisposable
 		ushort shortTypeId = reader.ReadObjectStart( DeSerializeConstants.TYPE_TABLE_FIELD_TABLE, null );
 		if( shortTypeId != DeSerializeConstants.TYPE_ID_TYPE_TABLE )
 		{
-			throw new DeSerializeException(
-				$"Unexpected short type ID {shortTypeId} during deserialization of type table" );
+			throw new DeSerializeException( $"Unexpected short type ID {shortTypeId} during deserialization of type table" );
 		}
 
 		_ = reader.ReadByte( DeSerializeConstants.TYPE_TABLE_FIELD_VERSION );
@@ -170,15 +167,11 @@ public class DeSerializeFileReader : IDisposable
 			for( int i = 0; i < count; i++ )
 			{
 				shortTypeId = reader.ReadObjectStart( string.Empty, i );
-				Guid identifier =
-					reader.ReadGuid( DeSerializeConstants.TYPE_TABLE_FIELD_IDENTIFIER );
 
-				ushort? parentId =
-					reader.ReadUInt16N( DeSerializeConstants.TYPE_TABLE_FIELD_PARENT_ID );
-
+				Guid identifier = reader.ReadGuid( DeSerializeConstants.TYPE_TABLE_FIELD_IDENTIFIER );
+				ushort? parentId = reader.ReadUInt16N( DeSerializeConstants.TYPE_TABLE_FIELD_PARENT_ID );
 				ushort version = reader.ReadUInt16( DeSerializeConstants.TYPE_TABLE_FIELD_VERSION );
-				string oldTypeName =
-					reader.ReadString( DeSerializeConstants.TYPE_TABLE_FIELD_TYPENAME );
+				string oldTypeName = reader.ReadString( DeSerializeConstants.TYPE_TABLE_FIELD_TYPENAME );
 
 				DeSerializeType type = new()
 				{

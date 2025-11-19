@@ -3,7 +3,7 @@
 /// <summary>
 ///    Exception during DeSerialization
 /// </summary>
-[Serializable]
+[ Serializable ]
 public class DeSerializationException : Exception
 {
 	/// <summary>
@@ -26,8 +26,7 @@ public class DeSerializationException : Exception
 	/// </summary>
 	/// <param name="message">Custom error message</param>
 	/// <param name="innerException">Original thrown exception</param>
-	public DeSerializationException( string? message, Exception? innerException ) : base(
-		message, innerException )
+	public DeSerializationException( string? message, Exception? innerException ) : base( message, innerException )
 	{
 	}
 }

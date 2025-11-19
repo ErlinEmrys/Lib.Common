@@ -3,7 +3,7 @@
 /// <summary>
 ///    Exception during attribute ctor
 /// </summary>
-[Serializable]
+[ Serializable ]
 public class AttributeCreationException : Exception
 {
 	/// <summary>
@@ -26,8 +26,7 @@ public class AttributeCreationException : Exception
 	/// </summary>
 	/// <param name="message">Custom error message</param>
 	/// <param name="innerException">Original thrown exception</param>
-	public AttributeCreationException( string? message, Exception? innerException ) : base(
-		message, innerException )
+	public AttributeCreationException( string? message, Exception? innerException ) : base( message, innerException )
 	{
 	}
 }

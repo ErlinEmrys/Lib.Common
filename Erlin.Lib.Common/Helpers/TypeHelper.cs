@@ -124,7 +124,7 @@ public static class TypeHelper
 	{
 		if( !type.IsValueType )
 		{
-			return true;// ref-type
+			return true; // ref-type
 		}
 
 		return Nullable.GetUnderlyingType( type ) != null;
@@ -159,7 +159,7 @@ public static class TypeHelper
 	/// <typeparam name="TProperty">Property type</typeparam>
 	/// <param name="property">LINQ query</param>
 	/// <returns>Name of the property in</returns>
-	public static string GetPropertyName<TProperty>( Expression<Func<TProperty>> property )
+	public static string GetPropertyName< TProperty >( Expression< Func< TProperty > > property )
 	{
 		LambdaExpression lambda = property;
 

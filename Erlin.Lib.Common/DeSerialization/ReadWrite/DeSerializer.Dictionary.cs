@@ -7,23 +7,17 @@ namespace Erlin.Lib.Common.DeSerialization.ReadWrite;
 /// </summary>
 partial class DeSerializer
 {
-	private KeyValuePair<TKey, TValue> ReadWriteKvPair<TKey, TValue>(
-		KeyValuePair<TKey, TValue> pair, Func<DeSerializeContext<TKey>, TKey> keyDeSerialization,
-		Func<DeSerializeContext<TValue>, TValue> valueDeSerialization, int valueIndex )
+	private KeyValuePair< TKey, TValue > ReadWriteKvPair< TKey, TValue >( KeyValuePair< TKey, TValue > pair, Func< DeSerializeContext< TKey >, TKey > keyDeSerialization,
+		Func< DeSerializeContext< TValue >, TValue > valueDeSerialization, int valueIndex )
 		where TKey : notnull
 	{
 		if( IsWrite )
 		{
 			Writer.WriteObjectStart( string.Empty, DeSerializeConstants.TYPE_ID_KEY_VALUE_PAIR );
 
-			keyDeSerialization(
-				new DeSerializeContext<TKey>(
-					this, pair.Key, valueIndex, pair.Key.GetType(), nameof( pair.Key ) ) );
+			keyDeSerialization( new DeSerializeContext< TKey >( this, pair.Key, valueIndex, pair.Key.GetType(), nameof( pair.Key ) ) );
 
-			valueDeSerialization(
-				new DeSerializeContext<TValue>(
-					this, pair.Value, valueIndex, pair.Value?.GetType() ?? typeof( TValue ),
-					nameof( pair.Value ) ) );
+			valueDeSerialization( new DeSerializeContext< TValue >( this, pair.Value, valueIndex, pair.Value?.GetType() ?? typeof( TValue ), nameof( pair.Value ) ) );
 
 			Writer.WriteObjectEnd();
 			return pair;
@@ -38,26 +32,18 @@ partial class DeSerializer
 		Type keyType = typeof( TKey );
 		Type valueType = typeof( TValue );
 
-		TKey key = keyDeSerialization(
-			new DeSerializeContext<TKey>( this, default, valueIndex, keyType, nameof( pair.Key ) ) );
+		TKey key = keyDeSerialization( new DeSerializeContext< TKey >( this, default, valueIndex, keyType, nameof( pair.Key ) ) );
 
-		TValue value = valueDeSerialization(
-			new DeSerializeContext<TValue>(
-				this, default, valueIndex, valueType,
-				nameof( pair.Value ) ) );
+		TValue value = valueDeSerialization( new DeSerializeContext< TValue >( this, default, valueIndex, valueType, nameof( pair.Value ) ) );
 
-		pair = new KeyValuePair<TKey, TValue>( key, value );
+		pair = new KeyValuePair< TKey, TValue >( key, value );
 
-		Reader.ReadObjectEnd( string.Empty, typeof( KeyValuePair<TKey, TValue> ) );
+		Reader.ReadObjectEnd( string.Empty, typeof( KeyValuePair< TKey, TValue > ) );
 
 		return pair;
 	}
 
-	public Dictionary<TKey, TValue> ReadWriteDic<TKey, TValue>(
-		Dictionary<TKey, TValue> value, Func<DeSerializeContext<TKey>, TKey> keyDeSerialization,
-		Func<DeSerializeContext<TValue>, TValue> valueDeSerialization,
-		[CallerArgumentExpression( nameof( value ) )]
-		string? argumentName = null )
+	public Dictionary< TKey, TValue > ReadWriteDic< TKey, TValue >( Dictionary< TKey, TValue > value, Func< DeSerializeContext< TKey >, TKey > keyDeSerialization, Func< DeSerializeContext< TValue >, TValue > valueDeSerialization, [ CallerArgumentExpression( nameof( value ) ) ]string? argumentName = null )
 		where TKey : notnull
 	{
 		if( IsWrite && value is null )
@@ -65,15 +51,10 @@ partial class DeSerializer
 			throw new DeSerializeException( $"Writing NULL value on expected instance! ArgName: {argumentName}" );
 		}
 
-		return ReadWriteDicN( value, keyDeSerialization, valueDeSerialization, argumentName )
-			?? throw new DeSerializeException( "Reading NULL value on expected instance!" );
+		return ReadWriteDicN( value, keyDeSerialization, valueDeSerialization, argumentName ) ?? throw new DeSerializeException( "Reading NULL value on expected instance!" );
 	}
 
-	public Dictionary<TKey, TValue>? ReadWriteDicN<TKey, TValue>(
-		Dictionary<TKey, TValue>? value, Func<DeSerializeContext<TKey>, TKey> keyDeSerialization,
-		Func<DeSerializeContext<TValue>, TValue> valueDeSerialization,
-		[CallerArgumentExpression( nameof( value ) )]
-		string? argumentName = null )
+	public Dictionary< TKey, TValue >? ReadWriteDicN< TKey, TValue >( Dictionary< TKey, TValue >? value, Func< DeSerializeContext< TKey >, TKey > keyDeSerialization, Func< DeSerializeContext< TValue >, TValue > valueDeSerialization, [ CallerArgumentExpression( nameof( value ) ) ]string? argumentName = null )
 		where TKey : notnull
 	{
 		int count;
@@ -84,7 +65,7 @@ partial class DeSerializer
 			if( value != null )
 			{
 				int i = 0;
-				foreach( KeyValuePair<TKey, TValue> fPair in value )
+				foreach( KeyValuePair< TKey, TValue > fPair in value )
 				{
 					ReadWriteKvPair( fPair, keyDeSerialization, valueDeSerialization, i );
 					i++;
@@ -99,16 +80,14 @@ partial class DeSerializer
 		count = Reader.ReadCollectionStart( argumentName );
 		if( count >= 0 )
 		{
-			value = new Dictionary<TKey, TValue>( count );
+			value = new Dictionary< TKey, TValue >( count );
 			for( int i = 0; i < count; i++ )
 			{
-				KeyValuePair<TKey, TValue> kvp = ReadWriteKvPair(
-					new KeyValuePair<TKey, TValue>(), keyDeSerialization, valueDeSerialization, i );
+				KeyValuePair< TKey, TValue > kvp = ReadWriteKvPair( new KeyValuePair< TKey, TValue >(), keyDeSerialization, valueDeSerialization, i );
 
 				if( value.ContainsKey( kvp.Key ) )
 				{
-					throw new DeSerializeException(
-						$"Attempt to add same key {kvp.Key} to Dictionary during deserialization! " );
+					throw new DeSerializeException( $"Attempt to add same key {kvp.Key} to Dictionary during deserialization! " );
 				}
 
 				value.Add( kvp.Key, kvp.Value );

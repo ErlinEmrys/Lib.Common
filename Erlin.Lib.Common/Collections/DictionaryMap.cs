@@ -7,27 +7,27 @@ namespace Erlin.Lib.Common.Collections;
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TValue"></typeparam>
-public class DictionaryMap<TKey, TValue>
+public class DictionaryMap< TKey, TValue >
 	where TKey : notnull
 	where TValue : notnull
 {
-	private readonly Dictionary<TKey, TValue> _forwardDic = new();
-	private readonly Dictionary<TValue, TKey> _backwardDic = new();
+	private readonly Dictionary< TKey, TValue > _forwardDic = new();
+	private readonly Dictionary< TValue, TKey > _backwardDic = new();
 
 	/// <summary>
 	///    Key to value translator
 	/// </summary>
-	public MapIndexer<TKey, TValue> ToValue { get; }
+	public MapIndexer< TKey, TValue > ToValue { get; }
 
 	/// <summary>
 	///    Value to key translator
 	/// </summary>
-	public MapIndexer<TValue, TKey> ToKey { get; }
+	public MapIndexer< TValue, TKey > ToKey { get; }
 
 	/// <summary>
 	///    Collection of all keys
 	/// </summary>
-	public ICollection<TKey> Keys
+	public ICollection< TKey > Keys
 	{
 		get { return _forwardDic.Keys; }
 	}
@@ -35,7 +35,7 @@ public class DictionaryMap<TKey, TValue>
 	/// <summary>
 	///    Collection of all values
 	/// </summary>
-	public ICollection<TValue> Values
+	public ICollection< TValue > Values
 	{
 		get { return _forwardDic.Values; }
 	}
@@ -45,8 +45,8 @@ public class DictionaryMap<TKey, TValue>
 	/// </summary>
 	public DictionaryMap()
 	{
-		ToValue = new MapIndexer<TKey, TValue>( _forwardDic );
-		ToKey = new MapIndexer<TValue, TKey>( _backwardDic );
+		ToValue = new MapIndexer< TKey, TValue >( _forwardDic );
+		ToKey = new MapIndexer< TValue, TKey >( _backwardDic );
 	}
 
 	/// <summary>
@@ -54,9 +54,9 @@ public class DictionaryMap<TKey, TValue>
 	/// </summary>
 	/// <typeparam name="TK"></typeparam>
 	/// <typeparam name="TV"></typeparam>
-	public class MapIndexer<TK, TV>
+	public class MapIndexer< TK, TV >
 	(
-		IDictionary<TK, TV> dictionary
+		IDictionary< TK, TV > dictionary
 	)
 		where TK : notnull
 		where TV : notnull

@@ -5,7 +5,7 @@ namespace Erlin.Lib.Common.Text.Diff;
 /// <summary>
 ///    Represent one whole edit part
 /// </summary>
-[DebuggerDisplay( "Type = {EditType}, StartA = {StartA}, StartB = {StartB}, Length = {Length}" )]
+[ DebuggerDisplay( "Type = {EditType}, StartA = {StartA}, StartB = {StartB}, Length = {Length}" ) ]
 public sealed class Edit
 {
 	/// <summary>

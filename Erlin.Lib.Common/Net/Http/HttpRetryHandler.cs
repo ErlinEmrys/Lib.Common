@@ -13,9 +13,7 @@ public class HttpRetryHandler
 	/// <summary>
 	///    Retry implementation
 	/// </summary>
-	protected override async Task<HttpResponseMessage> SendAsync(
-		HttpRequestMessage request,
-		CancellationToken cancellationToken )
+	protected override async Task< HttpResponseMessage > SendAsync( HttpRequestMessage request, CancellationToken cancellationToken )
 	{
 		HttpResponseMessage? response = null;
 		for( int i = 0; i < _maxRetries; i++ )
@@ -27,7 +25,7 @@ public class HttpRetryHandler
 			}
 		}
 
-		ArgumentNullException.ThrowIfNull( response, nameof( response ) );
+		ArgumentNullException.ThrowIfNull( response );
 
 		return response;
 	}

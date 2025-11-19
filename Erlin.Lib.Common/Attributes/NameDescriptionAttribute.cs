@@ -3,7 +3,7 @@
 /// <summary>
 ///    Attribute for name and description on the enum field
 /// </summary>
-[AttributeUsage( AttributeTargets.Field )]
+[ AttributeUsage( AttributeTargets.Field ) ]
 public class NameDescriptionAttribute : Attribute
 {
 	/// <summary>

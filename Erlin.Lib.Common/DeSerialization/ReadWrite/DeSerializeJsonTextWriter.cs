@@ -40,8 +40,6 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	/// <summary>
 	///    Ctor
 	/// </summary>
-	/// <param name="stream">Output stream</param>
-	/// <param name="options"></param>
 	public DeSerializeJsonTextWriter( Stream stream, DeSerializeOptions options )
 	{
 		Options = options;
@@ -51,12 +49,11 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	/// <summary>
 	///    Switches underlying stream to write
 	/// </summary>
-	/// <param name="stream"></param>
-	[MemberNotNull( nameof( DeSerializeJsonTextWriter.Writer ) )]
+	[ MemberNotNull( nameof( DeSerializeJsonTextWriter.Writer ) ) ]
 	public void SwitchStream( Stream stream )
 	{
 		Dispose();
-		Writer = new StreamWriter( stream, Encoding.UTF8, -1, true );
+		Writer = new StreamWriter( stream, Encoding.UTF8, leaveOpen: true );
 	}
 
 	/// <summary>
@@ -112,11 +109,9 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	/// <summary>
 	///    Write array of data
 	/// </summary>
-	/// <param name="data"></param>
+	/// <param name="data">Array data</param>
 	/// <param name="allowNull">Sign, whether array items can be NULL</param>
-	/// <typeparam name="T"></typeparam>
-	/// <exception cref="DeSerializeException"></exception>
-	private void WriteArray<T>( IReadOnlyList<T?>? data, bool allowNull )
+	private void WriteArray< T >( IReadOnlyList< T? >? data, bool allowNull )
 	{
 		if( data == null )
 		{
@@ -164,7 +159,6 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	/// <summary>
 	///    Write text value
 	/// </summary>
-	/// <param name="text"></param>
 	private void WriteText( string? text )
 	{
 		if( text == null )
@@ -181,8 +175,6 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	/// <summary>
 	///    Write JSON key part of value
 	/// </summary>
-	/// <param name="fieldName"></param>
-	/// <param name="sameLine"></param>
 	private void WriteFieldStart( string? fieldName, bool sameLine = true )
 	{
 		if( !FirstValue )
@@ -190,7 +182,7 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 			Writer.Write( "," );
 		}
 
-		if( !string.IsNullOrEmpty( fieldName ) )
+		if( fieldName.IsNotEmpty() )
 		{
 			if( !FirstValue && Options.JsonFormatted )
 			{
@@ -212,11 +204,9 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	/// <summary>
 	///    Encodes string for storing in JSON file
 	/// </summary>
-	/// <param name="text"></param>
-	/// <returns></returns>
 	public static string EncodeJsonString( string text )
 	{
-		if( string.IsNullOrEmpty( text ) )
+		if( text.IsEmpty() )
 		{
 			return text;
 		}
@@ -273,9 +263,7 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 
 		if( value.HasValue )
 		{
-			Writer.Write(
-				value.Value.ToString()
-					.ToLower() );
+			Writer.Write( value.Value.ToString().ToLower() );
 		}
 		else
 		{
@@ -753,7 +741,7 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	public void WriteDateTimeN( string? fieldName, DateTime? value )
 	{
 		WriteFieldStart( fieldName );
-		WriteText( value?.ToString( "o", CultureInfo.InvariantCulture ) );
+		WriteText( DeSerializeJsonTextWriter.FormatTime( value ) );
 	}
 
 	public void WriteDateTimeOffset( string? fieldName, DateTimeOffset value )
@@ -764,7 +752,7 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	public void WriteDateTimeOffsetN( string? fieldName, DateTimeOffset? value )
 	{
 		WriteFieldStart( fieldName );
-		WriteText( value?.ToString( "o", CultureInfo.InvariantCulture ) );
+		WriteText( DeSerializeJsonTextWriter.FormatTime( value ) );
 	}
 
 	public void WriteTimeSpan( string? fieldName, TimeSpan value )
@@ -775,7 +763,7 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 	public void WriteTimeSpanN( string? fieldName, TimeSpan? value )
 	{
 		WriteFieldStart( fieldName );
-		WriteText( value?.ToString( "o", CultureInfo.InvariantCulture ) );
+		WriteText( DeSerializeJsonTextWriter.FormatTime( value ) );
 	}
 
 	public void WriteString( string? fieldName, string value )
@@ -906,5 +894,10 @@ public class DeSerializeJsonTextWriter : IDeSerializeWriter
 
 		Writer.Write( "]" );
 		FirstValue = false;
+	}
+
+	private static string? FormatTime( IFormattable? value )
+	{
+		return value?.ToString( "o", CultureInfo.InvariantCulture );
 	}
 }

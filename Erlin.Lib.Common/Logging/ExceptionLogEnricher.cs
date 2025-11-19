@@ -14,8 +14,7 @@ public class ExceptionLogEnricher : ILogEventEnricher
 	{
 		if( logEvent.Exception != null )
 		{
-			logEvent.AddPropertyIfAbsent(
-				propertyFactory.CreateProperty( PROP_FULL_EXCEPTION, logEvent.Exception.ToJson() ) );
+			logEvent.AddPropertyIfAbsent( propertyFactory.CreateProperty( PROP_FULL_EXCEPTION, logEvent.Exception.ToJson() ) );
 		}
 	}
 }

@@ -2,7 +2,7 @@ namespace Erlin.Lib.Common.DeSerialization.ReadWrite;
 
 public interface IDeSerializeTypeProvider
 {
-	ushort GetVersion( Guid typeIdentifier, ushort shortTypeId );
+	ushort GetVersion( Guid typeIdentifier );
 
 	DeSerializeType EnsureType( Type runtimeType );
 

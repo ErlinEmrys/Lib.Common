@@ -18,9 +18,9 @@ public static class DeSerializeConstants
 	public const string TYPE_TABLE_FIELD_IDENTIFIER = "Identifier";
 	public const string TYPE_TABLE_FIELD_TYPENAME = "TypeName";
 
-	public const byte FILE_HEADER_BINARY = 42;// B char = Binary version of file
-	public const byte FILE_HEADER_JSON = 123;// { char = JSON version of file
-	public const byte FILE_CLOSURE_JSON = 125;// } char = JSON version of file
+	public const byte FILE_HEADER_BINARY = 42; // B char = Binary version of file
+	public const byte FILE_HEADER_JSON = 123; // { char = JSON version of file
+	public const byte FILE_CLOSURE_JSON = 125; // } char = JSON version of file
 
 	public const byte FLAG_OBJECT_END = byte.MaxValue;
 	public const byte FLAG_COLLECTION_END = byte.MaxValue;

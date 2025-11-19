@@ -9,14 +9,14 @@ namespace Erlin.Lib.Common.DeSerialization;
 /// </summary>
 public static class DeSerializeTypeCache
 {
-	private static DictionaryMap<Guid, Type> Map { get; } = new();
+	private static DictionaryMap< Guid, Type > Map { get; } = new();
 
-	private static Dictionary<Type, ushort> Versions { get; } = new();
+	private static Dictionary< Type, ushort > Versions { get; } = new();
 
 	/// <summary>
 	///    Collection of all registered DeSerializable types
 	/// </summary>
-	public static IEnumerable<Type> RegisteredTypes
+	public static IEnumerable< Type > RegisteredTypes
 	{
 		get { return DeSerializeTypeCache.Versions.Keys; }
 	}
@@ -38,11 +38,7 @@ public static class DeSerializeTypeCache
 	{
 		if( DeSerializeTypeCache.Map.ToValue.TryGetValue( identifier, out Type? existingValue ) )
 		{
-			throw new DeSerializeException(
-				"Two DeSerializable types shares same DeSerializableAttribute Identifier value: "
-				+ $"{runtimeType.FullName} VS {existingValue.FullName}"
-				+ $"{Environment.NewLine}"
-				+ $"Value: {identifier}" );
+			throw new DeSerializeException( $"Two DeSerializable types shares same DeSerializableAttribute Identifier value: {runtimeType.FullName} VS {existingValue.FullName}{Environment.NewLine}Value: {identifier}" );
 		}
 
 		DeSerializeTypeCache.Map.Add( identifier, runtimeType );
@@ -52,8 +48,6 @@ public static class DeSerializeTypeCache
 	/// <summary>
 	///    Retrieve all De/Serializable types from assembly
 	/// </summary>
-	/// <param name="assembly"></param>
-	/// <exception cref="DeSerializeException"></exception>
 	private static void ExtractDeSerializableTypes( Assembly assembly )
 	{
 		Type[] allTypes = assembly.GetTypes();
@@ -66,7 +60,7 @@ public static class DeSerializeTypeCache
 
 			if( DeSerializeTypeCache.CheckTypeIsDeSerializable( fType ) )
 			{
-				DeSerializableAttribute? att = fType.GetOneCustomAttributeN<DeSerializableAttribute>();
+				DeSerializableAttribute? att = fType.GetOneCustomAttributeN< DeSerializableAttribute >();
 				if( att is null )
 				{
 					throw new DeSerializeException( $"Missing DeSerializableAttribute on type '{fType.FullName}'" );
@@ -82,8 +76,7 @@ public static class DeSerializeTypeCache
 	/// </summary>
 	public static bool CheckTypeIsDeSerializable( Type type )
 	{
-		return DeSerializeTypeCache.Versions.ContainsKey( type )
-			|| type.GetInterfaces().Any( i => i == TypeHelper.TypeIDeSerializable );
+		return DeSerializeTypeCache.Versions.ContainsKey( type ) || type.GetInterfaces().Any( i => i == TypeHelper.TypeIDeSerializable );
 	}
 
 	/// <summary>
@@ -93,10 +86,7 @@ public static class DeSerializeTypeCache
 	{
 		if( !DeSerializeTypeCache.Map.ToValue.TryGetValue( identifier, out Type? type ) )
 		{
-			throw new DeSerializeException(
-				"RuntimeType not found in DeSerializable type cache by Guid: "
-				+ $"{identifier}{Environment.NewLine}"
-				+ $"Old type name was: {oldTypeName}" );
+			throw new DeSerializeException( $"RuntimeType not found in DeSerializable type cache by Guid: {identifier}{Environment.NewLine}Old type name was: {oldTypeName}" );
 		}
 
 		return type;
@@ -106,9 +96,7 @@ public static class DeSerializeTypeCache
 	{
 		if( !DeSerializeTypeCache.Versions.TryGetValue( runtimeType, out ushort version ) )
 		{
-			throw new DeSerializeException(
-				"Version of RuntimeType not found in DeSerializable type cache: "
-				+ $"{runtimeType.FullName}" );
+			throw new DeSerializeException( $"Version of RuntimeType not found in DeSerializable type cache: {runtimeType.FullName}" );
 		}
 
 		return version;
@@ -118,9 +106,7 @@ public static class DeSerializeTypeCache
 	{
 		if( !DeSerializeTypeCache.Map.ToKey.TryGetValue( runtimeType, out Guid identifier ) )
 		{
-			throw new DeSerializeException(
-				"Identifier not found in DeSerializable type cache by RuntimeType: "
-				+ $"{runtimeType.FullName}" );
+			throw new DeSerializeException( $"Identifier not found in DeSerializable type cache by RuntimeType: {runtimeType.FullName}" );
 		}
 
 		return identifier;

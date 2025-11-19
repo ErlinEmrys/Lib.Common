@@ -16,7 +16,7 @@ namespace System;
 /// </summary>
 public static class ExtensionMethods
 {
-#region Type
+	#region Type
 
 	/// <summary>
 	///    Returns one custom attribute
@@ -25,10 +25,10 @@ public static class ExtensionMethods
 	/// <param name="member">Runtime type or its member</param>
 	/// <param name="inherit">True - return inherited attribute</param>
 	/// <returns>Custom attribute object or NULL</returns>
-	public static T GetOneCustomAttribute<T>( this MemberInfo member, bool inherit = true )
+	public static T GetOneCustomAttribute< T >( this MemberInfo member, bool inherit = true )
 		where T : Attribute
 	{
-		T? att = member.GetOneCustomAttributeN<T>( inherit );
+		T? att = member.GetOneCustomAttributeN< T >( inherit );
 		if( att == null )
 		{
 			throw new InvalidOperationException( $"Attribute {typeof( T ).FullName} missing on member {member}" );
@@ -37,8 +37,7 @@ public static class ExtensionMethods
 		return att;
 	}
 
-	private static readonly ConcurrentDictionary<Tuple<MemberInfo, Type>, Attribute?> _customAttributeCache =
-		new();
+	private static readonly ConcurrentDictionary< Tuple< MemberInfo, Type >, Attribute? > _customAttributeCache = new();
 
 	/// <summary>
 	///    Returns one custom attribute
@@ -47,54 +46,46 @@ public static class ExtensionMethods
 	/// <param name="member">Runtime type or its member</param>
 	/// <param name="inherit">True - return inherited attribute</param>
 	/// <returns>Custom attribute object or NULL</returns>
-	public static T? GetOneCustomAttributeN<T>( this MemberInfo member, bool inherit = true )
+	public static T? GetOneCustomAttributeN< T >( this MemberInfo member, bool inherit = true )
 		where T : Attribute
 	{
 		Type attributeType = typeof( T );
-		Tuple<MemberInfo, Type> key = new( member, attributeType );
-		return ( T? )_customAttributeCache.GetOrAdd(
-			key,
-			k =>
+		Tuple< MemberInfo, Type > key = new( member, attributeType );
+		return ( T? )_customAttributeCache.GetOrAdd( key, k =>
+		{
+			object[] attributes;
+			try
 			{
-				object[] attributes;
-				try
-				{
-					attributes = k.Item1.GetCustomAttributes( k.Item2, inherit );
-				}
-				catch( Exception ex )
-				{
-					throw new InvalidProgramException(
-						$"Could not get custom attributes on object type: {k.Item1} "
-						+ "because of attribute ctor error!",
-						ex );
-				}
+				attributes = k.Item1.GetCustomAttributes( k.Item2, inherit );
+			}
+			catch( Exception ex )
+			{
+				throw new InvalidProgramException( $"Could not get custom attributes on object type: {k.Item1} because of attribute ctor error!", ex );
+			}
 
-				switch( attributes.Length )
-				{
-					case > 1:
-						throw new InvalidProgramException(
-							$"Found more than one attribute: {k.Item2} on member: {k.Item1}" );
+			switch( attributes.Length )
+			{
+				case > 1:
+					throw new InvalidProgramException( $"Found more than one attribute: {k.Item2} on member: {k.Item1}" );
 
-					case 0:
-						return null;
-				}
+				case 0:
+					return null;
+			}
 
-				if( attributes[ 0 ] is not T att )
-				{
-					throw new InvalidProgramException(
-						$"Found weird attribute: {attributes[ 0 ]} "
-						+ $"instead of {k.Item2} on member: {k.Item1}" );
-				}
+			if( attributes[ 0 ] is not T att )
+			{
+				throw new InvalidProgramException( $"Found weird attribute: {attributes[ 0 ]} instead of {k.Item2} on member: {k.Item1}" );
+			}
 
-				return att;
-			} );
+			return att;
+		} );
 	}
 
-#endregion
+	#endregion
 
-#region Enums
+	#region Enums
 
-	private static readonly Dictionary<Enum, NameDescriptionAttribute?> _enumDescriptorCache = new();
+	private static readonly Dictionary< Enum, NameDescriptionAttribute? > _enumDescriptorCache = new();
 
 	/// <summary>
 	///    Finds NameDescriptionAttribute associated with an Enum value
@@ -112,8 +103,7 @@ public static class ExtensionMethods
 
 			// Description is in a hidden Attribute class called DisplayAttribute
 			// Not to be confused with DisplayNameAttribute
-			IEnumerable<NameDescriptionAttribute> attributes =
-				field.GetCustomAttributes<NameDescriptionAttribute>( false );
+			IEnumerable< NameDescriptionAttribute > attributes = field.GetCustomAttributes< NameDescriptionAttribute >( false );
 
 			att = attributes.SingleOrDefault();
 			_enumDescriptorCache[ value ] = att;
@@ -127,6 +117,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="value">Enum field value</param>
 	/// <returns>Associated name</returns>
+	// ReSharper disable once ConvertToExtensionBlock
 	public static string Name( this Enum value )
 	{
 		NameDescriptionAttribute? att = ExtensionMethods.FindEnumDescriptorAtt( value );
@@ -144,9 +135,9 @@ public static class ExtensionMethods
 		return att?.Description ?? att?.Name ?? value.ToString();
 	}
 
-#endregion
+	#endregion
 
-#region Exception
+	#region Exception
 
 	/// <summary>
 	///    Returns full descriptive JSON of any exception
@@ -168,17 +159,15 @@ public static class ExtensionMethods
 		return builder.ToString();
 	}
 
-#endregion
+	#endregion
 
-#region String
+	#region String
 
 	/// <summary>
 	///    Returns deterministic hash code for the string
 	///    According to:
 	///    https://andrewlock.net/why-is-string-gethashcode-different-each-time-i-run-my-program-in-net-core/
 	/// </summary>
-	/// <param name="str"></param>
-	/// <returns></returns>
 	public static int GetDeterministicHashCode( this string str )
 	{
 		unchecked
@@ -206,7 +195,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="text">Value to check</param>
 	/// <returns>True = value is empty or null</returns>
-	public static bool IsEmpty( [NotNullWhen( false )]this string? text )
+	public static bool IsEmpty( [ NotNullWhen( false ) ]this string? text )
 	{
 		return string.IsNullOrEmpty( text );
 	}
@@ -216,7 +205,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="text">Value to check</param>
 	/// <returns>True = value contains characters</returns>
-	public static bool IsNotEmpty( [NotNullWhen( true )]this string? text )
+	public static bool IsNotEmpty( [ NotNullWhen( true ) ]this string? text )
 	{
 		return !text.IsEmpty();
 	}
@@ -248,7 +237,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <param name="text">Input text</param>
 	/// <returns>Text without diacritics</returns>
-	[return: NotNullIfNotNull( nameof( text ) )]
+	[ return: NotNullIfNotNull( nameof( text ) ) ]
 	public static string? RemoveDiacritics( this string? text )
 	{
 		if( text.IsEmpty() )
@@ -323,7 +312,7 @@ public static class ExtensionMethods
 	/// <param name="text">Input text</param>
 	/// <param name="maxLength">Maximum allowed length of a text</param>
 	/// <returns>Truncated text</returns>
-	[return: NotNullIfNotNull( nameof( text ) )]
+	[ return: NotNullIfNotNull( nameof( text ) ) ]
 	public static string? Truncate( this string? text, int maxLength )
 	{
 		if( text.IsEmpty() )
@@ -339,9 +328,9 @@ public static class ExtensionMethods
 		return text.Length <= maxLength ? text : text[ ..maxLength ];
 	}
 
-#endregion
+	#endregion
 
-#region Collections
+	#region Collections
 
 	/// <summary>
 	///    Separate collections items to three ways (Only items in left collection, only items in right
@@ -354,14 +343,12 @@ public static class ExtensionMethods
 	/// <param name="onlyLeft">Method for perform items found only in left collection</param>
 	/// <param name="onlyRight">Method for perform items found only in right collection</param>
 	/// <param name="both">Method for perform items found in both collections</param>
-	public static void Assort<T>(
-		this IEnumerable<T>? left, IEnumerable<T>? right, Func<T, T, bool> equalityMethod,
-		Action<T>? onlyLeft = null, Action<T>? onlyRight = null, Action<T, T>? both = null )
+	public static void Assort< T >( this IEnumerable< T >? left, IEnumerable< T >? right, Func< T, T, bool > equalityMethod, Action< T >? onlyLeft = null, Action< T >? onlyRight = null, Action< T, T >? both = null )
 	{
-		left ??= new List<T>();
-		right ??= new List<T>();
+		left ??= new List< T >();
+		right ??= new List< T >();
 
-		List<T> tempRight = right.ToList();
+		List< T > tempRight = right.ToList();
 		foreach( T fLeft in left )
 		{
 			T? fRight = tempRight.FirstOrDefault( t => equalityMethod( fLeft, t ) );
@@ -392,7 +379,7 @@ public static class ExtensionMethods
 	/// <typeparam name="T">Runtime of item type</typeparam>
 	/// <param name="source">Collection to remove items</param>
 	/// <param name="toRemove">Which items should be removed</param>
-	public static void RemoveRange<T>( this IList<T> source, IEnumerable<T>? toRemove )
+	public static void RemoveRange< T >( this IList< T > source, IEnumerable< T >? toRemove )
 	{
 		if( toRemove != null )
 		{
@@ -410,9 +397,9 @@ public static class ExtensionMethods
 	/// <param name="source">Source list</param>
 	/// <param name="selector">Item selector</param>
 	/// <returns>Withdrew items as list</returns>
-	public static List<TSource> Withdraw<TSource>( this IList<TSource> source, Func<TSource, bool> selector )
+	public static List< TSource > Withdraw< TSource >( this IList< TSource > source, Func< TSource, bool > selector )
 	{
-		List<TSource> result = [];
+		List< TSource > result = [ ];
 		for( int i = 0; i < source.Count; )
 		{
 			TSource item = source[ i ];
@@ -438,12 +425,11 @@ public static class ExtensionMethods
 	/// <param name="source">Collection of source objects</param>
 	/// <param name="converter">Converter function</param>
 	/// <returns>Collection of target objects</returns>
-	public static IEnumerable<TResult> Convert<TSource, TResult>(
-		this IEnumerable<TSource> source, Func<TSource, TResult> converter )
+	public static IEnumerable< TResult > Convert< TSource, TResult >( this IEnumerable< TSource > source, Func< TSource, TResult > converter )
 	{
 		switch( source )
 		{
-			case IEnumerable<TResult> results:
+			case IEnumerable< TResult > results:
 				return results;
 
 			default:
@@ -459,11 +445,10 @@ public static class ExtensionMethods
 	/// <param name="source">Source collection</param>
 	/// <param name="selector">Min value selector</param>
 	/// <returns>Collection with min values</returns>
-	public static IEnumerable<TSource> AllMinBy<TSource, TKey>(
-		this IEnumerable<TSource> source, Func<TSource, TKey> selector )
+	public static IEnumerable< TSource > AllMinBy< TSource, TKey >( this IEnumerable< TSource > source, Func< TSource, TKey > selector )
 		where TKey : IComparable
 	{
-		List<TSource> result = new();
+		List< TSource > result = new();
 
 		result.Capacity = 1;
 
@@ -500,11 +485,10 @@ public static class ExtensionMethods
 	/// <param name="source">Source collection</param>
 	/// <param name="selector">Max value selector</param>
 	/// <returns>Collection with max values</returns>
-	public static IEnumerable<TSource> AllMaxBy<TSource, TKey>(
-		this IEnumerable<TSource> source, Func<TSource, TKey> selector )
+	public static IEnumerable< TSource > AllMaxBy< TSource, TKey >( this IEnumerable< TSource > source, Func< TSource, TKey > selector )
 		where TKey : IComparable
 	{
-		List<TSource> result = [];
+		List< TSource > result = [ ];
 		TKey? maxKey = default;
 		bool firstItem = true;
 		foreach( TSource fItem in source )
@@ -535,7 +519,7 @@ public static class ExtensionMethods
 	/// </summary>
 	/// <typeparam name="T">Runtime type of stored objects</typeparam>
 	/// <param name="queue">Queue to clear</param>
-	public static void Clear<T>( this ConcurrentQueue<T> queue )
+	public static void Clear< T >( this ConcurrentQueue< T > queue )
 	{
 		while( !queue.IsEmpty )
 		{
@@ -543,5 +527,5 @@ public static class ExtensionMethods
 		}
 	}
 
-#endregion
+	#endregion
 }

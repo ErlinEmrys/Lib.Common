@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<RootNamespace>Erlin.Lib.Common</RootNamespace>
 		<AssemblyName>Erlin.Lib.Common</AssemblyName>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<OutputType>Library</OutputType>
 
@@ -21,7 +21,7 @@
 		<InvariantGlobalization>true</InvariantGlobalization>
 		<DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		
+
 		<WeaverConfiguration>
 			<Weavers>
 				<ConfigureAwait ContinueOnCapturedContext="false" />

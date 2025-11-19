@@ -10,7 +10,7 @@ namespace Erlin.Lib.Common.SourceGenerator;
 /// <summary>
 ///    Helper generator for DeSerialize constructors
 /// </summary>
-[Generator]
+[ Generator ]
 public class DeSerializeConstructorGenerator : IIncrementalGenerator
 {
 	/// <summary>
@@ -19,15 +19,12 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	/// <param name="context"></param>
 	public void Initialize( IncrementalGeneratorInitializationContext context )
 	{
-		IncrementalValuesProvider<DeSerializableInfo?> deSerializableTypes =
-			context
-			.SyntaxProvider
-			.CreateSyntaxProvider(
-					DeSerializeConstructorGenerator.CheckIsTypeDeclaration,
-					DeSerializeConstructorGenerator.GetDeSerializableSymbol )
-			.Where( type => type is not null )
-			.Collect()
-			.SelectMany( ( types, _ ) => types.Distinct() );
+		IncrementalValuesProvider< DeSerializableInfo? > deSerializableTypes =
+			context.SyntaxProvider
+					.CreateSyntaxProvider( DeSerializeConstructorGenerator.CheckIsTypeDeclaration, DeSerializeConstructorGenerator.GetDeSerializableSymbol )
+					.Where( type => type is not null )
+					.Collect()
+					.SelectMany( ( types, _ ) => types.Distinct() );
 
 		context.RegisterSourceOutput( deSerializableTypes, DeSerializeConstructorGenerator.GenerateSource );
 	}
@@ -38,12 +35,9 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	/// <param name="syntaxNode"></param>
 	/// <param name="cancellationToken"></param>
 	/// <returns></returns>
-	private static bool CheckIsTypeDeclaration(
-		SyntaxNode syntaxNode,
-		CancellationToken cancellationToken )
+	private static bool CheckIsTypeDeclaration( SyntaxNode syntaxNode, CancellationToken cancellationToken )
 	{
-		if( syntaxNode is not TypeDeclarationSyntax declaration
-			|| syntaxNode is InterfaceDeclarationSyntax )
+		if( syntaxNode is not TypeDeclarationSyntax declaration || syntaxNode is InterfaceDeclarationSyntax )
 		{
 			return false;
 		}
@@ -93,9 +87,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	/// <param name="context"></param>
 	/// <param name="cancellationToken"></param>
 	/// <returns></returns>
-	private static DeSerializableInfo? GetDeSerializableSymbol(
-		GeneratorSyntaxContext context,
-		CancellationToken cancellationToken )
+	private static DeSerializableInfo? GetDeSerializableSymbol( GeneratorSyntaxContext context, CancellationToken cancellationToken )
 	{
 		if( context.SemanticModel.GetDeclaredSymbol( context.Node ) is not ITypeSymbol symbol
 			|| !DeSerializeConstructorGenerator.ImplementsIDeSerializable( symbol ) )
@@ -103,26 +95,20 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 			return null;
 		}
 
-		bool implemetDeSerializeCtor =
-			!DeSerializeConstructorGenerator.ImplementsDeSerializableConstructor( symbol );
+		bool implemetDeSerializeCtor = !DeSerializeConstructorGenerator.ImplementsDeSerializableConstructor( symbol );
 
-		bool baseHaveParamlessCtor = ( symbol.BaseType == null )
-			|| DeSerializeConstructorGenerator.ImplementsConstructor( symbol.BaseType, true );
+		bool baseHaveParamlessCtor = ( symbol.BaseType == null ) || DeSerializeConstructorGenerator.ImplementsConstructor( symbol.BaseType, true );
 
-		bool implemetParamlessCtor = baseHaveParamlessCtor
-			&& !DeSerializeConstructorGenerator.ImplementsConstructor( symbol );
+		bool implemetParamlessCtor = baseHaveParamlessCtor && !DeSerializeConstructorGenerator.ImplementsConstructor( symbol );
 
 		if( !implemetDeSerializeCtor && !implemetParamlessCtor )
 		{
 			return null;
 		}
 
-		bool isBottomImplementation = symbol.BaseType is null
-			|| !DeSerializeConstructorGenerator.ImplementsIDeSerializable( symbol.BaseType );
+		bool isBottomImplementation = symbol.BaseType is null || !DeSerializeConstructorGenerator.ImplementsIDeSerializable( symbol.BaseType );
 
-		DeSerializableInfo info = new(
-			symbol.Name, symbol.ContainingNamespace.ToString(), isBottomImplementation,
-			symbol.IsAbstract, implemetDeSerializeCtor, implemetParamlessCtor );
+		DeSerializableInfo info = new( symbol.Name, symbol.ContainingNamespace.ToString(), isBottomImplementation, symbol.IsAbstract, implemetDeSerializeCtor, implemetParamlessCtor );
 
 		return info;
 	}
@@ -133,20 +119,12 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	public static bool ImplementsDeSerializableConstructor( ITypeSymbol symbol )
 	{
 		return symbol.GetMembers()
-						.Any(
-								m =>
-								{
-									return ( m.Kind == SymbolKind.Method )
-										&& m is IMethodSymbol
-										{
-											MethodKind: MethodKind.Constructor, Parameters.Length: 1
-										} methodSymbol
-										&& methodSymbol.Parameters.SingleOrDefault(
-												p =>
-													DeSerializeConstructorGenerator.IsRuntimeType(
-														p.Type, Const.I_DE_SERIALIZER_NS, Const.I_DE_SERIALIZER_NAME ) )
-											is not null;
-								} );
+						.Any( m =>
+							{
+								return ( m.Kind == SymbolKind.Method )
+									&& m is IMethodSymbol { MethodKind: MethodKind.Constructor, Parameters.Length: 1 } methodSymbol
+									&& methodSymbol.Parameters.SingleOrDefault( p => DeSerializeConstructorGenerator.IsRuntimeType( p.Type, Const.I_DE_SERIALIZER_NS, Const.I_DE_SERIALIZER_NAME ) ) is not null;
+							} );
 	}
 
 	/// <summary>
@@ -155,20 +133,11 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	public static bool ImplementsConstructor( ITypeSymbol symbol, bool onlyParamless = false )
 	{
 		return symbol.GetMembers()
-						.Any(
-								m => ( m.Kind == SymbolKind.Method )
-									&& m is IMethodSymbol
-									{
-										MethodKind: MethodKind.Constructor
-									} ctor
-									&& ( onlyParamless || ( m.DeclaringSyntaxReferences.Length > 0 ) )
-									&& ( !onlyParamless || ( ctor.Parameters.Length <= 0 ) )
-									&& !ctor.GetAttributes()
-											.Any(
-													a =>
-														DeSerializeConstructorGenerator.IsRuntimeType(
-															a, Const.GENERATED_CODE_ATT_NS,
-															Const.GENERATED_CODE_ATT_NAME ) ) );
+						.Any( m => ( m.Kind == SymbolKind.Method )
+								&& m is IMethodSymbol { MethodKind: MethodKind.Constructor } ctor
+								&& ( onlyParamless || ( m.DeclaringSyntaxReferences.Length > 0 ) )
+								&& ( !onlyParamless || ( ctor.Parameters.Length <= 0 ) )
+								&& !ctor.GetAttributes().Any( a => DeSerializeConstructorGenerator.IsRuntimeType( a, Const.GENERATED_CODE_ATT_NS, Const.GENERATED_CODE_ATT_NAME ) ) );
 	}
 
 	/// <summary>
@@ -178,9 +147,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	/// <returns></returns>
 	public static bool ImplementsIDeSerializable( ITypeSymbol symbol )
 	{
-		return symbol.AllInterfaces.Any(
-			i => DeSerializeConstructorGenerator.IsRuntimeType(
-				i, Const.I_DE_SERIALIZABLE_NS, Const.I_DE_SERIALIZABLE_NAME ) );
+		return symbol.AllInterfaces.Any( i => DeSerializeConstructorGenerator.IsRuntimeType( i, Const.I_DE_SERIALIZABLE_NS, Const.I_DE_SERIALIZABLE_NAME ) );
 	}
 
 	/// <summary>
@@ -188,9 +155,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	/// </summary>
 	/// <param name="context"></param>
 	/// <param name="deSerializable"></param>
-	private static void GenerateSource(
-		SourceProductionContext context,
-		DeSerializableInfo? deSerializable )
+	private static void GenerateSource( SourceProductionContext context, DeSerializableInfo? deSerializable )
 	{
 		if( deSerializable is null )
 		{
@@ -208,13 +173,13 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	private static string GenerateCode( DeSerializableInfo type )
 	{
 		StringBuilder code = new();
-		code.Append(
-			$$"""
+		code.Append( $$"""
 				// Generated: {{DateTime.Now:yyyy.MM.dd HH:mm:ss:ffff}}
 				// <auto-generated />
 
 				using {{Const.GENERATED_CODE_ATT_NS}};
 				using System.Diagnostics.CodeAnalysis;
+
 				using {{Const.I_DE_SERIALIZER_NS}};
 
 				namespace {{type.NameSpace}};
@@ -226,8 +191,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 
 		if( type.ImplementDeSerializeCtor )
 		{
-			code.Append(
-				$$"""
+			code.Append( $$"""
 						/// <summary>
 						///  DeSerializable constructor
 						/// </summary>
@@ -235,8 +199,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 					#pragma warning disable CS8618
 						[SuppressMessage( "ReSharper", "VirtualMemberCallInConstructor" )]
 						[{{Const.GENERATED_CODE_ATT_NAME}}("Erlin.Lib.Common.SourceGenerator", "1.0.0")]
-						{{( type.IsAbstract ? "protected" : "public" )}} {{type.Name}}( {{Const.I_DE_SERIALIZER_NAME}} ds ){{(
-								type.IsBottomImplementation ? string.Empty : $" : base( ({Const.I_DE_SERIALIZER_NAME})null )" )}}
+						{{( type.IsAbstract ? "protected" : "public" )}} {{type.Name}}( {{Const.I_DE_SERIALIZER_NAME}} ds ){{( type.IsBottomImplementation ? string.Empty : $" : base( ({Const.I_DE_SERIALIZER_NAME})null )" )}}
 						{
 							if( ds != null )
 							{
@@ -251,8 +214,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 
 		if( type.ImplementParamlessCtor )
 		{
-			code.Append(
-				$$"""
+			code.Append( $$"""
 						/// <summary>
 						///  DeSerializable constructor
 						/// </summary>
@@ -266,12 +228,5 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 
 		code.AppendLine( "}" );
 		return code.ToString();
-	}
-
-	public static void Log( string message )
-	{
-		File.AppendAllText(
-			@"E:\Temp\Dbg.txt", $"[{DateTime.Now:yyyy.MM.dd HH:mm:ss:ffff}] {message}{Environment.NewLine}",
-			Encoding.UTF8 );
 	}
 }

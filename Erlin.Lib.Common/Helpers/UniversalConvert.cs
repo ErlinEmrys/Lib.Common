@@ -10,20 +10,17 @@ public static class UniversalConvert
 	/// <summary>
 	///    US number format
 	/// </summary>
-	public static NumberFormatInfo NumberFormatEnUs { get; } =
-		new CultureInfo( "en-US", false ).NumberFormat;
+	public static NumberFormatInfo NumberFormatEnUs { get; } = new CultureInfo( "en-US", false ).NumberFormat;
 
 	/// <summary>
 	///    Czech number format
 	/// </summary>
-	public static NumberFormatInfo NumberFormatCsCz { get; } =
-		new CultureInfo( "cs-CZ", false ).NumberFormat;
+	public static NumberFormatInfo NumberFormatCsCz { get; } = new CultureInfo( "cs-CZ", false ).NumberFormat;
 
 	/// <summary>
 	///    Arabic Egypt number format
 	/// </summary>
-	public static NumberFormatInfo NumberFormatArEg { get; } =
-		new CultureInfo( "ar-EG", false ).NumberFormat;
+	public static NumberFormatInfo NumberFormatArEg { get; } = new CultureInfo( "ar-EG", false ).NumberFormat;
 
 	/// <summary>
 	///    Converts null value to DBNull value
@@ -51,7 +48,7 @@ public static class UniversalConvert
 	/// <typeparam name="T">Runtime type for converting input object to</typeparam>
 	/// <param name="input">Input object to convert</param>
 	/// <returns>Converted value</returns>
-	public static T Convert<T>( object? input )
+	public static T Convert< T >( object? input )
 	{
 		Type targetType = typeof( T );
 		object? converted = UniversalConvert.ConvertToType( input, targetType );
@@ -69,14 +66,14 @@ public static class UniversalConvert
 	/// <typeparam name="T">Runtime type for converting input object to</typeparam>
 	/// <param name="input">Input object to convert</param>
 	/// <returns>Converted value</returns>
-	public static T? ConvertN<T>( object? input )
+	public static T? ConvertN< T >( object? input )
 		where T : struct
 	{
 		Type targetType = typeof( T );
 		object? converted = UniversalConvert.ConvertToType( input, targetType );
 		if( ( converted == null ) && !TypeHelper.IsNullable( targetType ) )
 		{
-			return default;
+			return null;
 		}
 
 		return ( T? )converted;
@@ -238,7 +235,7 @@ public static class UniversalConvert
 		return numberFormatInfo;
 	}
 
-#region TryParse methods
+	#region TryParse methods
 
 	/// <summary>
 	///    Convert entered text to decimal, returns default value if conversion fails
@@ -254,11 +251,7 @@ public static class UniversalConvert
 		}
 
 		NumberFormatInfo numberFormatInfo = UniversalConvert.PickNumberFormatInfo( input );
-		return decimal.TryParse(
-			input, NumberStyles.Number | NumberStyles.AllowExponent, numberFormatInfo,
-			out decimal result )
-			? result
-			: defaultValue;
+		return decimal.TryParse( input, NumberStyles.Number | NumberStyles.AllowExponent, numberFormatInfo, out decimal result ) ? result : defaultValue;
 	}
 
 	/// <summary>
@@ -275,11 +268,7 @@ public static class UniversalConvert
 		}
 
 		NumberFormatInfo numberFormatInfo = UniversalConvert.PickNumberFormatInfo( input );
-		return double.TryParse(
-			input, NumberStyles.Number | NumberStyles.AllowExponent, numberFormatInfo,
-			out double result )
-			? result
-			: defaultValue;
+		return double.TryParse( input, NumberStyles.Number | NumberStyles.AllowExponent, numberFormatInfo, out double result ) ? result : defaultValue;
 	}
 
 	/// <summary>
@@ -296,11 +285,7 @@ public static class UniversalConvert
 		}
 
 		NumberFormatInfo numberFormatInfo = UniversalConvert.PickNumberFormatInfo( input );
-		return float.TryParse(
-			input, NumberStyles.Number | NumberStyles.AllowExponent, numberFormatInfo,
-			out float result )
-			? result
-			: defaultValue;
+		return float.TryParse( input, NumberStyles.Number | NumberStyles.AllowExponent, numberFormatInfo, out float result ) ? result : defaultValue;
 	}
 
 	/// <summary>
@@ -413,5 +398,5 @@ public static class UniversalConvert
 		return DateTime.TryParse( input, out DateTime result ) ? result : defaultValue;
 	}
 
-#endregion
+	#endregion
 }

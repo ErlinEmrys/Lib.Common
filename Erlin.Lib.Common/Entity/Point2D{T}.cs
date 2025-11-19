@@ -4,7 +4,7 @@
 ///    Any two dimensional point structure
 /// </summary>
 /// <typeparam name="T">Runtime type of coordinates</typeparam>
-public readonly struct Point2D<T>
+public readonly struct Point2D< T >
 	where T : struct
 {
 	/// <summary>
@@ -44,7 +44,7 @@ public readonly struct Point2D<T>
 	/// <returns>True - input object and this struct is equals</returns>
 	public override bool Equals( object? obj )
 	{
-		return obj is Point2D<T> point2D && Equals( point2D );
+		return obj is Point2D< T > point2D && Equals( point2D );
 	}
 
 	/// <summary>
@@ -52,7 +52,7 @@ public readonly struct Point2D<T>
 	/// </summary>
 	/// <param name="other">Input point</param>
 	/// <returns>True - input point and this one is equals</returns>
-	public bool Equals( Point2D<T> other )
+	public bool Equals( Point2D< T > other )
 	{
 		return X.Equals( other.X ) && Y.Equals( other.Y );
 	}
@@ -63,7 +63,7 @@ public readonly struct Point2D<T>
 	/// <param name="left">Left operand</param>
 	/// <param name="right">Right operand</param>
 	/// <returns>True - points are equal</returns>
-	public static bool operator ==( Point2D<T> left, Point2D<T> right )
+	public static bool operator ==( Point2D< T > left, Point2D< T > right )
 	{
 		return left.Equals( right );
 	}
@@ -74,7 +74,7 @@ public readonly struct Point2D<T>
 	/// <param name="left">Left operand</param>
 	/// <param name="right">Right operand</param>
 	/// <returns>True - points are NOT equal</returns>
-	public static bool operator !=( Point2D<T> left, Point2D<T> right )
+	public static bool operator !=( Point2D< T > left, Point2D< T > right )
 	{
 		return !left.Equals( right );
 	}

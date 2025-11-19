@@ -15,7 +15,5 @@ public static class AssemblyHelper
 	/// <summary>
 	///    Path to location of this base assembly
 	/// </summary>
-	public static string BaseLocation { get; } =
-		Path.GetDirectoryName( AssemblyHelper.CommonBaseAssembly.Location )
-		?? throw new InvalidOperationException();
+	public static string BaseLocation { get; } = Path.GetDirectoryName( AssemblyHelper.CommonBaseAssembly.Location ) ?? throw new InvalidOperationException();
 }

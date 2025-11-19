@@ -9,14 +9,17 @@ public enum TextEditType
 	///    None
 	/// </summary>
 	None = 0,
+
 	/// <summary>
 	///    Delete
 	/// </summary>
 	Delete = 1,
+
 	/// <summary>
 	///    Insert
 	/// </summary>
 	Insert = 2,
+
 	/// <summary>
 	///    Change
 	/// </summary>

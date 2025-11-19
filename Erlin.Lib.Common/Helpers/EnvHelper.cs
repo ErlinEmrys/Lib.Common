@@ -13,10 +13,7 @@ public static class EnvHelper
 	/// <summary>
 	///    All variants of standard line breakers
 	/// </summary>
-	public static string[] NewLineBreakers { get; } =
-	[
-		"\r\n", "\n", "\r"
-	];
+	public static string[] NewLineBreakers { get; } = [ "\r\n", "\n", "\r" ];
 
 	/// <summary>
 	///    Provider of date and time

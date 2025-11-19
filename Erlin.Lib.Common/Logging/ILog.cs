@@ -8,7 +8,7 @@ namespace Erlin.Lib.Common;
 /// </summary>
 public interface ILog
 {
-#region ForContext
+	#region ForContext
 
 	/// <summary>
 	///    Create a logger that enriches log events with the specified property.
@@ -23,16 +23,16 @@ public interface ILog
 	/// <returns>A logger that will enrich log events as specified.</returns>
 	ILog ForContext( string propertyName, object? value, bool destructureObjects = false );
 
-#endregion
+	#endregion
 
-#region Verbose
+	#region Verbose
 
 	/// <summary>
 	///    Log custom verbose message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Vrb( string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -41,19 +41,19 @@ public interface ILog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Vrb( bool condition, string messageTemplate, params object?[] values );
 
-#endregion
+	#endregion
 
-#region Debug
+	#region Debug
 
 	/// <summary>
 	///    Log custom debug message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Dbg( string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -62,19 +62,19 @@ public interface ILog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Dbg( bool condition, string messageTemplate, params object?[] values );
 
-#endregion
+	#endregion
 
-#region Info
+	#region Info
 
 	/// <summary>
 	///    Log custom info message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Inf( string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -83,19 +83,19 @@ public interface ILog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Inf( bool condition, string messageTemplate, params object?[] values );
 
-#endregion
+	#endregion
 
-#region Warning
+	#region Warning
 
 	/// <summary>
 	///    Log custom warning message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Wrn( string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -104,7 +104,7 @@ public interface ILog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Wrn( bool condition, string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -113,7 +113,7 @@ public interface ILog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Wrn( Exception? ex, string? messageTemplate = null, params object?[] values );
 
 	/// <summary>
@@ -123,19 +123,19 @@ public interface ILog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Wrn( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values );
 
-#endregion
+	#endregion
 
-#region Error
+	#region Error
 
 	/// <summary>
 	///    Log custom error message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Err( string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -144,7 +144,7 @@ public interface ILog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Err( bool condition, string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -153,7 +153,7 @@ public interface ILog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Err( Exception? ex, string? messageTemplate = null, params object?[] values );
 
 	/// <summary>
@@ -163,19 +163,19 @@ public interface ILog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Err( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values );
 
-#endregion
+	#endregion
 
-#region Fatal
+	#region Fatal
 
 	/// <summary>
 	///    Log custom fatal message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Fatal( string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -184,7 +184,7 @@ public interface ILog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Fatal( bool condition, string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -193,7 +193,7 @@ public interface ILog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Fatal( Exception? ex, string? messageTemplate = null, params object?[] values );
 
 	/// <summary>
@@ -203,12 +203,12 @@ public interface ILog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Fatal( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values );
 
-#endregion
+	#endregion
 
-#region Any
+	#region Any
 
 	/// <summary>
 	///    Log custom message with selected level
@@ -216,7 +216,7 @@ public interface ILog
 	/// <param name="level">Message event level</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Any( LogEventLevel level, string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -226,7 +226,7 @@ public interface ILog
 	/// <param name="level">Message event level</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Any( bool condition, LogEventLevel level, string messageTemplate, params object?[] values );
 
 	/// <summary>
@@ -236,7 +236,7 @@ public interface ILog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	void Any( LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values );
 
 	/// <summary>
@@ -247,10 +247,8 @@ public interface ILog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	void Any(
-		bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null,
-		params object?[] values );
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	void Any( bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values );
 
-#endregion
+	#endregion
 }

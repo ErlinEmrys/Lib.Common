@@ -14,7 +14,7 @@ public class DeSerializableInfo
 	bool implementDeSerializeCtor,
 	bool implementParamlessCtor
 )
-	: IEquatable<DeSerializableInfo>
+	: IEquatable< DeSerializableInfo >
 {
 	/// <summary>
 	///    Type name

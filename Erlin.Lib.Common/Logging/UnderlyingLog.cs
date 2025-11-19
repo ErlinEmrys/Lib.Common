@@ -6,10 +6,12 @@ using Serilog.Events;
 
 namespace Erlin.Lib.Common;
 
+#pragma warning disable CA2254 // Template should be a static expression
+
 /// <summary>
 ///    Logger implementation that logs to underlying logger
 /// </summary>
-[SuppressMessage( "ReSharper", "TemplateIsNotCompileTimeConstantProblem" )]
+[ SuppressMessage( "ReSharper", "TemplateIsNotCompileTimeConstantProblem" ) ]
 public class UnderlyingLog
 (
 	ILogger underlyingLogger
@@ -28,9 +30,8 @@ public class UnderlyingLog
 	/// <param name="ex">Exception</param>
 	/// <param name="messageTemplate">Message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	private void WriteToUnderlying(
-		LogEventLevel level, Exception? ex, string? messageTemplate, params object?[]? values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	private void WriteToUnderlying( LogEventLevel level, Exception? ex, string? messageTemplate, params object?[]? values )
 	{
 		if( messageTemplate.IsEmpty() )
 		{
@@ -41,10 +42,7 @@ public class UnderlyingLog
 			else
 			{
 				messageTemplate = "Logging of empty {Level}{NewLine}{Stack}";
-				values =
-				[
-					level, Environment.NewLine, EnvHelper.GetStackTrace()
-				];
+				values = [ level, Environment.NewLine, EnvHelper.GetStackTrace() ];
 
 				level = LogEventLevel.Warning;
 			}
@@ -53,7 +51,7 @@ public class UnderlyingLog
 		Logger.Write( level, ex, messageTemplate, values );
 	}
 
-#region ForContext
+	#region ForContext
 
 	/// <summary>
 	///    Create a logger that enriches log events with the specified property.
@@ -71,16 +69,16 @@ public class UnderlyingLog
 		return new UnderlyingLog( Logger.ForContext( propertyName, value, destructureObjects ) );
 	}
 
-#endregion
+	#endregion
 
-#region Verbose
+	#region Verbose
 
 	/// <summary>
 	///    Log custom verbose message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Vrb( string messageTemplate, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Verbose, null, messageTemplate, values );
@@ -92,7 +90,7 @@ public class UnderlyingLog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Vrb( bool condition, string messageTemplate, params object?[] values )
 	{
 		if( condition )
@@ -101,16 +99,16 @@ public class UnderlyingLog
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Debug
+	#region Debug
 
 	/// <summary>
 	///    Log custom debug message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Dbg( string messageTemplate, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Debug, null, messageTemplate, values );
@@ -122,7 +120,7 @@ public class UnderlyingLog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Dbg( bool condition, string messageTemplate, params object?[] values )
 	{
 		if( condition )
@@ -131,16 +129,16 @@ public class UnderlyingLog
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Info
+	#region Info
 
 	/// <summary>
 	///    Log custom info message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Inf( string messageTemplate, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Information, null, messageTemplate, values );
@@ -152,7 +150,7 @@ public class UnderlyingLog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Inf( bool condition, string messageTemplate, params object?[] values )
 	{
 		if( condition )
@@ -161,16 +159,16 @@ public class UnderlyingLog
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Warning
+	#region Warning
 
 	/// <summary>
 	///    Log custom warning message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Wrn( string messageTemplate, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Warning, null, messageTemplate, values );
@@ -182,7 +180,7 @@ public class UnderlyingLog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Wrn( bool condition, string messageTemplate, params object?[] values )
 	{
 		if( condition )
@@ -197,7 +195,7 @@ public class UnderlyingLog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Wrn( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Warning, ex, messageTemplate, values );
@@ -210,7 +208,7 @@ public class UnderlyingLog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Wrn( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		if( condition )
@@ -219,16 +217,16 @@ public class UnderlyingLog
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Error
+	#region Error
 
 	/// <summary>
 	///    Log custom error message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Err( string messageTemplate, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Error, null, messageTemplate, values );
@@ -240,7 +238,7 @@ public class UnderlyingLog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Err( bool condition, string messageTemplate, params object?[] values )
 	{
 		if( condition )
@@ -255,7 +253,7 @@ public class UnderlyingLog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Err( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Error, ex, messageTemplate, values );
@@ -268,7 +266,7 @@ public class UnderlyingLog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Err( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		if( condition )
@@ -277,16 +275,16 @@ public class UnderlyingLog
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Fatal
+	#region Fatal
 
 	/// <summary>
 	///    Log custom fatal message
 	/// </summary>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Fatal( string messageTemplate, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Fatal, null, messageTemplate, values );
@@ -298,7 +296,7 @@ public class UnderlyingLog
 	/// <param name="condition">Dynamic condition if log this message</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Fatal( bool condition, string messageTemplate, params object?[] values )
 	{
 		if( condition )
@@ -313,7 +311,7 @@ public class UnderlyingLog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Fatal( Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		WriteToUnderlying( LogEventLevel.Fatal, ex, messageTemplate, values );
@@ -326,7 +324,7 @@ public class UnderlyingLog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Fatal( bool condition, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		if( condition )
@@ -335,9 +333,9 @@ public class UnderlyingLog
 		}
 	}
 
-#endregion
+	#endregion
 
-#region Any
+	#region Any
 
 	/// <summary>
 	///    Log custom message with selected level
@@ -345,7 +343,7 @@ public class UnderlyingLog
 	/// <param name="level">Message event level</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Any( LogEventLevel level, string messageTemplate, params object?[] values )
 	{
 		WriteToUnderlying( level, null, messageTemplate, values );
@@ -358,7 +356,7 @@ public class UnderlyingLog
 	/// <param name="level">Message event level</param>
 	/// <param name="messageTemplate">Message to log</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
 	public void Any( bool condition, LogEventLevel level, string messageTemplate, params object?[] values )
 	{
 		if( condition )
@@ -374,9 +372,8 @@ public class UnderlyingLog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Any(
-		LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	public void Any( LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		WriteToUnderlying( level, ex, messageTemplate, values );
 	}
@@ -389,10 +386,8 @@ public class UnderlyingLog
 	/// <param name="ex">Exception to log</param>
 	/// <param name="messageTemplate">Additional message</param>
 	/// <param name="values">Additional properties</param>
-	[MessageTemplateFormatMethod( nameof( messageTemplate ) )]
-	public void Any(
-		bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null,
-		params object?[] values )
+	[ MessageTemplateFormatMethod( nameof( messageTemplate ) ) ]
+	public void Any( bool condition, LogEventLevel level, Exception? ex, string? messageTemplate = null, params object?[] values )
 	{
 		if( condition )
 		{
@@ -400,5 +395,5 @@ public class UnderlyingLog
 		}
 	}
 
-#endregion
+	#endregion
 }

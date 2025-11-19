@@ -10,13 +10,13 @@ public static class ParallelHelper
 	/// <summary>
 	///    Setting to true force computing all ParallelHelper method runs synchronously
 	/// </summary>
-	public static bool GlobalOneThread { get; set; }
-
-	static ParallelHelper()
+	public static bool GlobalOneThread
 	{
-		if( ParallelHelper.GlobalOneThread )
+		get;
+		set
 		{
-			Log.Wrn( "ParallelHelper: Global settings for only one thread enabled!" );
+			field = value;
+			Log.Wrn( "ParallelHelper: Global settings for only one thread: {Value}", value );
 		}
 	}
 
@@ -27,7 +27,7 @@ public static class ParallelHelper
 	/// <param name="toExclusive">The end index, exclusive.</param>
 	/// <param name="action">The delegate that is invoked once per iteration.</param>
 	/// <param name="oneThread">Whether this loop should use only one-thread for</param>
-	public static void For( int fromInclusive, int toExclusive, Action<int> action, bool oneThread = false )
+	public static void For( int fromInclusive, int toExclusive, Action< int > action, bool oneThread = false )
 	{
 		if( fromInclusive > toExclusive )
 		{
@@ -45,19 +45,18 @@ public static class ParallelHelper
 		{
 			string stackTrace = EnvHelper.GetStackTrace();
 
-			_ = Parallel.For(
-				fromInclusive, toExclusive, i =>
+			_ = Parallel.For( fromInclusive, toExclusive, i =>
+			{
+				try
 				{
-					try
-					{
-						action( i );
-					}
-					catch( Exception ex )
-					{
-						ex.Data.Add( STACKTRACE_TASK, stackTrace );
-						Log.Err( ex, "Parallel task failed!" );
-					}
-				} );
+					action( i );
+				}
+				catch( Exception ex )
+				{
+					ex.Data.Add( STACKTRACE_TASK, stackTrace );
+					Log.Err( ex, "Parallel task failed!" );
+				}
+			} );
 		}
 	}
 
@@ -69,9 +68,7 @@ public static class ParallelHelper
 	/// <param name="action">The delegate that is invoked once per iteration.</param>
 	/// <param name="oneThread">Whether this loop should use only one-thread for</param>
 	/// <param name="cancelToken">Token for cancellation of all concurrent tasks</param>
-	public static async Task ForAsync(
-		int fromInclusive, int toExclusive, Func<int, CancellationToken, Task> action,
-		bool oneThread = false, CancellationToken cancelToken = default )
+	public static async Task ForAsync( int fromInclusive, int toExclusive, Func< int, CancellationToken, Task > action, bool oneThread = false, CancellationToken cancelToken = default )
 	{
 		if( fromInclusive > toExclusive )
 		{
@@ -87,14 +84,13 @@ public static class ParallelHelper
 		}
 		else
 		{
-			HashSet<int> values = [];
+			HashSet< int > values = [ ];
 			for( int i = fromInclusive; i < toExclusive; i++ )
 			{
 				values.Add( i );
 			}
 
-			await ParallelHelper.ForEachAsync(
-				values, async ( i, token ) => { await action( i, token ); }, oneThread, cancelToken );
+			await ParallelHelper.ForEachAsync( values, async ( i, token ) => { await action( i, token ); }, oneThread, cancelToken );
 		}
 	}
 
@@ -105,7 +101,7 @@ public static class ParallelHelper
 	/// <param name="height">Height of 2D</param>
 	/// <param name="action">The delegate that is invoked once per iteration.</param>
 	/// <param name="oneThread">Whether this loop should use only one-thread for</param>
-	public static void For2D( int width, int height, Action<int, int> action, bool oneThread = false )
+	public static void For2D( int width, int height, Action< int, int > action, bool oneThread = false )
 	{
 		if( ( width <= 0 ) || ( height <= 0 ) )
 		{
@@ -125,21 +121,20 @@ public static class ParallelHelper
 		else
 		{
 			string stackTrace = EnvHelper.GetStackTrace();
-			_ = Parallel.For(
-				0, count, i =>
+			_ = Parallel.For( 0, count, i =>
+			{
+				try
 				{
-					try
-					{
-						int x = i % width;
-						int y = i / width;
-						action( x, y );
-					}
-					catch( Exception ex )
-					{
-						ex.Data.Add( STACKTRACE_TASK, stackTrace );
-						Log.Err( ex, "Parallel task failed!" );
-					}
-				} );
+					int x = i % width;
+					int y = i / width;
+					action( x, y );
+				}
+				catch( Exception ex )
+				{
+					ex.Data.Add( STACKTRACE_TASK, stackTrace );
+					Log.Err( ex, "Parallel task failed!" );
+				}
+			} );
 		}
 	}
 
@@ -151,9 +146,7 @@ public static class ParallelHelper
 	/// <param name="action">The delegate that is invoked once per iteration.</param>
 	/// <param name="oneThread">Whether this loop should use only one-thread for</param>
 	/// <param name="cancelToken">Token for cancellation of all concurrent tasks</param>
-	public static async Task For2DAsync(
-		int width, int height, Func<int, int, CancellationToken, Task> action, bool oneThread = false,
-		CancellationToken cancelToken = default )
+	public static async Task For2DAsync( int width, int height, Func< int, int, CancellationToken, Task > action, bool oneThread = false, CancellationToken cancelToken = default )
 	{
 		if( ( width <= 0 ) || ( height <= 0 ) )
 		{
@@ -172,19 +165,18 @@ public static class ParallelHelper
 		}
 		else
 		{
-			HashSet<int> values = [];
+			HashSet< int > values = [ ];
 			for( int i = 0; i < count; i++ )
 			{
 				values.Add( i );
 			}
 
-			await ParallelHelper.ForEachAsync(
-				values, async ( i, token ) =>
-				{
-					int x = i % width;
-					int y = i / width;
-					await action( x, y, token );
-				}, oneThread, cancelToken );
+			await ParallelHelper.ForEachAsync( values, async ( i, token ) =>
+			{
+				int x = i % width;
+				int y = i / width;
+				await action( x, y, token );
+			}, oneThread, cancelToken );
 		}
 	}
 
@@ -195,8 +187,7 @@ public static class ParallelHelper
 	/// <param name="body">The delegate that is invoked once per iteration.</param>
 	/// <param name="oneThread">Whether this loop should use only one-thread foreach</param>
 	/// <typeparam name="TSource">The type of the data in the source.</typeparam>
-	public static void ForEach<TSource>(
-		IEnumerable<TSource>? source, Action<TSource> body, bool oneThread = false )
+	public static void ForEach< TSource >( IEnumerable< TSource >? source, Action< TSource > body, bool oneThread = false )
 	{
 		if( source == null )
 		{
@@ -213,19 +204,18 @@ public static class ParallelHelper
 		else
 		{
 			string stackTrace = EnvHelper.GetStackTrace();
-			Parallel.ForEach(
-				source, entity =>
+			Parallel.ForEach( source, entity =>
+			{
+				try
 				{
-					try
-					{
-						body( entity );
-					}
-					catch( Exception ex )
-					{
-						ex.Data.Add( STACKTRACE_TASK, stackTrace );
-						Log.Err( ex, "Parallel task failed!" );
-					}
-				} );
+					body( entity );
+				}
+				catch( Exception ex )
+				{
+					ex.Data.Add( STACKTRACE_TASK, stackTrace );
+					Log.Err( ex, "Parallel task failed!" );
+				}
+			} );
 		}
 	}
 
@@ -237,9 +227,7 @@ public static class ParallelHelper
 	/// <param name="body">An asynchronous delegate that is invoked once per element in the data source.</param>
 	/// <param name="oneThread">Whether this loop should use only one-thread foreach</param>
 	/// <param name="cancelToken">Token for cancellation of all concurrent tasks</param>
-	public static async Task ForEachAsync<TSource>(
-		IEnumerable<TSource>? source, Func<TSource, CancellationToken, ValueTask> body,
-		bool oneThread = false, CancellationToken cancelToken = default )
+	public static async Task ForEachAsync< TSource >( IEnumerable< TSource >? source, Func< TSource, CancellationToken, ValueTask > body, bool oneThread = false, CancellationToken cancelToken = default )
 	{
 		if( source == null )
 		{
@@ -256,20 +244,18 @@ public static class ParallelHelper
 		else
 		{
 			string stackTrace = EnvHelper.GetStackTrace();
-			await Parallel.ForEachAsync(
-				source, cancelToken,
-				async ( entity, token ) =>
+			await Parallel.ForEachAsync( source, cancelToken, async ( entity, token ) =>
+			{
+				try
 				{
-					try
-					{
-						await body( entity, token );
-					}
-					catch( Exception ex )
-					{
-						ex.Data.Add( STACKTRACE_TASK, stackTrace );
-						Log.Err( ex, "Parallel task failed!" );
-					}
-				} );
+					await body( entity, token );
+				}
+				catch( Exception ex )
+				{
+					ex.Data.Add( STACKTRACE_TASK, stackTrace );
+					Log.Err( ex, "Parallel task failed!" );
+				}
+			} );
 		}
 	}
 
@@ -281,20 +267,19 @@ public static class ParallelHelper
 	public static Task Run( Action action )
 	{
 		string stackTrace = EnvHelper.GetStackTrace();
-		return Task.Run(
-			() =>
+		return Task.Run( () =>
+		{
+			try
 			{
-				try
-				{
-					action();
-				}
-				catch( Exception ex )
-				{
-					ex.Data.Add( STACKTRACE_TASK, stackTrace );
-					Log.Err( ex, "Parallel task failed!" );
-					throw;
-				}
-			} );
+				action();
+			}
+			catch( Exception ex )
+			{
+				ex.Data.Add( STACKTRACE_TASK, stackTrace );
+				Log.Err( ex, "Parallel task failed!" );
+				throw;
+			}
+		} );
 	}
 
 	/// <summary>
@@ -303,22 +288,21 @@ public static class ParallelHelper
 	/// <param name="action">The work to execute asynchronously</param>
 	/// <returns>A Task that represents a proxy for the Task returned by <paramref name="action"/>.</returns>
 	/// <param name="cancelToken">Token for cancellation of all concurrent tasks</param>
-	public static Task Run( Func<CancellationToken, Task> action, CancellationToken cancelToken = default )
+	public static Task Run( Func< CancellationToken, Task > action, CancellationToken cancelToken = default )
 	{
 		string stackTrace = EnvHelper.GetStackTrace();
-		return Task.Run(
-			async () =>
+		return Task.Run( async () =>
+		{
+			try
 			{
-				try
-				{
-					await action( cancelToken );
-				}
-				catch( Exception ex )
-				{
-					ex.Data.Add( STACKTRACE_TASK, stackTrace );
-					Log.Err( ex, "Parallel task failed!" );
-					throw;
-				}
-			}, cancelToken );
+				await action( cancelToken );
+			}
+			catch( Exception ex )
+			{
+				ex.Data.Add( STACKTRACE_TASK, stackTrace );
+				Log.Err( ex, "Parallel task failed!" );
+				throw;
+			}
+		}, cancelToken );
 	}
 }

@@ -7,21 +7,19 @@ namespace Erlin.Lib.Common.Threading;
 /// <summary>
 ///    Worker for asynchronous process execution
 /// </summary>
-public sealed class TaskWorker<T> : IAsyncDisposable
+public sealed class TaskWorker< T > : IAsyncDisposable
 	where T : notnull
 {
 	public const string WORKER_NAME_PREFIX = "TaskWorker:";
 
 	private bool _disposed;
 	private readonly bool _cancelOnDispose;
-	private readonly Func<T, CancellationToken, Task> _handler;
-	private readonly ConcurrentQueue<T> _queue = new();
-	private readonly HashSet<WorkItem<T>> _work = [];
+	private readonly Func< T, CancellationToken, Task > _handler;
+	private readonly ConcurrentQueue< T > _queue = new();
+	private readonly HashSet< WorkItem< T > > _work = [ ];
 	private CancellationTokenSource _cancelSource = new();
 
-	public TaskWorker(
-		string name,
-		Func<T, CancellationToken, Task> handler, int maxConcurrency, bool cancelOnDispose = true )
+	public TaskWorker( string name, Func< T, CancellationToken, Task > handler, int maxConcurrency, bool cancelOnDispose = true )
 	{
 		Name = WORKER_NAME_PREFIX + name;
 		_cancelOnDispose = cancelOnDispose;
@@ -70,19 +68,17 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 		}
 	}
 
-	private int _maxConcurrency;
-
 	/// <summary>
 	///    Target for how many items work at same time
 	/// </summary>
 	public int MaxConcurrency
 	{
-		get { return _maxConcurrency; }
+		get;
 		set
 		{
-			if( _maxConcurrency != value )
+			if( field != value )
 			{
-				_maxConcurrency = value;
+				field = value;
 				Start();
 			}
 		}
@@ -141,10 +137,19 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	}
 
 	/// <summary>
+	///    Creates an entry with the specified value and enqueues it
+	/// </summary>
+	/// <param name="item">Entry item</param>
+	public void Enqueue( T item )
+	{
+		Enqueue( [ item ] );
+	}
+
+	/// <summary>
 	///    Creates an entries with the specified values and enqueues them
 	/// </summary>
 	/// <param name="items">Multiple entry items</param>
-	public void Enqueue( IEnumerable<T>? items )
+	public void Enqueue( IEnumerable< T >? items )
 	{
 		if( items != null )
 		{
@@ -164,22 +169,9 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	}
 
 	/// <summary>
-	///    Creates an entry with the specified value and enqueues it
-	/// </summary>
-	/// <param name="item">Entry item</param>
-	public void Enqueue( T item )
-	{
-		Enqueue(
-			new[]
-			{
-				item
-			} );
-	}
-
-	/// <summary>
 	///    Starts working on the queued items
 	/// </summary>
-	private void Start( WorkItem<T>? previousWork = null )
+	private void Start( WorkItem< T >? previousWork = null )
 	{
 		lock( _work )
 		{
@@ -201,7 +193,7 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 
 				for( int i = 0; i < count; i++ )
 				{
-					WorkItem<T>? work = RunTask();
+					WorkItem< T >? work = RunTask();
 					if( work != null )
 					{
 						_work.Add( work );
@@ -215,41 +207,37 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	///    Runs a working task for one queue item
 	/// </summary>
 	/// <returns></returns>
-	private WorkItem<T>? RunTask()
+	private WorkItem< T >? RunTask()
 	{
 		if( _disposed || !_queue.TryDequeue( out T? item ) )
 		{
 			return null;
 		}
 
-		Task work = ParallelHelper.Run(
-			async token =>
+		Task work = ParallelHelper.Run( async token =>
+		{
+			try
 			{
-				try
-				{
-					await _handler( item, token );
-				}
-				catch( Exception e )
-				{
-					Log.Err(
-						e, "{Worker} failed task for item {Item}{NewLine}{Exception}", Name, item,
-						Environment.NewLine, e.ToJson() );
-				}
-			}, _cancelSource.Token );
+				await _handler( item, token );
+			}
+			catch( Exception e )
+			{
+				Log.Err( e, "{Worker} failed task for item {Item}{NewLine}{Exception}", Name, item, Environment.NewLine, e.ToJson() );
+			}
+		}, _cancelSource.Token );
 
-		WorkItem<T> workItem = new( item, work );
-		workItem.Continuation = workItem.Work.ContinueWith(
-			_ =>
+		WorkItem< T > workItem = new( item, work );
+		workItem.Continuation = workItem.Work.ContinueWith( _ =>
+		{
+			try
 			{
-				try
-				{
-					Start( workItem );
-				}
-				catch( Exception e )
-				{
-					Log.Err( e, "{Worker} failed task continuation", Name );
-				}
-			} );
+				Start( workItem );
+			}
+			catch( Exception e )
+			{
+				Log.Err( e, "{Worker} failed task continuation", Name );
+			}
+		} );
 
 		return workItem;
 	}
@@ -292,11 +280,7 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 			await _cancelSource.CancelAsync();
 		}
 
-		await Task.WhenAny(
-			Task.WhenAll( GetAllWorkTasks() ),
-			Task.Delay(
-				_cancelOnDispose ? IDateTimeProvider.TS_MILLISECONDS_100
-					: IDateTimeProvider.TS_MINUS_MILLISECONDS_001 ) );
+		await Task.WhenAny( Task.WhenAll( GetAllWorkTasks() ), Task.Delay( _cancelOnDispose ? IDateTimeProvider.TS_MILLISECONDS_100 : IDateTimeProvider.TS_MINUS_MILLISECONDS_001 ) );
 
 		_cancelSource.Dispose();
 		Log.Dbg( "{Worker} disposed!", Name );
@@ -305,12 +289,12 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	/// <summary>
 	///    Get all actual runtime Tasks that this Worker utilizes
 	/// </summary>
-	private HashSet<Task> GetAllWorkTasks()
+	private HashSet< Task > GetAllWorkTasks()
 	{
-		HashSet<Task> workTasks = [];
+		HashSet< Task > workTasks = [ ];
 		lock( _work )
 		{
-			foreach( WorkItem<T> fWork in _work )
+			foreach( WorkItem< T > fWork in _work )
 			{
 				workTasks.Add( fWork.Work );
 				workTasks.Add( fWork.Continuation );
@@ -323,7 +307,7 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 	/// <summary>
 	///    Internal worker item
 	/// </summary>
-	private sealed class WorkItem<TT>
+	private sealed class WorkItem< TT >
 	(
 		TT item,
 		Task work
@@ -345,6 +329,6 @@ public sealed class TaskWorker<T> : IAsyncDisposable
 		/// <summary>
 		///    Task representing continuation after work is completed
 		/// </summary>
-		public Task Continuation { get; set; } = default!;
+		public Task Continuation { get; set; } = Task.CompletedTask;
 	}
 }

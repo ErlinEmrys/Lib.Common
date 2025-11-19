@@ -45,8 +45,7 @@ public partial class Win10Loop : IDisposable
 		KeepPcAwake = keepPcAwake;
 		DoGarbage = doGarbage;
 
-		_timer = new Timer(
-			Win10Loop.OnTimerElapsed, this, TimeSpan.FromMinutes( 1 ), TimeSpan.FromMinutes( 1 ) );
+		_timer = new Timer( Win10Loop.OnTimerElapsed, this, TimeSpan.FromMinutes( 1 ), TimeSpan.FromMinutes( 1 ) );
 	}
 
 	/// <summary>
@@ -101,13 +100,13 @@ public partial class Win10Loop : IDisposable
 	/// </summary>
 	/// <param name="esFlags">Flags of options</param>
 	/// <returns>Result state</returns>
-	[LibraryImport( "kernel32.dll", SetLastError = true )]
+	[ LibraryImport( "kernel32.dll", SetLastError = true ) ]
 	private static partial ExecutionState SetThreadExecutionState( ExecutionState esFlags );
 
 	/// <summary>
 	///    P/Invoke states
 	/// </summary>
-	[Flags]
+	[ Flags ]
 	private enum ExecutionState : uint
 	{
 		//ES_CONTINUOUS = 0x80000000,

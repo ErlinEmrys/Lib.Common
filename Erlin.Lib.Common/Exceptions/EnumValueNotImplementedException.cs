@@ -3,15 +3,14 @@
 /// <summary>
 ///    Exception when run to not implemented enum vale branch
 /// </summary>
-[Serializable]
+[ Serializable ]
 public class EnumValueNotImplementedException : Exception
 {
 	/// <summary>
 	///    Ctor
 	/// </summary>
 	/// <param name="value">Value of the enum</param>
-	public EnumValueNotImplementedException( Enum value ) : base(
-		EnumValueNotImplementedException.CreateMessage( value ) )
+	public EnumValueNotImplementedException( Enum value ) : base( EnumValueNotImplementedException.CreateMessage( value ) )
 	{
 	}
 
@@ -20,8 +19,7 @@ public class EnumValueNotImplementedException : Exception
 	/// </summary>
 	/// <param name="value">Value of the enum</param>
 	/// <param name="innerException">Original thrown exception</param>
-	public EnumValueNotImplementedException( Enum value, Exception? innerException ) : base(
-		EnumValueNotImplementedException.CreateMessage( value ), innerException )
+	public EnumValueNotImplementedException( Enum value, Exception? innerException ) : base( EnumValueNotImplementedException.CreateMessage( value ), innerException )
 	{
 	}
 

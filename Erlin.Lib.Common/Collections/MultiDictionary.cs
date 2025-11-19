@@ -6,17 +6,17 @@
 /// <typeparam name="TKey">Runtime type of dictionary key</typeparam>
 /// <typeparam name="TValue">Runtime type of dictionary value</typeparam>
 #pragma warning disable CA1711
-public class MultiDictionary<TKey, TValue>
+public class MultiDictionary< TKey, TValue >
 #pragma warning restore CA1711
 	where TKey : notnull
 {
-	private readonly Dictionary<TKey, List<TValue>> _innerDic = new();
+	private readonly Dictionary< TKey, List< TValue > > _innerDic = new();
 	private readonly bool _onlyUniqueValues;
 
 	/// <summary>
 	///    All keys collection
 	/// </summary>
-	public ICollection<TKey> Keys
+	public ICollection< TKey > Keys
 	{
 		get { return _innerDic.Keys; }
 	}
@@ -24,7 +24,7 @@ public class MultiDictionary<TKey, TValue>
 	/// <summary>
 	///    All List values collection
 	/// </summary>
-	public ICollection<List<TValue>> Values
+	public ICollection< List< TValue > > Values
 	{
 		get { return _innerDic.Values; }
 	}
@@ -34,12 +34,9 @@ public class MultiDictionary<TKey, TValue>
 	/// </summary>
 	/// <param name="key">Key</param>
 	/// <returns>List of values</returns>
-	public List<TValue> this[ TKey key ]
+	public List< TValue > this[ TKey key ]
 	{
-		get
-		{
-			return _innerDic.TryGetValue( key, out List<TValue>? item ) ? item : [];
-		}
+		get { return _innerDic.TryGetValue( key, out List< TValue >? item ) ? item : [ ]; }
 	}
 
 	/// <summary>
@@ -58,9 +55,9 @@ public class MultiDictionary<TKey, TValue>
 	/// <param name="value">Value</param>
 	public void Add( TKey key, TValue value )
 	{
-		if( !_innerDic.TryGetValue( key, out List<TValue>? list ) )
+		if( !_innerDic.TryGetValue( key, out List< TValue >? list ) )
 		{
-			list = new List<TValue>();
+			list = [ ];
 			_innerDic.Add( key, list );
 		}
 

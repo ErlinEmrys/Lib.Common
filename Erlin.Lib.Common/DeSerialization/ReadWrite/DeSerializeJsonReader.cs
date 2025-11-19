@@ -1,10 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-
-using Newtonsoft.Json.Linq;
-
 using System.Text;
 
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
 namespace Erlin.Lib.Common.DeSerialization.ReadWrite;
@@ -22,7 +20,7 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	/// <summary>
 	///    Saved Parents of current JSON node
 	/// </summary>
-	private Stack<JContainer> Parents { get; } = new();
+	private Stack< JContainer > Parents { get; } = new();
 
 	/// <summary>
 	///    Sign, that current JSON node is collection, that contains only primitive data
@@ -57,14 +55,11 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	/// <summary>
 	///    Check if current JSON node contains key
 	/// </summary>
-	/// <param name="key"></param>
-	/// <returns></returns>
-	/// <exception cref="DeSerializeException"></exception>
-	private bool ContainsKey( [NotNullWhen( true )]string? key )
+	private bool ContainsKey( [ NotNullWhen( true ) ]string? key )
 	{
 		if( Current is JObject obj )
 		{
-			if( string.IsNullOrEmpty( key ) )
+			if( key.IsEmpty() )
 			{
 				throw new DeSerializeException( "Attempt to read empty key on keyed container!" );
 			}
@@ -78,14 +73,10 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	/// <summary>
 	///    Read non-null value from current JSON node
 	/// </summary>
-	/// <param name="fieldName"></param>
-	/// <typeparam name="T"></typeparam>
-	/// <returns></returns>
-	/// <exception cref="DeSerializeException"></exception>
-	private T ReadValue<T>( string? fieldName )
+	private T ReadValue< T >( string? fieldName )
 		where T : struct
 	{
-		T? value = ReadValueN<T>( fieldName );
+		T? value = ReadValueN< T >( fieldName );
 		if( !value.HasValue )
 		{
 			throw new DeSerializeException( $"Reading NULL on expected value {fieldName}" );
@@ -97,8 +88,6 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	/// <summary>
 	///    Read nullable string from current JSON node
 	/// </summary>
-	/// <param name="fieldName"></param>
-	/// <returns></returns>
 	private string? ReadValueStringN( string? fieldName )
 	{
 		string value = string.Empty;
@@ -108,24 +97,17 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	/// <summary>
 	///    Read nullable value from current JSON node
 	/// </summary>
-	/// <param name="fieldName"></param>
-	/// <typeparam name="T"></typeparam>
-	/// <returns></returns>
-	private T? ReadValueN<T>( string? fieldName )
+	private T? ReadValueN< T >( string? fieldName )
 		where T : struct
 	{
-		T? value = default;
-		return ReadValueN( fieldName, ref value ) ? value : new T?();
+		T? value = null;
+		return ReadValueN( fieldName, ref value ) ? value : null;
 	}
 
 	/// <summary>
 	///    Read value from current JSON node
 	/// </summary>
-	/// <param name="fieldName"></param>
-	/// <param name="value"></param>
-	/// <typeparam name="T"></typeparam>
-	/// <returns></returns>
-	private bool ReadValueN<T>( string? fieldName, ref T value )
+	private bool ReadValueN< T >( string? fieldName, ref T value )
 	{
 		JToken? token = null;
 		if( ReadingPrimitiveCollection )
@@ -140,11 +122,9 @@ public class DeSerializeJsonReader : IDeSerializeReader
 			token = Current[ fieldName ];
 		}
 
-		if( ( token != null )
-			&& ( token.Type != JTokenType.Null )
-			&& ( token.Type != JTokenType.Undefined ) )
+		if( ( token != null ) && ( token.Type != JTokenType.Null ) && ( token.Type != JTokenType.Undefined ) )
 		{
-			T? nullableValue = token.Value<T>();
+			T? nullableValue = token.Value< T >();
 			if( nullableValue is null )
 			{
 				return false;
@@ -160,14 +140,11 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	/// <summary>
 	///    Read non-null array of data from current JSON node
 	/// </summary>
-	/// <param name="fieldName"></param>
+	/// <param name="fieldName">Name of the DeSerialized field</param>
 	/// <param name="allowNull">Sign whether the array items can be null</param>
-	/// <typeparam name="T"></typeparam>
-	/// <returns></returns>
-	/// <exception cref="DeSerializeException"></exception>
-	private T[] ReadArray<T>( string? fieldName, bool allowNull )
+	private T[] ReadArray< T >( string? fieldName, bool allowNull )
 	{
-		T[]? value = ReadArrayN<T>( fieldName, allowNull );
+		T[]? value = ReadArrayN< T >( fieldName, allowNull );
 		if( value is null )
 		{
 			throw new DeSerializeException( $"Reading NULL on expected value {fieldName}" );
@@ -179,12 +156,9 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	/// <summary>
 	///    Reads nullable array of data from current JSON node
 	/// </summary>
-	/// <param name="fieldName"></param>
+	/// <param name="fieldName">Name of the DeSerialized field</param>
 	/// <param name="allowNull">Sign whether the array items can be null</param>
-	/// <typeparam name="T"></typeparam>
-	/// <returns></returns>
-	/// <exception cref="DeSerializeException"></exception>
-	private T[]? ReadArrayN<T>( string? fieldName, bool allowNull )
+	private T[]? ReadArrayN< T >( string? fieldName, bool allowNull )
 	{
 		if( ContainsKey( fieldName ) )
 		{
@@ -193,10 +167,10 @@ public class DeSerializeJsonReader : IDeSerializeReader
 				&& ( jArr.Type != JTokenType.Null )
 				&& ( jArr.Type != JTokenType.Undefined ) )
 			{
-				T[] result = new T[ jArr.Count ];
+				T[] result = new T[jArr.Count];
 				for( int i = 0; i < jArr.Count; i++ )
 				{
-					T? value = jArr[ i ].Value<T>();
+					T? value = jArr[ i ].Value< T >();
 					if( !allowNull && value is null )
 					{
 						throw new DeSerializeException( "Reading NULL value as one of the item in array!" );
@@ -216,342 +190,342 @@ public class DeSerializeJsonReader : IDeSerializeReader
 
 	public bool ReadBool( string? fieldName )
 	{
-		return ReadValue<bool>( fieldName );
+		return ReadValue< bool >( fieldName );
 	}
 
 	public bool? ReadBoolN( string? fieldName )
 	{
-		return ReadValueN<bool>( fieldName );
+		return ReadValueN< bool >( fieldName );
 	}
 
 	public sbyte ReadSByte( string? fieldName )
 	{
-		return ReadValue<sbyte>( fieldName );
+		return ReadValue< sbyte >( fieldName );
 	}
 
 	public sbyte? ReadSByteN( string? fieldName )
 	{
-		return ReadValueN<sbyte>( fieldName );
+		return ReadValueN< sbyte >( fieldName );
 	}
 
 	public sbyte[] ReadSByteArr( string? fieldName )
 	{
-		return ReadArray<sbyte>( fieldName, false );
+		return ReadArray< sbyte >( fieldName, false );
 	}
 
 	public sbyte[]? ReadSByteArrN( string? fieldName )
 	{
-		return ReadArrayN<sbyte>( fieldName, false );
+		return ReadArrayN< sbyte >( fieldName, false );
 	}
 
 	public sbyte?[] ReadSByteNArr( string? fieldName )
 	{
-		return ReadArray<sbyte?>( fieldName, true );
+		return ReadArray< sbyte? >( fieldName, true );
 	}
 
 	public sbyte?[]? ReadSByteNArrN( string? fieldName )
 	{
-		return ReadArrayN<sbyte?>( fieldName, true );
+		return ReadArrayN< sbyte? >( fieldName, true );
 	}
 
 	public byte ReadByte( string? fieldName )
 	{
-		return ReadValue<byte>( fieldName );
+		return ReadValue< byte >( fieldName );
 	}
 
 	public byte? ReadByteN( string? fieldName )
 	{
-		return ReadValueN<byte>( fieldName );
+		return ReadValueN< byte >( fieldName );
 	}
 
 	public byte[] ReadByteArr( string? fieldName )
 	{
-		return ReadArray<byte>( fieldName, false );
+		return ReadArray< byte >( fieldName, false );
 	}
 
 	public byte[]? ReadByteArrN( string? fieldName )
 	{
-		return ReadArrayN<byte>( fieldName, false );
+		return ReadArrayN< byte >( fieldName, false );
 	}
 
 	public byte?[] ReadByteNArr( string? fieldName )
 	{
-		return ReadArray<byte?>( fieldName, true );
+		return ReadArray< byte? >( fieldName, true );
 	}
 
 	public byte?[]? ReadByteNArrN( string? fieldName )
 	{
-		return ReadArrayN<byte?>( fieldName, true );
+		return ReadArrayN< byte? >( fieldName, true );
 	}
 
 	public short ReadInt16( string? fieldName )
 	{
-		return ReadValue<short>( fieldName );
+		return ReadValue< short >( fieldName );
 	}
 
 	public short? ReadInt16N( string? fieldName )
 	{
-		return ReadValueN<short>( fieldName );
+		return ReadValueN< short >( fieldName );
 	}
 
 	public short[] ReadInt16Arr( string? fieldName )
 	{
-		return ReadArray<short>( fieldName, false );
+		return ReadArray< short >( fieldName, false );
 	}
 
 	public short[]? ReadInt16ArrN( string? fieldName )
 	{
-		return ReadArrayN<short>( fieldName, false );
+		return ReadArrayN< short >( fieldName, false );
 	}
 
 	public short?[] ReadInt16NArr( string? fieldName )
 	{
-		return ReadArray<short?>( fieldName, true );
+		return ReadArray< short? >( fieldName, true );
 	}
 
 	public short?[]? ReadInt16NArrN( string? fieldName )
 	{
-		return ReadArrayN<short?>( fieldName, true );
+		return ReadArrayN< short? >( fieldName, true );
 	}
 
 	public ushort ReadUInt16( string? fieldName )
 	{
-		return ReadValue<ushort>( fieldName );
+		return ReadValue< ushort >( fieldName );
 	}
 
 	public ushort? ReadUInt16N( string? fieldName )
 	{
-		return ReadValueN<ushort>( fieldName );
+		return ReadValueN< ushort >( fieldName );
 	}
 
 	public ushort[] ReadUInt16Arr( string? fieldName )
 	{
-		return ReadArray<ushort>( fieldName, false );
+		return ReadArray< ushort >( fieldName, false );
 	}
 
 	public ushort[]? ReadUInt16ArrN( string? fieldName )
 	{
-		return ReadArrayN<ushort>( fieldName, false );
+		return ReadArrayN< ushort >( fieldName, false );
 	}
 
 	public ushort?[] ReadUInt16NArr( string? fieldName )
 	{
-		return ReadArray<ushort?>( fieldName, true );
+		return ReadArray< ushort? >( fieldName, true );
 	}
 
 	public ushort?[]? ReadUInt16NArrN( string? fieldName )
 	{
-		return ReadArrayN<ushort?>( fieldName, true );
+		return ReadArrayN< ushort? >( fieldName, true );
 	}
 
 	public int ReadInt32( string? fieldName )
 	{
-		return ReadValue<int>( fieldName );
+		return ReadValue< int >( fieldName );
 	}
 
 	public int? ReadInt32N( string? fieldName )
 	{
-		return ReadValueN<int>( fieldName );
+		return ReadValueN< int >( fieldName );
 	}
 
 	public int[] ReadInt32Arr( string? fieldName )
 	{
-		return ReadArray<int>( fieldName, false );
+		return ReadArray< int >( fieldName, false );
 	}
 
 	public int[]? ReadInt32ArrN( string? fieldName )
 	{
-		return ReadArrayN<int>( fieldName, false );
+		return ReadArrayN< int >( fieldName, false );
 	}
 
 	public int?[] ReadInt32NArr( string? fieldName )
 	{
-		return ReadArray<int?>( fieldName, true );
+		return ReadArray< int? >( fieldName, true );
 	}
 
 	public int?[]? ReadInt32NArrN( string? fieldName )
 	{
-		return ReadArrayN<int?>( fieldName, true );
+		return ReadArrayN< int? >( fieldName, true );
 	}
 
 	public uint ReadUInt32( string? fieldName )
 	{
-		return ReadValue<uint>( fieldName );
+		return ReadValue< uint >( fieldName );
 	}
 
 	public uint? ReadUInt32N( string? fieldName )
 	{
-		return ReadValueN<uint>( fieldName );
+		return ReadValueN< uint >( fieldName );
 	}
 
 	public uint[] ReadUInt32Arr( string? fieldName )
 	{
-		return ReadArray<uint>( fieldName, false );
+		return ReadArray< uint >( fieldName, false );
 	}
 
 	public uint[]? ReadUInt32ArrN( string? fieldName )
 	{
-		return ReadArrayN<uint>( fieldName, false );
+		return ReadArrayN< uint >( fieldName, false );
 	}
 
 	public uint?[] ReadUInt32NArr( string? fieldName )
 	{
-		return ReadArray<uint?>( fieldName, true );
+		return ReadArray< uint? >( fieldName, true );
 	}
 
 	public uint?[]? ReadUInt32NArrN( string? fieldName )
 	{
-		return ReadArrayN<uint?>( fieldName, true );
+		return ReadArrayN< uint? >( fieldName, true );
 	}
 
 	public long ReadInt64( string? fieldName )
 	{
-		return ReadValue<long>( fieldName );
+		return ReadValue< long >( fieldName );
 	}
 
 	public long? ReadInt64N( string? fieldName )
 	{
-		return ReadValueN<long>( fieldName );
+		return ReadValueN< long >( fieldName );
 	}
 
 	public long[] ReadInt64Arr( string? fieldName )
 	{
-		return ReadArray<long>( fieldName, false );
+		return ReadArray< long >( fieldName, false );
 	}
 
 	public long[]? ReadInt64ArrN( string? fieldName )
 	{
-		return ReadArrayN<long>( fieldName, false );
+		return ReadArrayN< long >( fieldName, false );
 	}
 
 	public long?[] ReadInt64NArr( string? fieldName )
 	{
-		return ReadArray<long?>( fieldName, true );
+		return ReadArray< long? >( fieldName, true );
 	}
 
 	public long?[]? ReadInt64NArrN( string? fieldName )
 	{
-		return ReadArrayN<long?>( fieldName, true );
+		return ReadArrayN< long? >( fieldName, true );
 	}
 
 	public ulong ReadUInt64( string? fieldName )
 	{
-		return ReadValue<ulong>( fieldName );
+		return ReadValue< ulong >( fieldName );
 	}
 
 	public ulong? ReadUInt64N( string? fieldName )
 	{
-		return ReadValueN<ulong>( fieldName );
+		return ReadValueN< ulong >( fieldName );
 	}
 
 	public ulong[] ReadUInt64Arr( string? fieldName )
 	{
-		return ReadArray<ulong>( fieldName, false );
+		return ReadArray< ulong >( fieldName, false );
 	}
 
 	public ulong[]? ReadUInt64ArrN( string? fieldName )
 	{
-		return ReadArrayN<ulong>( fieldName, false );
+		return ReadArrayN< ulong >( fieldName, false );
 	}
 
 	public ulong?[] ReadUInt64NArr( string? fieldName )
 	{
-		return ReadArray<ulong?>( fieldName, true );
+		return ReadArray< ulong? >( fieldName, true );
 	}
 
 	public ulong?[]? ReadUInt64NArrN( string? fieldName )
 	{
-		return ReadArrayN<ulong?>( fieldName, true );
+		return ReadArrayN< ulong? >( fieldName, true );
 	}
 
 	public float ReadFloat( string? fieldName )
 	{
-		return ReadValue<float>( fieldName );
+		return ReadValue< float >( fieldName );
 	}
 
 	public float? ReadFloatN( string? fieldName )
 	{
-		return ReadValueN<float>( fieldName );
+		return ReadValueN< float >( fieldName );
 	}
 
 	public float[] ReadFloatArr( string? fieldName )
 	{
-		return ReadArray<float>( fieldName, false );
+		return ReadArray< float >( fieldName, false );
 	}
 
 	public float[]? ReadFloatArrN( string? fieldName )
 	{
-		return ReadArrayN<float>( fieldName, false );
+		return ReadArrayN< float >( fieldName, false );
 	}
 
 	public float?[] ReadFloatNArr( string? fieldName )
 	{
-		return ReadArray<float?>( fieldName, true );
+		return ReadArray< float? >( fieldName, true );
 	}
 
 	public float?[]? ReadFloatNArrN( string? fieldName )
 	{
-		return ReadArrayN<float?>( fieldName, true );
+		return ReadArrayN< float? >( fieldName, true );
 	}
 
 	public double ReadDouble( string? fieldName )
 	{
-		return ReadValue<double>( fieldName );
+		return ReadValue< double >( fieldName );
 	}
 
 	public double? ReadDoubleN( string? fieldName )
 	{
-		return ReadValueN<double>( fieldName );
+		return ReadValueN< double >( fieldName );
 	}
 
 	public double[] ReadDoubleArr( string? fieldName )
 	{
-		return ReadArray<double>( fieldName, false );
+		return ReadArray< double >( fieldName, false );
 	}
 
 	public double[]? ReadDoubleArrN( string? fieldName )
 	{
-		return ReadArrayN<double>( fieldName, false );
+		return ReadArrayN< double >( fieldName, false );
 	}
 
 	public double?[] ReadDoubleNArr( string? fieldName )
 	{
-		return ReadArray<double?>( fieldName, true );
+		return ReadArray< double? >( fieldName, true );
 	}
 
 	public double?[]? ReadDoubleNArrN( string? fieldName )
 	{
-		return ReadArrayN<double?>( fieldName, true );
+		return ReadArrayN< double? >( fieldName, true );
 	}
 
 	public decimal ReadDecimal( string? fieldName )
 	{
-		return ReadValue<decimal>( fieldName );
+		return ReadValue< decimal >( fieldName );
 	}
 
 	public decimal? ReadDecimalN( string? fieldName )
 	{
-		return ReadValueN<decimal>( fieldName );
+		return ReadValueN< decimal >( fieldName );
 	}
 
 	public decimal[] ReadDecimalArr( string? fieldName )
 	{
-		return ReadArray<decimal>( fieldName, false );
+		return ReadArray< decimal >( fieldName, false );
 	}
 
 	public decimal[]? ReadDecimalArrN( string? fieldName )
 	{
-		return ReadArrayN<decimal>( fieldName, false );
+		return ReadArrayN< decimal >( fieldName, false );
 	}
 
 	public decimal?[] ReadDecimalNArr( string? fieldName )
 	{
-		return ReadArray<decimal?>( fieldName, true );
+		return ReadArray< decimal? >( fieldName, true );
 	}
 
 	public decimal?[]? ReadDecimalNArrN( string? fieldName )
 	{
-		return ReadArrayN<decimal?>( fieldName, true );
+		return ReadArrayN< decimal? >( fieldName, true );
 	}
 
 	public Guid ReadGuid( string? fieldName )
@@ -568,7 +542,7 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	public Guid? ReadGuidN( string? fieldName )
 	{
 		string? identifier = ReadValueStringN( fieldName );
-		if( !string.IsNullOrEmpty( identifier ) )
+		if( identifier.IsNotEmpty() )
 		{
 			if( Guid.TryParse( identifier, out Guid result ) )
 			{
@@ -595,7 +569,7 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	public DateTime? ReadDateTimeN( string? fieldName )
 	{
 		string? text = ReadValueStringN( fieldName );
-		if( !string.IsNullOrEmpty( text ) )
+		if( text.IsNotEmpty() )
 		{
 			if( DateTime.TryParse( text, null, DateTimeStyles.None, out DateTime result ) )
 			{
@@ -622,15 +596,14 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	public DateTimeOffset? ReadDateTimeOffsetN( string? fieldName )
 	{
 		string? text = ReadValueStringN( fieldName );
-		if( !string.IsNullOrEmpty( text ) )
+		if( text.IsNotEmpty() )
 		{
 			if( DateTimeOffset.TryParse( text, out DateTimeOffset result ) )
 			{
 				return result;
 			}
 
-			throw new DeSerializeException(
-				$"Could not parse DateTimeOffset value: {text} for field: {fieldName}" );
+			throw new DeSerializeException( $"Could not parse DateTimeOffset value: {text} for field: {fieldName}" );
 		}
 
 		return null;
@@ -650,7 +623,7 @@ public class DeSerializeJsonReader : IDeSerializeReader
 	public TimeSpan? ReadTimeSpanN( string? fieldName )
 	{
 		string? text = ReadValueStringN( fieldName );
-		if( !string.IsNullOrEmpty( text ) )
+		if( text.IsNotEmpty() )
 		{
 			if( TimeSpan.TryParse( text, out TimeSpan result ) )
 			{
@@ -681,22 +654,22 @@ public class DeSerializeJsonReader : IDeSerializeReader
 
 	public string[] ReadStringArr( string? fieldName )
 	{
-		return ReadArray<string>( fieldName, false );
+		return ReadArray< string >( fieldName, false );
 	}
 
 	public string[]? ReadStringArrN( string? fieldName )
 	{
-		return ReadArrayN<string>( fieldName, false );
+		return ReadArrayN< string >( fieldName, false );
 	}
 
 	public string?[] ReadStringNArr( string? fieldName )
 	{
-		return ReadArray<string?>( fieldName, true );
+		return ReadArray< string? >( fieldName, true );
 	}
 
 	public string?[]? ReadStringNArrN( string? fieldName )
 	{
-		return ReadArrayN<string?>( fieldName, true );
+		return ReadArrayN< string? >( fieldName, true );
 	}
 
 	public ushort ReadObjectStart( string? fieldName, int? itemIndex )
@@ -706,7 +679,7 @@ public class DeSerializeJsonReader : IDeSerializeReader
 		{
 			token = Current[ itemIndex ];
 		}
-		else if( !string.IsNullOrEmpty( fieldName ) && ContainsKey( fieldName ) )
+		else if( fieldName.IsNotEmpty() && ContainsKey( fieldName ) )
 		{
 			token = Current[ fieldName ];
 		}

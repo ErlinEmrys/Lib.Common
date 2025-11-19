@@ -45,8 +45,7 @@ public static class FileSystemHelper
 	public static string GetDirectoryPath( string filePath )
 	{
 		FileInfo info = new( filePath );
-		return info.Directory?.FullName
-			?? throw new InvalidOperationException( $"Could not get directory from file path: {filePath}" );
+		return info.Directory?.FullName ?? throw new InvalidOperationException( $"Could not get directory from file path: {filePath}" );
 	}
 
 	/// <summary>
@@ -107,8 +106,7 @@ public static class FileSystemHelper
 	/// </summary>
 	/// <param name="directoryPath">Path to directory</param>
 	/// <param name="cancellationToken"></param>
-	public static async Task DirectoryDelete(
-		string directoryPath, CancellationToken cancellationToken = default )
+	public static async Task DirectoryDelete( string directoryPath, CancellationToken cancellationToken = default )
 	{
 		DirectoryInfo info = new( directoryPath );
 		if( info.Exists )

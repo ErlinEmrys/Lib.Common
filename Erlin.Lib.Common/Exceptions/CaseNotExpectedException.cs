@@ -3,7 +3,7 @@
 /// <summary>
 ///    Exception when go to not implemented and not expected case statement
 /// </summary>
-[Serializable]
+[ Serializable ]
 public class CaseNotExpectedException : Exception
 {
 	/// <summary>
@@ -19,8 +19,7 @@ public class CaseNotExpectedException : Exception
 	/// </summary>
 	/// <param name="value">Value of the case</param>
 	/// <param name="innerException">Original thrown exception</param>
-	public CaseNotExpectedException( object value, Exception? innerException ) : base(
-		CaseNotExpectedException.CreateMessage( value ), innerException )
+	public CaseNotExpectedException( object value, Exception? innerException ) : base( CaseNotExpectedException.CreateMessage( value ), innerException )
 	{
 	}
 

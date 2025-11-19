@@ -14,11 +14,11 @@ namespace Erlin.Lib.Common.Text.Diff;
 ///    hash corresponds to a line of text.  Then it can be
 ///    used to diff two text files on a line-by-line basis.
 /// </summary>
-public sealed class MyersDiff<T>
-	where T : IComparable<T>
+public sealed class MyersDiff< T >
+	where T : IComparable< T >
 {
-	private readonly IList<T> _listA;// Sequence A
-	private readonly IList<T> _listB;// Sequence B
+	private readonly IList< T > _listA; // Sequence A
+	private readonly IList< T > _listB; // Sequence B
 	private readonly bool _supportChangeEditType;
 	private readonly DiagonalVector _vectorForward;
 	private readonly DiagonalVector _vectorReverse;
@@ -32,7 +32,7 @@ public sealed class MyersDiff<T>
 	///    If "Change" EditType is allowed (default is delete and insert
 	///    only)
 	/// </param>
-	public MyersDiff( IList<T> listA, IList<T> listB, bool supportChangeEditType )
+	public MyersDiff( IList< T > listA, IList< T > listB, bool supportChangeEditType )
 	{
 		_listA = listA;
 		_listB = listB;
@@ -52,24 +52,17 @@ public sealed class MyersDiff<T>
 	/// <returns>Complete edit script</returns>
 	public EditScript Execute()
 	{
-		List<Point2D<int>> matchPoints = [];
+		List< Point2D< int > > matchPoints = [ ];
 
-		SubArray<T> subArrayA = new( _listA );
-		SubArray<T> subArrayB = new( _listB );
+		SubArray< T > subArrayA = new( _listA );
+		SubArray< T > subArrayB = new( _listB );
 
 		GetMatchPoints( subArrayA, subArrayB, matchPoints );
-		Debug.Assert(
-			matchPoints.Count == GetLongestCommonSubsequenceLength(),
-			"The number of match points must equal the LCS length." );
+		Debug.Assert( matchPoints.Count == GetLongestCommonSubsequenceLength(), "The number of match points must equal the LCS length." );
 
-		EditScript result = ConvertMatchPointsToEditScript(
-			subArrayA.Length,
-			subArrayB.Length,
-			matchPoints );
+		EditScript result = ConvertMatchPointsToEditScript( subArrayA.Length, subArrayB.Length, matchPoints );
 
-		Debug.Assert(
-			result.TotalEditLength == GetShortestEditScriptLength(),
-			"The total edit length must equal the SES length." );
+		Debug.Assert( result.TotalEditLength == GetShortestEditScriptLength(), "The total edit length must equal the SES length." );
 
 		return result;
 	}
@@ -78,11 +71,11 @@ public sealed class MyersDiff<T>
 	///    Returns the longest common subsequence from A and B.
 	/// </summary>
 	/// <returns>LCS of entered sequences</returns>
-	public IList<T> GetLongestCommonSubsequence()
+	public IList< T > GetLongestCommonSubsequence()
 	{
-		List<T> result = [];
+		List< T > result = [ ];
 
-		GetLcs( new SubArray<T>( _listA ), new SubArray<T>( _listB ), result );
+		GetLcs( new SubArray< T >( _listA ), new SubArray< T >( _listB ), result );
 
 		return result;
 	}
@@ -106,8 +99,8 @@ public sealed class MyersDiff<T>
 	/// <returns>Reverse SES lenght</returns>
 	public int GetReverseShortestEditScriptLength()
 	{
-		SubArray<T> subArrayA = new( _listA );
-		SubArray<T> subArrayB = new( _listB );
+		SubArray< T > subArrayA = new( _listA );
+		SubArray< T > subArrayB = new( _listB );
 
 		if( SetupFictitiousPoints( subArrayA, subArrayB ) )
 		{
@@ -150,8 +143,8 @@ public sealed class MyersDiff<T>
 	/// <returns>SES lenght</returns>
 	public int GetShortestEditScriptLength()
 	{
-		SubArray<T> subArrayA = new( _listA );
-		SubArray<T> subArrayB = new( _listB );
+		SubArray< T > subArrayA = new( _listA );
+		SubArray< T > subArrayB = new( _listB );
 
 		if( SetupFictitiousPoints( subArrayA, subArrayB ) )
 		{
@@ -189,10 +182,7 @@ public sealed class MyersDiff<T>
 	/// <returns>Similarity index (0=>completely different, 1=>same)</returns>
 	public double GetSimilarity()
 	{
-		double result = MyersDiff<T>.GetSimilarity(
-			_listA.Count,
-			_listB.Count,
-			GetLongestCommonSubsequenceLength() );
+		double result = MyersDiff< T >.GetSimilarity( _listA.Count, _listB.Count, GetLongestCommonSubsequenceLength() );
 
 		return result;
 	}
@@ -221,12 +211,12 @@ public sealed class MyersDiff<T>
 	/// <param name="m">Lenght of B sequence</param>
 	/// <param name="matchPoints">Match points</param>
 	/// <returns>Final edit script</returns>
-	private EditScript ConvertMatchPointsToEditScript( int n, int m, List<Point2D<int>> matchPoints )
+	private EditScript ConvertMatchPointsToEditScript( int n, int m, List< Point2D< int > > matchPoints )
 	{
 		// The Execute method already has an assertion that the number of MatchPoints
 		// equals the LCS length, so we can use it to calculate similarity, but we must do
 		// it before we add a fictitious match point below.
-		double similarity = MyersDiff<T>.GetSimilarity( n, m, matchPoints.Count );
+		double similarity = MyersDiff< T >.GetSimilarity( n, m, matchPoints.Count );
 		EditScript script = new( similarity );
 
 		int currentX = 1;
@@ -234,13 +224,13 @@ public sealed class MyersDiff<T>
 
 		// Add a fictitious match point at (N+1, M+1) so we're guaranteed to
 		// pick up all edits with a single loop.
-		matchPoints.Add( new Point2D<int>( n + 1, m + 1 ) );
+		matchPoints.Add( new Point2D< int >( n + 1, m + 1 ) );
 
 		// NOTE: When we create new Edit instances, we'll store iCurrX and iCurrY
 		// minus 1 because we want to convert them back to 0-based indexes for
 		// the user.  The user shouldn't have to know that internally we use any
 		// 1-based types.
-		foreach( Point2D<int> point in matchPoints )
+		foreach( Point2D< int > point in matchPoints )
 		{
 			int matchX = point.X;
 			int matchY = point.Y;
@@ -280,12 +270,7 @@ public sealed class MyersDiff<T>
 	/// <param name="pathEndX">X end</param>
 	/// <param name="pathK">K path</param>
 	/// <returns>SES lenght</returns>
-	private int FindMiddleSnake(
-		SubArray<T> subArrayA,
-		SubArray<T> subArrayB,
-		out int pathStartX,
-		out int pathEndX,
-		out int pathK )
+	private int FindMiddleSnake( SubArray< T > subArrayA, SubArray< T > subArrayB, out int pathStartX, out int pathEndX, out int pathK )
 	{
 		// We don't have to check the result of this because the calling procedure
 		// has already check the length preconditions.
@@ -348,10 +333,7 @@ public sealed class MyersDiff<T>
 						pathStartX = _vectorReverse[ pathK ];
 						pathEndX = pathStartX;
 						int pathEndY = pathEndX - pathK;
-						while(
-							( pathEndX < subArrayA.Length )
-							&& ( pathEndY < subArrayB.Length )
-							&& ( subArrayA[ pathEndX + 1 ].CompareTo( subArrayB[ pathEndY + 1 ] ) == 0 )
+						while( ( pathEndX < subArrayA.Length ) && ( pathEndY < subArrayB.Length ) && ( subArrayA[ pathEndX + 1 ].CompareTo( subArrayB[ pathEndY + 1 ] ) == 0 )
 						)
 						{
 							pathEndX++;
@@ -378,7 +360,7 @@ public sealed class MyersDiff<T>
 	/// <param name="d">D index</param>
 	/// <param name="k">K index</param>
 	/// <returns>X coordinate</returns>
-	private int GetForwardDPaths( SubArray<T> subArrayA, SubArray<T> subArrayB, int d, int k )
+	private int GetForwardDPaths( SubArray< T > subArrayA, SubArray< T > subArrayB, int d, int k )
 	{
 		int x;
 		if( ( k == -d ) || ( ( k != d ) && ( _vectorForward[ k - 1 ] < _vectorForward[ k + 1 ] ) ) )
@@ -392,9 +374,7 @@ public sealed class MyersDiff<T>
 
 		int y = x - k;
 
-		while( ( x < subArrayA.Length )
-			&& ( y < subArrayB.Length )
-			&& ( subArrayA[ x + 1 ].CompareTo( subArrayB[ y + 1 ] ) == 0 ) )
+		while( ( x < subArrayA.Length ) && ( y < subArrayB.Length ) && ( subArrayA[ x + 1 ].CompareTo( subArrayB[ y + 1 ] ) == 0 ) )
 		{
 			x++;
 			y++;
@@ -411,7 +391,7 @@ public sealed class MyersDiff<T>
 	/// <param name="subArrayA">Sub-sequence A</param>
 	/// <param name="subArrayB">Sub-sequence B</param>
 	/// <param name="output">LCS output</param>
-	private void GetLcs( SubArray<T> subArrayA, SubArray<T> subArrayB, ICollection<T> output )
+	private void GetLcs( SubArray< T > subArrayA, SubArray< T > subArrayB, ICollection< T > output )
 	{
 		while( true )
 		{
@@ -424,18 +404,15 @@ public sealed class MyersDiff<T>
 
 				if( d > 1 )
 				{
-					GetLcs(
-						new SubArray<T>( subArrayA, 1, x ),
-						new SubArray<T>( subArrayB, 1, y ),
-						output );
+					GetLcs( new SubArray< T >( subArrayA, 1, x ), new SubArray< T >( subArrayB, 1, y ), output );
 
 					for( int i = x + 1; i <= u; i++ )
 					{
 						output.Add( subArrayA[ i ] );
 					}
 
-					subArrayA = new SubArray<T>( subArrayA, u + 1, subArrayA.Length - u );
-					subArrayB = new SubArray<T>( subArrayB, v + 1, subArrayB.Length - v );
+					subArrayA = new SubArray< T >( subArrayA, u + 1, subArrayA.Length - u );
+					subArrayB = new SubArray< T >( subArrayB, v + 1, subArrayB.Length - v );
 					continue;
 				}
 
@@ -465,10 +442,7 @@ public sealed class MyersDiff<T>
 	/// <param name="subArrayA">Sub-sequence A</param>
 	/// <param name="subArrayB">Sub-sequence B</param>
 	/// <param name="matchPoints">Match points</param>
-	private void GetMatchPoints(
-		SubArray<T> subArrayA,
-		SubArray<T> subArrayB,
-		ICollection<Point2D<int>> matchPoints )
+	private void GetMatchPoints( SubArray< T > subArrayA, SubArray< T > subArrayB, ICollection< Point2D< int > > matchPoints )
 	{
 		while( true )
 		{
@@ -481,28 +455,25 @@ public sealed class MyersDiff<T>
 
 				if( d > 1 )
 				{
-					GetMatchPoints(
-						new SubArray<T>( subArrayA, 1, x ),
-						new SubArray<T>( subArrayB, 1, y ),
+					GetMatchPoints( new SubArray< T >( subArrayA, 1, x ),
+						new SubArray< T >( subArrayB, 1, y ),
 						matchPoints );
 
 					for( int i = x + 1; i <= u; i++ )
 					{
 						// Output absolute X and Y (not relative to the current subarray)
-						matchPoints.Add( new Point2D<int>( i + subArrayA.Offset, ( i - k ) + subArrayB.Offset ) );
+						matchPoints.Add( new Point2D< int >( i + subArrayA.Offset, ( i - k ) + subArrayB.Offset ) );
 					}
 
-					subArrayA = new SubArray<T>( subArrayA, u + 1, subArrayA.Length - u );
-					subArrayB = new SubArray<T>( subArrayB, v + 1, subArrayB.Length - v );
+					subArrayA = new SubArray< T >( subArrayA, u + 1, subArrayA.Length - u );
+					subArrayB = new SubArray< T >( subArrayB, v + 1, subArrayB.Length - v );
 					continue;
 				}
 
 				// If there are no differences, we have to output all of the points.
 				// If there's only one difference, we have to output all of the
 				// match points, skipping the single point that is different.
-				Debug.Assert(
-					( d == 0 ) || ( Math.Abs( subArrayA.Length - subArrayB.Length ) == 1 ),
-					"A and B's lengths must differ by 1 if D == 1" );
+				Debug.Assert( ( d == 0 ) || ( Math.Abs( subArrayA.Length - subArrayB.Length ) == 1 ), "A and B's lengths must differ by 1 if D == 1" );
 
 				// Only go to the minimum of the two lengths since that's the
 				// most that can possibly match between the two subsequences.
@@ -520,7 +491,7 @@ public sealed class MyersDiff<T>
 							currentY++;
 						}
 
-						matchPoints.Add( new Point2D<int>( i + subArrayA.Offset, currentY + subArrayB.Offset ) );
+						matchPoints.Add( new Point2D< int >( i + subArrayA.Offset, currentY + subArrayB.Offset ) );
 						currentY++;
 					}
 				}
@@ -536,7 +507,7 @@ public sealed class MyersDiff<T>
 							currentX++;
 						}
 
-						matchPoints.Add( new Point2D<int>( currentX + subArrayA.Offset, i + subArrayB.Offset ) );
+						matchPoints.Add( new Point2D< int >( currentX + subArrayA.Offset, i + subArrayB.Offset ) );
 						currentX++;
 					}
 				}
@@ -555,12 +526,7 @@ public sealed class MyersDiff<T>
 	/// <param name="k">K index</param>
 	/// <param name="delta">Delta</param>
 	/// <returns>X coordinate</returns>
-	private int GetReverseDPaths(
-		SubArray<T> subArrayA,
-		SubArray<T> subArrayB,
-		int d,
-		int k,
-		int delta )
+	private int GetReverseDPaths( SubArray< T > subArrayA, SubArray< T > subArrayB, int d, int k, int delta )
 	{
 		int p = k + delta;
 
@@ -593,7 +559,7 @@ public sealed class MyersDiff<T>
 	/// <param name="subArrayA">Sub-sequence A</param>
 	/// <param name="subArrayB">Sub-sequence B</param>
 	/// <returns>True - fictitious points added</returns>
-	private bool SetupFictitiousPoints( SubArray<T> subArrayA, SubArray<T> subArrayB )
+	private bool SetupFictitiousPoints( SubArray< T > subArrayA, SubArray< T > subArrayB )
 	{
 		if( ( subArrayA.Length > 0 ) && ( subArrayB.Length > 0 ) )
 		{

@@ -49,7 +49,7 @@ public class DeSerializeBinaryReader : IDeSerializeReader
 	/// <typeparam name="T"></typeparam>
 	/// <returns></returns>
 	/// <exception cref="DeSerializeException"></exception>
-	private T[] ReadArr<T>( string? fieldName, Func<string, T> reader, bool allowNull )
+	private T[] ReadArr< T >( string? fieldName, Func< string, T > reader, bool allowNull )
 	{
 		T[]? reading = ReadArrN( fieldName, reader, allowNull );
 		if( reading == null )
@@ -69,7 +69,7 @@ public class DeSerializeBinaryReader : IDeSerializeReader
 	/// <typeparam name="T"></typeparam>
 	/// <returns></returns>
 	/// <exception cref="DeSerializeException"></exception>
-	private T[]? ReadArrN<T>( string? fieldName, Func<string, T> reader, bool allowNull )
+	private T[]? ReadArrN< T >( string? fieldName, Func< string, T > reader, bool allowNull )
 	{
 		int length = Reader.ReadInt32();
 		if( length >= 0 )
@@ -633,9 +633,7 @@ public class DeSerializeBinaryReader : IDeSerializeReader
 		byte value = Reader.ReadByte();
 		if( value != DeSerializeConstants.FLAG_OBJECT_END )
 		{
-			throw new DeSerializeException(
-				$"Invalid deserialized object '{objectType.FullName}' "
-				+ $"End of object \"{fieldName}\" expected!" );
+			throw new DeSerializeException( $"Invalid deserialized object '{objectType.FullName}' End of object \"{fieldName}\" expected!" );
 		}
 	}
 
@@ -650,9 +648,7 @@ public class DeSerializeBinaryReader : IDeSerializeReader
 		byte value = ReadByte( fieldName );
 		if( value != DeSerializeConstants.FLAG_COLLECTION_END )
 		{
-			throw new DeSerializeException(
-				$"Invalid deserialized object '{objectType.FullName}' "
-				+ $"End of collection \"{fieldName}\" expected!" );
+			throw new DeSerializeException( $"Invalid deserialized object '{objectType.FullName}' End of collection \"{fieldName}\" expected!" );
 		}
 	}
 }

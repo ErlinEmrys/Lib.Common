@@ -3,12 +3,13 @@ namespace Erlin.Lib.Common.DeSerialization;
 /// <summary>
 ///    Attribute for all De/Serializable records
 /// </summary>
-[AttributeUsage( AttributeTargets.Class | AttributeTargets.Struct, Inherited = false )]
+[ AttributeUsage( AttributeTargets.Class | AttributeTargets.Struct, Inherited = false ) ]
 public class DeSerializableAttribute
 (
 	ushort version,
 	string identifier
-) : Attribute
+)
+	: Attribute
 {
 	/// <summary>
 	///    Unique identifier for record runtime type

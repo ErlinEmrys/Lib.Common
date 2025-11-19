@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 
+using Erlin.Lib.Common.Exceptions;
+
 namespace Erlin.Lib.Common.DeSerialization.ReadWrite;
 
 /// <summary>
@@ -13,8 +15,6 @@ public partial class DeSerializer
 )
 	: IDeSerializer
 {
-	private Stack<ushort> ShortRuntimeTypes { get; } = new();
-
 	/// <summary>
 	///    Reader or Writer of elementary values
 	/// </summary>
@@ -34,8 +34,7 @@ public partial class DeSerializer
 		{
 			if( Reader.ImplementsRead && Writer.ImplementsWrite )
 			{
-				throw new InvalidOperationException(
-					"DeSerializer implements both reading and writing at the same time!" );
+				throw new InvalidOperationException( "DeSerializer implements both reading and writing at the same time!" );
 			}
 
 			return Reader.ImplementsRead;
@@ -58,7 +57,7 @@ public partial class DeSerializer
 	/// <summary>
 	///    Optional parameters of De/Serialization
 	/// </summary>
-	public Dictionary<string, string> Params { get; } = new();
+	public Dictionary< string, string > Params { get; } = new();
 
 	/// <summary>
 	///    Release all resources
@@ -68,58 +67,49 @@ public partial class DeSerializer
 		Writer.Dispose();
 	}
 
-	public T ReadWrite<T>( DeSerializeContext<T> context )
+	public T ReadWrite< T >( DeSerializeContext< T > context )
 		where T : IDeSerializable
 	{
 		return ReadWrite( context.GetValue(), context.ArgumentName, context.ValueIndex );
 	}
 
-	public T ReadWrite<T>(
-		T value, [CallerArgumentExpression( nameof( value ) )]string? argumentName = null,
-		int? valueIndex = null )
+	public T ReadWrite< T >( T value, [ CallerArgumentExpression( nameof( value ) ) ]string? argumentName = null, int? valueIndex = null )
 		where T : IDeSerializable
 	{
-		return ReadWrite(
-			value, c =>
+		return ReadWrite( value, c =>
+		{
+			T item = c.GetValue( () => ( T? )Activator.CreateInstance( c.ValueRuntimeType, this ) );
+			if( c.DS.IsWrite )
 			{
-				T item = c.GetValue( () => ( T? )Activator.CreateInstance( c.ValueRuntimeType, this ) );
-				if( c.DS.IsWrite )
-				{
-					item.DeSerialize( this );
-				}
+				item.DeSerialize( this );
+			}
 
-				return item;
-			}, argumentName, valueIndex );
+			return item;
+		}, argumentName, valueIndex );
 	}
 
-	public T? ReadWriteN<T>( DeSerializeContext<T?> context )
+	public T? ReadWriteN< T >( DeSerializeContext< T? > context )
 		where T : IDeSerializable
 	{
 		return ReadWriteN( context.GetValue(), context.ArgumentName, context.ValueIndex );
 	}
 
-	public T? ReadWriteN<T>(
-		T? value, [CallerArgumentExpression( nameof( value ) )]string? argumentName = null,
-		int? valueIndex = null )
+	public T? ReadWriteN< T >( T? value, [ CallerArgumentExpression( nameof( value ) ) ]string? argumentName = null, int? valueIndex = null )
 		where T : IDeSerializable
 	{
-		return ReadWriteN(
-			value, c =>
+		return ReadWriteN( value, c =>
+		{
+			T item = c.GetValue( () => ( T? )Activator.CreateInstance( c.ValueRuntimeType, this ) );
+			if( c.DS.IsWrite )
 			{
-				T item = c.GetValue( () => ( T? )Activator.CreateInstance( c.ValueRuntimeType, this ) );
-				if( c.DS.IsWrite )
-				{
-					item.DeSerialize( this );
-				}
+				item.DeSerialize( this );
+			}
 
-				return item;
-			}, argumentName, valueIndex );
+			return item;
+		}, argumentName, valueIndex );
 	}
 
-	public T ReadWrite<T>(
-		T value, Func<DeSerializeContext<T>, T> objectDeSerialization,
-		[CallerArgumentExpression( nameof( value ) )]
-		string? argumentName = null, int? valueIndex = null )
+	public T ReadWrite< T >( T value, Func< DeSerializeContext< T >, T > objectDeSerialization, [ CallerArgumentExpression( nameof( value ) ) ]string? argumentName = null, int? valueIndex = null )
 	{
 		if( IsWrite && value is null )
 		{
@@ -135,10 +125,7 @@ public partial class DeSerializer
 		return read;
 	}
 
-	public T? ReadWriteN<T>(
-		T? value, Func<DeSerializeContext<T>, T> objectDeSerialization,
-		[CallerArgumentExpression( nameof( value ) )]
-		string? argumentName = null, int? valueIndex = null )
+	public T? ReadWriteN< T >( T? value, Func< DeSerializeContext< T >, T > objectDeSerialization, [ CallerArgumentExpression( nameof( value ) ) ]string? argumentName = null, int? valueIndex = null )
 	{
 		if( IsWrite )
 		{
@@ -150,8 +137,14 @@ public partial class DeSerializer
 			{
 				Type valueType = value.GetType();
 				DeSerializeType type = TypeProvider.EnsureType( valueType );
+
+				if( type.ShortId is DeSerializeConstants.TYPE_ID_OBJECT_NULL or DeSerializeConstants.TYPE_ID_CUSTOM_TYPE or DeSerializeConstants.TYPE_ID_TYPE_TABLE or DeSerializeConstants.TYPE_ID_MAIN_DATA or DeSerializeConstants.TYPE_ID_KEY_VALUE_PAIR )
+				{
+					throw new DeSerializationException( $"Attempt to write forbidden short type ID: {type.ShortId}" );
+				}
+
 				Writer.WriteObjectStart( argumentName, type.ShortId );
-				DeSerializeContext<T> context = new( this, value, valueIndex, valueType, argumentName );
+				DeSerializeContext< T > context = new( this, value, valueIndex, valueType, argumentName );
 				objectDeSerialization( context );
 				Writer.WriteObjectEnd();
 			}
@@ -160,10 +153,10 @@ public partial class DeSerializer
 		}
 
 		ushort shortTypeId = Reader.ReadObjectStart( argumentName, valueIndex );
-		if( shortTypeId != 0 )
+		if( shortTypeId != DeSerializeConstants.TYPE_ID_OBJECT_NULL )
 		{
 			Type itemType = TypeProvider.FindRuntimeType( shortTypeId );
-			DeSerializeContext<T> context = new( this, value, valueIndex, itemType, argumentName );
+			DeSerializeContext< T > context = new( this, value, valueIndex, itemType, argumentName );
 			T reading = objectDeSerialization( context );
 
 			Reader.ReadObjectEnd( argumentName, itemType );
@@ -174,10 +167,10 @@ public partial class DeSerializer
 		return default;
 	}
 
-	public ushort GetVersion<T>()
+	public ushort GetVersion< T >()
 		where T : IDeSerializable
 	{
-		DeSerializableAttribute att = typeof( T ).GetOneCustomAttribute<DeSerializableAttribute>();
-		return IsWrite ? att.Version : TypeProvider.GetVersion( att.Identifier, ShortRuntimeTypes.Peek() );
+		DeSerializableAttribute att = typeof( T ).GetOneCustomAttribute< DeSerializableAttribute >();
+		return IsWrite ? att.Version : TypeProvider.GetVersion( att.Identifier );
 	}
 }

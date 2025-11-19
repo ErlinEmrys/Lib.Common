@@ -5,7 +5,7 @@ namespace Erlin.Lib.Common.Text.Diff;
 /// <summary>
 ///    Collection of all edits needed to transform seqA to seqB
 /// </summary>
-public sealed class EditScript : ReadOnlyCollection<Edit>
+public sealed class EditScript : ReadOnlyCollection< Edit >
 {
 	/// <summary>
 	///    Total lenght of all edits
@@ -22,7 +22,7 @@ public sealed class EditScript : ReadOnlyCollection<Edit>
 	/// </summary>
 	/// <param name="similarity">Similarity index</param>
 	internal EditScript( double similarity )
-		: base( new List<Edit>() )
+		: base( new List< Edit >() )
 	{
 		Similarity = similarity;
 	}

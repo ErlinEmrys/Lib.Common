@@ -34,7 +34,7 @@ public class DeSerializeBinaryWriter : IDeSerializeWriter
 	///    Switches underlying stream to write
 	/// </summary>
 	/// <param name="stream"></param>
-	[MemberNotNull( nameof( DeSerializeBinaryWriter.Writer ) )]
+	[ MemberNotNull( nameof( DeSerializeBinaryWriter.Writer ) ) ]
 	public void SwitchStream( Stream stream )
 	{
 		Dispose();
@@ -74,11 +74,7 @@ public class DeSerializeBinaryWriter : IDeSerializeWriter
 	/// <summary>
 	///    Writes nullable array of data
 	/// </summary>
-	/// <param name="fieldName"></param>
-	/// <param name="value"></param>
-	/// <param name="serializer"></param>
-	/// <typeparam name="T"></typeparam>
-	public void WriteArrN<T>( string? fieldName, T[]? value, Action<string, T> serializer )
+	public void WriteArrN< T >( string? fieldName, T[]? value, Action< string, T > serializer )
 	{
 		int length = value?.Length ?? DeSerializeConstants.FLAG_LENGTH_NULL;
 		Writer.Write( length );

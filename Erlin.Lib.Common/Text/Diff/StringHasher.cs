@@ -10,7 +10,7 @@ namespace Erlin.Lib.Common.Text.Diff;
 /// </summary>
 internal sealed class StringHasher
 {
-#region Crc32 Code
+	#region Crc32 Code
 
 	private static readonly uint[] Crc32Code =
 	[
@@ -272,14 +272,14 @@ internal sealed class StringHasher
 		0x2D02EF8D
 	];
 
-#endregion
+	#endregion
 
 	private readonly TextDiffHashType _hashType;
 
 	private readonly bool _ignoreCase;
 	private readonly bool _ignoreWhiteSpace;
 	private readonly int _leadingCharactersToIgnore;
-	private readonly Dictionary<string, int> _uniqueTable;
+	private readonly Dictionary< string, int > _uniqueTable;
 
 	/// <summary>
 	///    Ctor
@@ -288,14 +288,13 @@ internal sealed class StringHasher
 	/// <param name="ignoreCase">Ignore case of hashed text (used UPPER variant)</param>
 	/// <param name="ignoreWhiteSpace">Ignore whitespace characters on beginning and ending of text</param>
 	/// <param name="leadingCharactersToIgnore">Lenght of prefix that should be ignored</param>
-	public StringHasher(
-		TextDiffHashType hashType, bool ignoreCase, bool ignoreWhiteSpace, int leadingCharactersToIgnore )
+	public StringHasher( TextDiffHashType hashType, bool ignoreCase, bool ignoreWhiteSpace, int leadingCharactersToIgnore )
 	{
 		_hashType = hashType;
 		_ignoreCase = ignoreCase;
 		_ignoreWhiteSpace = ignoreWhiteSpace;
 		_leadingCharactersToIgnore = leadingCharactersToIgnore;
-		_uniqueTable = new Dictionary<string, int>();
+		_uniqueTable = new Dictionary< string, int >();
 	}
 
 	/// <summary>

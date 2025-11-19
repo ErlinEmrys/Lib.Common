@@ -8,7 +8,8 @@ namespace Erlin.Lib.Common.Xml;
 public class IgnoreNamespaceXmlReader
 (
 	TextReader reader
-) : XmlTextReader( reader )
+)
+	: XmlTextReader( reader )
 {
 	/// <summary>
 	///    Gets the namespace URI (as defined in the W3C Namespace specification) of the node on

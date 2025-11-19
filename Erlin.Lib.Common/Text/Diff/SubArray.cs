@@ -6,10 +6,10 @@ namespace Erlin.Lib.Common.Text.Diff;
 /// <summary>
 ///    Allows 1..M access for a selected portion of an int array.
 /// </summary>
-internal sealed class SubArray<T>
-	where T : IComparable<T>
+internal sealed class SubArray< T >
+	where T : IComparable< T >
 {
-	private readonly IList<T> _data;
+	private readonly IList< T > _data;
 
 	/// <summary>
 	///    Data lenght
@@ -28,17 +28,14 @@ internal sealed class SubArray<T>
 	/// <returns>Data on selected index + offset</returns>
 	public T this[ int index ]
 	{
-		get
-		{
-			return _data[ ( Offset + index ) - 1 ];
-		}
+		get { return _data[ ( Offset + index ) - 1 ]; }
 	}
 
 	/// <summary>
 	///    Ctor
 	/// </summary>
 	/// <param name="data">Raw data</param>
-	public SubArray( IList<T> data )
+	public SubArray( IList< T > data )
 	{
 		_data = data;
 		Offset = 0;
@@ -51,7 +48,7 @@ internal sealed class SubArray<T>
 	/// <param name="data">Raw data</param>
 	/// <param name="offset">Data lookup offset</param>
 	/// <param name="length">Data lenght</param>
-	public SubArray( SubArray<T> data, int offset, int length )
+	public SubArray( SubArray< T > data, int offset, int length )
 	{
 		_data = data._data;
 

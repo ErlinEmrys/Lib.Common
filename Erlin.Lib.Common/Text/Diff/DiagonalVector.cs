@@ -35,7 +35,7 @@ internal sealed class DiagonalVector
 		_max = n + m + Math.Abs( delta );
 
 		// Create an array of size 2*MAX+1 to hold -MAX..+MAX.
-		_data = new int[ ( 2 * _max ) + 1 ];
+		_data = new int[( 2 * _max ) + 1];
 	}
 
 	/// <summary>
@@ -46,9 +46,7 @@ internal sealed class DiagonalVector
 	private int GetActualIndex( int userIndex )
 	{
 		int result = userIndex + _max;
-		Debug.Assert(
-			( result >= 0 ) && ( result < _data.Length ),
-			"The actual index must be within the actual _data array's bounds." );
+		Debug.Assert( ( result >= 0 ) && ( result < _data.Length ), "The actual index must be within the actual _data array's bounds." );
 
 		return result;
 	}

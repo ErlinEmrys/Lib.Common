@@ -3,7 +3,7 @@ namespace Erlin.Lib.Common.DeSerialization;
 /// <summary>
 ///    Exception during DeSerialization
 /// </summary>
-[Serializable]
+[ Serializable ]
 public class DeSerializeException : Exception
 {
 	/// <summary>

@@ -7,12 +7,12 @@ namespace Erlin.Lib.Common.Collections;
 /// <summary>
 ///    List of items that provides events when the collection changes
 /// </summary>
-public class ObservableList<T> : ObservableCollection<T>
+public class ObservableList< T > : ObservableCollection< T >
 {
 	/// <summary>
 	///    Adds the elements of the specified collection to the end of this List
 	/// </summary>
-	public void AddRange( IList<T> collection )
+	public void AddRange( IList< T > collection )
 	{
 		InsertRange( Count, collection );
 	}
@@ -21,9 +21,9 @@ public class ObservableList<T> : ObservableCollection<T>
 	///    Inserts the elements of a collection into this List at the
 	///    specified index.
 	/// </summary>
-	public void InsertRange( int index, IList<T> collection )
+	public void InsertRange( int index, IList< T > collection )
 	{
-		ArgumentNullException.ThrowIfNull( collection, nameof( collection ) );
+		ArgumentNullException.ThrowIfNull( collection );
 
 		if( ( index < 0 ) || ( index > Count ) )
 		{
@@ -38,14 +38,13 @@ public class ObservableList<T> : ObservableCollection<T>
 		CheckReentrancy();
 
 		//expand the following couple of lines when adding more constructors.
-		List<T> target = ( List<T> )Items;
+		List< T > target = ( List< T > )Items;
 		target.InsertRange( index, collection );
 
 		OnPropertyChanged( ObservableListEventArgsCache.CountPropertyChanged );
 		OnPropertyChanged( ObservableListEventArgsCache.IndexerPropertyChanged );
 
-		OnCollectionChanged(
-			new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, collection, index ) );
+		OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, collection, index ) );
 	}
 }
 
