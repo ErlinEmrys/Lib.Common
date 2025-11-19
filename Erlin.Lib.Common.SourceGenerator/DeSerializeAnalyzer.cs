@@ -15,12 +15,15 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 	/// <summary>
 	///    List of errors this analyzer can rise
 	/// </summary>
-	public override ImmutableArray< DiagnosticDescriptor > SupportedDiagnostics { get; } = ImmutableArray.Create( DeSerializeDiagnosticsDescriptors.SourceGeneratorError,
+	public override ImmutableArray< DiagnosticDescriptor > SupportedDiagnostics { get; } =
+	[
+		DeSerializeDiagnosticsDescriptors.SourceGeneratorError,
 		DeSerializeDiagnosticsDescriptors.MustBePartial,
 		DeSerializeDiagnosticsDescriptors.MustHaveAttribute,
 		DeSerializeDiagnosticsDescriptors.AttributeMustHaveGuid,
 		DeSerializeDiagnosticsDescriptors.MethodInheritance,
-		DeSerializeDiagnosticsDescriptors.ParameterlessCtorAccessibility );
+		DeSerializeDiagnosticsDescriptors.ParameterlessCtorAccessibility
+	];
 
 	/// <summary>
 	///    Initialization of the analyzer
