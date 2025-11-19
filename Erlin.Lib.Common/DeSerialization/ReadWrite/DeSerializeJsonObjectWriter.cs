@@ -19,7 +19,7 @@ public class DeSerializeJsonObjectWriter : IDeSerializeWriter
 	/// <summary>
 	///    Saved Parents of current JSON node
 	/// </summary>
-	private Stack<JContainer> Parents { get; } = new();
+	private Stack< JContainer > Parents { get; } = new();
 
 	public DeSerializeJsonObjectWriter()
 	{
@@ -497,7 +497,7 @@ public class DeSerializeJsonObjectWriter : IDeSerializeWriter
 
 	public void WriteCollectionStart( string? fieldName, int count, bool isPrimitive = false )
 	{
-		JArray arr = [];
+		JArray arr = [ ];
 		WriteValue( fieldName, arr );
 
 		Parents.Push( Current );

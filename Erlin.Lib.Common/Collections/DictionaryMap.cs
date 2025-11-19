@@ -74,7 +74,7 @@ public class DictionaryMap< TKey, TValue >
 		/// <summary>
 		///    Gets the value associated with the specified key.
 		/// </summary>
-		public bool TryGetValue( TK key, [MaybeNullWhen( false )]out TV value )
+		public bool TryGetValue( TK key, [ MaybeNullWhen( false ) ]out TV value )
 		{
 			return dictionary.TryGetValue( key, out value );
 		}

@@ -34,7 +34,7 @@ public class DeSerializeBinaryReader : IDeSerializeReader
 	///    Switches underlying stream to read
 	/// </summary>
 	/// <param name="stream"></param>
-	[MemberNotNull( nameof( DeSerializeBinaryReader.Reader ) )]
+	[ MemberNotNull( nameof( DeSerializeBinaryReader.Reader ) ) ]
 	public void SwitchStream( Stream stream )
 	{
 		Reader = new BinaryReader( stream, Encoding.UTF8, true );
@@ -74,7 +74,7 @@ public class DeSerializeBinaryReader : IDeSerializeReader
 		int length = Reader.ReadInt32();
 		if( length >= 0 )
 		{
-			T[] result = new T[ length ];
+			T[] result = new T[length];
 			for( int i = 0; i < length; i++ )
 			{
 				T value = reader( string.Empty );

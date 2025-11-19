@@ -4,7 +4,7 @@ namespace Erlin.Lib.Common.DeSerialization;
 ///    Helper context for custom De/Serialization
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class DeSerializeContext<T>
+public class DeSerializeContext< T >
 (
 	IDeSerializer ds,
 	T? value,
@@ -43,7 +43,7 @@ public class DeSerializeContext<T>
 	/// </summary>
 	/// <param name="valueCreation"></param>
 	/// <returns></returns>
-	public T GetValue( Func<T?>? valueCreation = null )
+	public T GetValue( Func< T? >? valueCreation = null )
 	{
 		if( Value is not null )
 		{
