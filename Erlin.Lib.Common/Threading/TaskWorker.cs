@@ -206,7 +206,6 @@ public sealed class TaskWorker< T > : IAsyncDisposable
 	/// <summary>
 	///    Runs a working task for one queue item
 	/// </summary>
-	/// <returns></returns>
 	private WorkItem< T >? RunTask()
 	{
 		if( _disposed || !_queue.TryDequeue( out T? item ) )
@@ -247,17 +246,19 @@ public sealed class TaskWorker< T > : IAsyncDisposable
 	/// </summary>
 	public async Task WaitToFinish( CancellationToken cancelToken = default )
 	{
-		Start:
-		while( !IsSuspended && ( QueueCount > 0 ) )
+		while( true )
 		{
-			await Task.Delay( IDateTimeProvider.TS_MILLISECONDS_010, cancelToken );
-		}
+			while( !IsSuspended && ( QueueCount > 0 ) )
+			{
+				await Task.Delay( IDateTimeProvider.TS_MILLISECONDS_010, cancelToken );
+			}
 
-		await Task.WhenAll( GetAllWorkTasks() );
+			await Task.WhenAll( GetAllWorkTasks() );
 
-		if( ( !IsSuspended && ( QueueCount > 0 ) ) || ( GetAllWorkTasks().Count > 0 ) )
-		{
-			goto Start;
+			if( ( IsSuspended || ( QueueCount <= 0 ) ) && ( GetAllWorkTasks().Count <= 0 ) )
+			{
+				return;
+			}
 		}
 	}
 

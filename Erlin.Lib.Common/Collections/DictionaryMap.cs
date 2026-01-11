@@ -5,8 +5,6 @@ namespace Erlin.Lib.Common.Collections;
 /// <summary>
 ///    Two way dictionary
 /// </summary>
-/// <typeparam name="TKey"></typeparam>
-/// <typeparam name="TValue"></typeparam>
 public class DictionaryMap< TKey, TValue >
 	where TKey : notnull
 	where TValue : notnull

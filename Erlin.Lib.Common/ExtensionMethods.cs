@@ -328,6 +328,16 @@ public static class ExtensionMethods
 		return text.Length <= maxLength ? text : text[ ..maxLength ];
 	}
 
+	/// <summary>
+	///    Check if string is valid URL
+	/// </summary>
+	public static bool IsUrl( this string? text )
+	{
+		return text.IsNotEmpty() &&
+			Uri.TryCreate( text, UriKind.Absolute, out Uri? uriResult ) &&
+			( ( uriResult.Scheme == Uri.UriSchemeHttp ) || ( uriResult.Scheme == Uri.UriSchemeHttps ) );
+	}
+
 	#endregion
 
 	#region Collections
