@@ -31,6 +31,11 @@ public interface IDateTimeProvider
 	const string FORMAT_TIME_TICKS = "HH:mm:ss:ffff";
 
 	/// <summary>
+	///    Maximal Unix time 1.1.2038 00:00:00
+	/// </summary>
+	static readonly DateTime MAX_UNIX_TIME = new( 2038, 1, 1, 0, 0, 0, DateTimeKind.Utc );
+
+	/// <summary>
 	///    1 millisecond
 	/// </summary>
 	static readonly TimeSpan TS_MINUS_MILLISECONDS_001 = TimeSpan.FromMilliseconds( -1 );
