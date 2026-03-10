@@ -8,7 +8,6 @@ namespace Erlin.Lib.Common.Threading;
 /// <summary>
 ///    Original source: https://github.com/kpreisser/AsyncReaderWriterLockSlim
 /// </summary>
-[ ConfigureAwait( true ) ]
 public class AsyncReaderWriterLock : IDisposable
 {
 	private readonly object syncRoot = new();
@@ -177,7 +176,7 @@ public class AsyncReaderWriterLock : IDisposable
 		{
 			// Need to wait until the existing write lock is released.
 			// This may throw an OperationCanceledException.
-			waitResult = await ( existingWriteLockState.WaitingReadLocksSemaphore?.WaitAsync( millisecondsTimeout, cancellationToken ) ?? Task.FromResult( false ) );
+			waitResult = await ( existingWriteLockState.WaitingReadLocksSemaphore?.WaitAsync( millisecondsTimeout, cancellationToken ) ?? Task.FromResult( false ) ).ConfigureAwait( true );
 		}
 		finally
 		{
@@ -321,7 +320,7 @@ public class AsyncReaderWriterLock : IDisposable
 			bool writeLockWaitResult = false;
 			try
 			{
-				writeLockWaitResult = await writeLockSemaphore.WaitAsync( millisecondsTimeout, cancellationToken );
+				writeLockWaitResult = await writeLockSemaphore.WaitAsync( millisecondsTimeout, cancellationToken ).ConfigureAwait( true );
 			}
 			finally
 			{
@@ -346,7 +345,7 @@ public class AsyncReaderWriterLock : IDisposable
 			try
 			{
 				// This may throw an OperationCanceledException.
-				waitResult = await readLockReleaseSemaphore.WaitAsync( AsyncReaderWriterLock.GetRemainingTimeout( millisecondsTimeout, initialTicks ), cancellationToken );
+				waitResult = await readLockReleaseSemaphore.WaitAsync( AsyncReaderWriterLock.GetRemainingTimeout( millisecondsTimeout, initialTicks ), cancellationToken ).ConfigureAwait( true );
 			}
 			finally
 			{

@@ -12,17 +12,20 @@ namespace Erlin.Lib.Common.SourceGenerator;
 [ DiagnosticAnalyzer( LanguageNames.CSharp ) ]
 public class DeSerializeAnalyzer : DiagnosticAnalyzer
 {
+	private HashSet< Guid > DeSerializeAttIds { get; } = [ ];
+
 	/// <summary>
 	///    List of errors this analyzer can rise
 	/// </summary>
 	public override ImmutableArray< DiagnosticDescriptor > SupportedDiagnostics { get; } =
 	[
-		DeSerializeDiagnosticsDescriptors.SourceGeneratorError,
+		DeSerializeDiagnosticsDescriptors.AnalyzerError,
 		DeSerializeDiagnosticsDescriptors.MustBePartial,
 		DeSerializeDiagnosticsDescriptors.MustHaveAttribute,
 		DeSerializeDiagnosticsDescriptors.AttributeMustHaveGuid,
 		DeSerializeDiagnosticsDescriptors.MethodInheritance,
-		DeSerializeDiagnosticsDescriptors.ParameterlessCtorAccessibility
+		DeSerializeDiagnosticsDescriptors.ParameterlessCtorAccessibility,
+		DeSerializeDiagnosticsDescriptors.IdentifierMustBeUnique,
 	];
 
 	/// <summary>
@@ -33,13 +36,13 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 		context.ConfigureGeneratedCodeAnalysis( GeneratedCodeAnalysisFlags.None );
 		context.EnableConcurrentExecution();
 
-		context.RegisterSymbolAction( DeSerializeAnalyzer.AnalyzeNamedType, SymbolKind.NamedType );
+		context.RegisterSymbolAction( AnalyzeNamedType, SymbolKind.NamedType );
 	}
 
 	/// <summary>
 	///    Analysis of named type
 	/// </summary>
-	private static void AnalyzeNamedType( SymbolAnalysisContext context )
+	private void AnalyzeNamedType( SymbolAnalysisContext context )
 	{
 		try
 		{
@@ -51,18 +54,18 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 				return;
 			}
 
-			DeSerializeAnalyzer.AnalyzeDeSerializableType( context, type );
+			AnalyzeDeSerializableType( context, type );
 		}
 		catch( Exception ex )
 		{
-			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.SourceGeneratorError, null, ex.ToString() ) );
+			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.AnalyzerError, null, ex.ToString() ) );
 		}
 	}
 
 	/// <summary>
 	///    Analysis of DeSerializable type
 	/// </summary>
-	private static void AnalyzeDeSerializableType( SymbolAnalysisContext context, INamedTypeSymbol type )
+	private void AnalyzeDeSerializableType( SymbolAnalysisContext context, INamedTypeSymbol type )
 	{
 		bool isPartial = false;
 		Location? typeDeclarationLocation = null;
@@ -80,7 +83,7 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 		}
 
 		DeSerializeAnalyzer.CheckPartial( context, type, typeDeclarationLocation, isPartial );
-		DeSerializeAnalyzer.CheckAttribute( context, type, typeDeclarationLocation );
+		CheckAttribute( context, type, typeDeclarationLocation );
 		DeSerializeAnalyzer.CheckMethod( context, type, typeDeclarationLocation );
 		DeSerializeAnalyzer.CheckCtorAccess( context, type, typeDeclarationLocation );
 	}
@@ -99,7 +102,7 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 	/// <summary>
 	///    Check if type have correct DeSerializable attribute
 	/// </summary>
-	private static void CheckAttribute( SymbolAnalysisContext context, ISymbol type, Location? typeDeclarationLocation )
+	private void CheckAttribute( SymbolAnalysisContext context, ISymbol type, Location? typeDeclarationLocation )
 	{
 		AttributeData? deSerializeAtt = type.GetAttributes().FirstOrDefault( a => DeSerializeConstructorGenerator.IsRuntimeType( a, Const.DE_SERIALIZABLE_ATT_NS, Const.DE_SERIALIZABLE_ATT_NAME ) );
 
@@ -111,9 +114,15 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 
 		string? attGuidValue = deSerializeAtt.ConstructorArguments.FirstOrDefault( a => DeSerializeConstructorGenerator.IsRuntimeType( a.Type, Const.STRING_NS, Const.STRING_NAME ) ).Value?.ToString();
 
-		if( string.IsNullOrEmpty( attGuidValue ) || !Guid.TryParse( attGuidValue, out Guid _ ) )
+		if( !Guid.TryParse( attGuidValue, out Guid dsId ) )
 		{
 			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.AttributeMustHaveGuid, typeDeclarationLocation, attGuidValue ) );
+			return;
+		}
+
+		if( !DeSerializeAttIds.Add( dsId ) )
+		{
+			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.IdentifierMustBeUnique, typeDeclarationLocation, attGuidValue ) );
 		}
 	}
 

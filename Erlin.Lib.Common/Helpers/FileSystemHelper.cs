@@ -120,4 +120,21 @@ public static class FileSystemHelper
 			}
 		}
 	}
+
+	/// <summary>
+	///    Checks if two paths are pointing to same directory
+	/// </summary>
+	public static bool IsSameDirectory( string? left, string? right )
+	{
+		if( ( left == null ) || ( right == null ) )
+		{
+			return left == right;
+		}
+
+		// Trim ending slashes to ensure "Folder" equals "Folder/" and all separator chars would be same
+		string lt = left.Replace( Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar ).TrimEnd( Path.DirectorySeparatorChar );
+		string rt = right.Replace( Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar ).TrimEnd( Path.DirectorySeparatorChar );
+
+		return string.Equals( lt, rt, StringComparison.OrdinalIgnoreCase );
+	}
 }
