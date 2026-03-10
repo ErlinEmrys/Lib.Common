@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-using Fody;
-
 namespace Erlin.Lib.Common.Threading;
 
 /// <summary>

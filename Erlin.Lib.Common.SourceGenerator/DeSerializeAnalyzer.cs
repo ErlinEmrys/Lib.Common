@@ -25,7 +25,7 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 		DeSerializeDiagnosticsDescriptors.AttributeMustHaveGuid,
 		DeSerializeDiagnosticsDescriptors.MethodInheritance,
 		DeSerializeDiagnosticsDescriptors.ParameterlessCtorAccessibility,
-		DeSerializeDiagnosticsDescriptors.IdentifierMustBeUnique,
+		DeSerializeDiagnosticsDescriptors.IdentifierMustBeUnique
 	];
 
 	/// <summary>
