@@ -22,8 +22,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
-		<AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+		<AdditionalFiles Include="AnalyzerReleases\AnalyzerReleases.Shipped.md" />
+		<AdditionalFiles Include="AnalyzerReleases\AnalyzerReleases.Unshipped.md" />
 	</ItemGroup>
 
 	<ItemGroup>

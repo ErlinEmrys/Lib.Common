@@ -5,7 +5,7 @@ namespace Erlin.Lib.Common.SourceGenerator;
 /// <summary>
 ///    Compilation time error messages
 /// </summary>
-public static class DeSerializeDiagnosticsDescriptors
+public static class DiagnosticsDescriptors
 {
 	public const string CATEGORY = "DeSerializeAnalyzer";
 

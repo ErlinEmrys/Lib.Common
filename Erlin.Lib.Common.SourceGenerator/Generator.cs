@@ -11,7 +11,7 @@ namespace Erlin.Lib.Common.SourceGenerator;
 ///    Helper generator for DeSerialize constructors
 /// </summary>
 [ Generator ]
-public class DeSerializeConstructorGenerator : IIncrementalGenerator
+public class Generator : IIncrementalGenerator
 {
 	/// <summary>
 	///    Initialization of source generation
@@ -21,12 +21,12 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	{
 		IncrementalValuesProvider< DeSerializableInfo? > deSerializableTypes =
 			context.SyntaxProvider
-					.CreateSyntaxProvider( DeSerializeConstructorGenerator.CheckIsTypeDeclaration, DeSerializeConstructorGenerator.GetDeSerializableSymbol )
+					.CreateSyntaxProvider( Generator.CheckIsTypeDeclaration, Generator.GetDeSerializableSymbol )
 					.Where( type => type is not null )
 					.Collect()
 					.SelectMany( ( types, _ ) => types.Distinct() );
 
-		context.RegisterSourceOutput( deSerializableTypes, DeSerializeConstructorGenerator.GenerateSource );
+		context.RegisterSourceOutput( deSerializableTypes, Generator.GenerateSource );
 	}
 
 	/// <summary>
@@ -42,7 +42,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 			return false;
 		}
 
-		return DeSerializeConstructorGenerator.IsPartial( declaration );
+		return Generator.IsPartial( declaration );
 	}
 
 	/// <summary>
@@ -78,7 +78,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	/// <returns>True - name and namespace equals the one on symbol</returns>
 	public static bool IsRuntimeType( AttributeData? att, string ns, string name )
 	{
-		return ( att != null ) && DeSerializeConstructorGenerator.IsRuntimeType( att.AttributeClass, ns, name );
+		return ( att != null ) && Generator.IsRuntimeType( att.AttributeClass, ns, name );
 	}
 
 	/// <summary>
@@ -90,23 +90,23 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	private static DeSerializableInfo? GetDeSerializableSymbol( GeneratorSyntaxContext context, CancellationToken cancellationToken )
 	{
 		if( context.SemanticModel.GetDeclaredSymbol( context.Node ) is not ITypeSymbol symbol
-			|| !DeSerializeConstructorGenerator.ImplementsIDeSerializable( symbol ) )
+			|| !Generator.ImplementsIDeSerializable( symbol ) )
 		{
 			return null;
 		}
 
-		bool implemetDeSerializeCtor = !DeSerializeConstructorGenerator.ImplementsDeSerializableConstructor( symbol );
+		bool implemetDeSerializeCtor = !Generator.ImplementsDeSerializableConstructor( symbol );
 
-		bool baseHaveParamlessCtor = ( symbol.BaseType == null ) || DeSerializeConstructorGenerator.ImplementsConstructor( symbol.BaseType, true );
+		bool baseHaveParamlessCtor = ( symbol.BaseType == null ) || Generator.ImplementsConstructor( symbol.BaseType, true );
 
-		bool implemetParamlessCtor = baseHaveParamlessCtor && !DeSerializeConstructorGenerator.ImplementsConstructor( symbol );
+		bool implemetParamlessCtor = baseHaveParamlessCtor && !Generator.ImplementsConstructor( symbol );
 
 		if( !implemetDeSerializeCtor && !implemetParamlessCtor )
 		{
 			return null;
 		}
 
-		bool isBottomImplementation = symbol.BaseType is null || !DeSerializeConstructorGenerator.ImplementsIDeSerializable( symbol.BaseType );
+		bool isBottomImplementation = symbol.BaseType is null || !Generator.ImplementsIDeSerializable( symbol.BaseType );
 
 		DeSerializableInfo info = new( symbol.Name, symbol.ContainingNamespace.ToString(), isBottomImplementation, symbol.IsAbstract, implemetDeSerializeCtor, implemetParamlessCtor );
 
@@ -123,7 +123,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 							{
 								return ( m.Kind == SymbolKind.Method )
 									&& m is IMethodSymbol { MethodKind: MethodKind.Constructor, Parameters.Length: 1 } methodSymbol
-									&& methodSymbol.Parameters.SingleOrDefault( p => DeSerializeConstructorGenerator.IsRuntimeType( p.Type, Const.I_DE_SERIALIZER_NS, Const.I_DE_SERIALIZER_NAME ) ) is not null;
+									&& methodSymbol.Parameters.SingleOrDefault( p => Generator.IsRuntimeType( p.Type, Const.I_DE_SERIALIZER_NS, Const.I_DE_SERIALIZER_NAME ) ) is not null;
 							} );
 	}
 
@@ -137,7 +137,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 								&& m is IMethodSymbol { MethodKind: MethodKind.Constructor } ctor
 								&& ( onlyParamless || ( m.DeclaringSyntaxReferences.Length > 0 ) )
 								&& ( !onlyParamless || ( ctor.Parameters.Length <= 0 ) )
-								&& !ctor.GetAttributes().Any( a => DeSerializeConstructorGenerator.IsRuntimeType( a, Const.GENERATED_CODE_ATT_NS, Const.GENERATED_CODE_ATT_NAME ) ) );
+								&& !ctor.GetAttributes().Any( a => Generator.IsRuntimeType( a, Const.GENERATED_CODE_ATT_NS, Const.GENERATED_CODE_ATT_NAME ) ) );
 	}
 
 	/// <summary>
@@ -147,7 +147,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 	/// <returns></returns>
 	public static bool ImplementsIDeSerializable( ITypeSymbol symbol )
 	{
-		return symbol.AllInterfaces.Any( i => DeSerializeConstructorGenerator.IsRuntimeType( i, Const.I_DE_SERIALIZABLE_NS, Const.I_DE_SERIALIZABLE_NAME ) );
+		return symbol.AllInterfaces.Any( i => Generator.IsRuntimeType( i, Const.I_DE_SERIALIZABLE_NS, Const.I_DE_SERIALIZABLE_NAME ) );
 	}
 
 	/// <summary>
@@ -162,7 +162,7 @@ public class DeSerializeConstructorGenerator : IIncrementalGenerator
 			return;
 		}
 
-		string code = DeSerializeConstructorGenerator.GenerateCode( deSerializable );
+		string code = Generator.GenerateCode( deSerializable );
 
 		context.AddSource( $"{deSerializable.NameSpace}.{deSerializable.Name}.g.cs", code );
 	}

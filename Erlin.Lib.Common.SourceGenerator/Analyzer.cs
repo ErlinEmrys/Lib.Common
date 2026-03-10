@@ -10,7 +10,7 @@ namespace Erlin.Lib.Common.SourceGenerator;
 ///    Analyzer for enforcing DeSerialization rules
 /// </summary>
 [ DiagnosticAnalyzer( LanguageNames.CSharp ) ]
-public class DeSerializeAnalyzer : DiagnosticAnalyzer
+public class Analyzer : DiagnosticAnalyzer
 {
 	private HashSet< Guid > DeSerializeAttIds { get; } = [ ];
 
@@ -19,13 +19,13 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 	/// </summary>
 	public override ImmutableArray< DiagnosticDescriptor > SupportedDiagnostics { get; } =
 	[
-		DeSerializeDiagnosticsDescriptors.AnalyzerError,
-		DeSerializeDiagnosticsDescriptors.MustBePartial,
-		DeSerializeDiagnosticsDescriptors.MustHaveAttribute,
-		DeSerializeDiagnosticsDescriptors.AttributeMustHaveGuid,
-		DeSerializeDiagnosticsDescriptors.MethodInheritance,
-		DeSerializeDiagnosticsDescriptors.ParameterlessCtorAccessibility,
-		DeSerializeDiagnosticsDescriptors.IdentifierMustBeUnique
+		DiagnosticsDescriptors.AnalyzerError,
+		DiagnosticsDescriptors.MustBePartial,
+		DiagnosticsDescriptors.MustHaveAttribute,
+		DiagnosticsDescriptors.AttributeMustHaveGuid,
+		DiagnosticsDescriptors.MethodInheritance,
+		DiagnosticsDescriptors.ParameterlessCtorAccessibility,
+		DiagnosticsDescriptors.IdentifierMustBeUnique
 	];
 
 	/// <summary>
@@ -48,7 +48,7 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 		{
 			INamedTypeSymbol type = ( INamedTypeSymbol )context.Symbol;
 
-			if( ( type.TypeKind == TypeKind.Interface ) || !DeSerializeConstructorGenerator.ImplementsIDeSerializable( type )
+			if( ( type.TypeKind == TypeKind.Interface ) || !Generator.ImplementsIDeSerializable( type )
 			)
 			{
 				return;
@@ -58,7 +58,7 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 		}
 		catch( Exception ex )
 		{
-			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.AnalyzerError, null, ex.ToString() ) );
+			context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.AnalyzerError, null, ex.ToString() ) );
 		}
 	}
 
@@ -76,16 +76,16 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 				continue;
 			}
 
-			isPartial = DeSerializeConstructorGenerator.IsPartial( declaration );
+			isPartial = Generator.IsPartial( declaration );
 
 			typeDeclarationLocation = declaration.Identifier.GetLocation();
 			break;
 		}
 
-		DeSerializeAnalyzer.CheckPartial( context, type, typeDeclarationLocation, isPartial );
+		Analyzer.CheckPartial( context, type, typeDeclarationLocation, isPartial );
 		CheckAttribute( context, type, typeDeclarationLocation );
-		DeSerializeAnalyzer.CheckMethod( context, type, typeDeclarationLocation );
-		DeSerializeAnalyzer.CheckCtorAccess( context, type, typeDeclarationLocation );
+		Analyzer.CheckMethod( context, type, typeDeclarationLocation );
+		Analyzer.CheckCtorAccess( context, type, typeDeclarationLocation );
 	}
 
 	/// <summary>
@@ -95,7 +95,7 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 	{
 		if( !isPartial )
 		{
-			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.MustBePartial, typeDeclarationLocation, type.Name ) );
+			context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.MustBePartial, typeDeclarationLocation, type.Name ) );
 		}
 	}
 
@@ -104,25 +104,25 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 	/// </summary>
 	private void CheckAttribute( SymbolAnalysisContext context, ISymbol type, Location? typeDeclarationLocation )
 	{
-		AttributeData? deSerializeAtt = type.GetAttributes().FirstOrDefault( a => DeSerializeConstructorGenerator.IsRuntimeType( a, Const.DE_SERIALIZABLE_ATT_NS, Const.DE_SERIALIZABLE_ATT_NAME ) );
+		AttributeData? deSerializeAtt = type.GetAttributes().FirstOrDefault( a => Generator.IsRuntimeType( a, Const.DE_SERIALIZABLE_ATT_NS, Const.DE_SERIALIZABLE_ATT_NAME ) );
 
 		if( deSerializeAtt == null )
 		{
-			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.MustHaveAttribute, typeDeclarationLocation, type.Name ) );
+			context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.MustHaveAttribute, typeDeclarationLocation, type.Name ) );
 			return;
 		}
 
-		string? attGuidValue = deSerializeAtt.ConstructorArguments.FirstOrDefault( a => DeSerializeConstructorGenerator.IsRuntimeType( a.Type, Const.STRING_NS, Const.STRING_NAME ) ).Value?.ToString();
+		string? attGuidValue = deSerializeAtt.ConstructorArguments.FirstOrDefault( a => Generator.IsRuntimeType( a.Type, Const.STRING_NS, Const.STRING_NAME ) ).Value?.ToString();
 
 		if( !Guid.TryParse( attGuidValue, out Guid dsId ) )
 		{
-			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.AttributeMustHaveGuid, typeDeclarationLocation, attGuidValue ) );
+			context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.AttributeMustHaveGuid, typeDeclarationLocation, attGuidValue ) );
 			return;
 		}
 
 		if( !DeSerializeAttIds.Add( dsId ) )
 		{
-			context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.IdentifierMustBeUnique, typeDeclarationLocation, attGuidValue ) );
+			context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.IdentifierMustBeUnique, typeDeclarationLocation, attGuidValue ) );
 		}
 	}
 
@@ -135,14 +135,14 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 				.FirstOrDefault( m => ( m.Kind == SymbolKind.Method )
 						&& string.Equals( m.Name, Const.DE_SERIALIZABLE_METHOD_NAME, StringComparison.Ordinal )
 						&& m is IMethodSymbol { MethodKind: MethodKind.Ordinary, Parameters.Length: 1 } methodSymbol
-						&& methodSymbol.Parameters.SingleOrDefault( p => DeSerializeConstructorGenerator.IsRuntimeType( p.Type, Const.I_DE_SERIALIZER_NS, Const.I_DE_SERIALIZER_NAME ) ) is not null )
+						&& methodSymbol.Parameters.SingleOrDefault( p => Generator.IsRuntimeType( p.Type, Const.I_DE_SERIALIZER_NS, Const.I_DE_SERIALIZER_NAME ) ) is not null )
 			is IMethodSymbol deSerializeMethod
 		)
 		{
 			if( !type.IsSealed
 				&& !( deSerializeMethod.IsOverride || deSerializeMethod.IsVirtual || deSerializeMethod.IsAbstract ) )
 			{
-				context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.MethodInheritance, typeDeclarationLocation, type.Name ) );
+				context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.MethodInheritance, typeDeclarationLocation, type.Name ) );
 			}
 		}
 	}
@@ -157,10 +157,10 @@ public class DeSerializeAnalyzer : DiagnosticAnalyzer
 			IMethodSymbol? paramLessCtor = type.InstanceConstructors.FirstOrDefault( c => c.Parameters.Length == 0 );
 
 			if( ( paramLessCtor != null )
-				&& !paramLessCtor.GetAttributes().Any( a => DeSerializeConstructorGenerator.IsRuntimeType( a, Const.GENERATED_CODE_ATT_NS, Const.GENERATED_CODE_ATT_NAME ) )
+				&& !paramLessCtor.GetAttributes().Any( a => Generator.IsRuntimeType( a, Const.GENERATED_CODE_ATT_NS, Const.GENERATED_CODE_ATT_NAME ) )
 				&& ( paramLessCtor.DeclaredAccessibility < type.DeclaredAccessibility ) )
 			{
-				context.ReportDiagnostic( Diagnostic.Create( DeSerializeDiagnosticsDescriptors.ParameterlessCtorAccessibility, typeDeclarationLocation, type.Name, paramLessCtor.DeclaredAccessibility, type.DeclaredAccessibility ) );
+				context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.ParameterlessCtorAccessibility, typeDeclarationLocation, type.Name, paramLessCtor.DeclaredAccessibility, type.DeclaredAccessibility ) );
 			}
 		}
 	}
