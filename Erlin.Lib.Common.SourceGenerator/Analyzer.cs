@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 
 using Microsoft.CodeAnalysis;
@@ -12,8 +13,6 @@ namespace Erlin.Lib.Common.SourceGenerator;
 [ DiagnosticAnalyzer( LanguageNames.CSharp ) ]
 public class Analyzer : DiagnosticAnalyzer
 {
-	private HashSet< Guid > DeSerializeAttIds { get; } = [ ];
-
 	/// <summary>
 	///    List of errors this analyzer can rise
 	/// </summary>
@@ -33,16 +32,20 @@ public class Analyzer : DiagnosticAnalyzer
 	/// </summary>
 	public override void Initialize( AnalysisContext context )
 	{
-		context.ConfigureGeneratedCodeAnalysis( GeneratedCodeAnalysisFlags.None );
+		context.ConfigureGeneratedCodeAnalysis( GeneratedCodeAnalysisFlags.ReportDiagnostics );
 		context.EnableConcurrentExecution();
 
-		context.RegisterSymbolAction( AnalyzeNamedType, SymbolKind.NamedType );
+		context.RegisterCompilationStartAction( compilationContext =>
+		{
+			ConcurrentDictionary< Guid, string > deSerializeAttIds = new();
+			compilationContext.RegisterSymbolAction( ctx => Analyzer.AnalyzeNamedType( ctx, deSerializeAttIds ), SymbolKind.NamedType );
+		} );
 	}
 
 	/// <summary>
 	///    Analysis of named type
 	/// </summary>
-	private void AnalyzeNamedType( SymbolAnalysisContext context )
+	private static void AnalyzeNamedType( SymbolAnalysisContext context, ConcurrentDictionary< Guid, string > deSerializeAttIds )
 	{
 		try
 		{
@@ -54,7 +57,7 @@ public class Analyzer : DiagnosticAnalyzer
 				return;
 			}
 
-			AnalyzeDeSerializableType( context, type );
+			Analyzer.AnalyzeDeSerializableType( context, type, deSerializeAttIds );
 		}
 		catch( Exception ex )
 		{
@@ -65,7 +68,7 @@ public class Analyzer : DiagnosticAnalyzer
 	/// <summary>
 	///    Analysis of DeSerializable type
 	/// </summary>
-	private void AnalyzeDeSerializableType( SymbolAnalysisContext context, INamedTypeSymbol type )
+	private static void AnalyzeDeSerializableType( SymbolAnalysisContext context, INamedTypeSymbol type, ConcurrentDictionary< Guid, string > deSerializeAttIds )
 	{
 		bool isPartial = false;
 		Location? typeDeclarationLocation = null;
@@ -83,7 +86,7 @@ public class Analyzer : DiagnosticAnalyzer
 		}
 
 		Analyzer.CheckPartial( context, type, typeDeclarationLocation, isPartial );
-		CheckAttribute( context, type, typeDeclarationLocation );
+		Analyzer.CheckAttribute( context, type, typeDeclarationLocation, deSerializeAttIds );
 		Analyzer.CheckMethod( context, type, typeDeclarationLocation );
 		Analyzer.CheckCtorAccess( context, type, typeDeclarationLocation );
 	}
@@ -102,7 +105,7 @@ public class Analyzer : DiagnosticAnalyzer
 	/// <summary>
 	///    Check if type have correct DeSerializable attribute
 	/// </summary>
-	private void CheckAttribute( SymbolAnalysisContext context, ISymbol type, Location? typeDeclarationLocation )
+	private static void CheckAttribute( SymbolAnalysisContext context, ISymbol type, Location? typeDeclarationLocation, ConcurrentDictionary< Guid, string > deSerializeAttIds )
 	{
 		AttributeData? deSerializeAtt = type.GetAttributes().FirstOrDefault( a => Generator.IsRuntimeType( a, Const.DE_SERIALIZABLE_ATT_NS, Const.DE_SERIALIZABLE_ATT_NAME ) );
 
@@ -120,9 +123,11 @@ public class Analyzer : DiagnosticAnalyzer
 			return;
 		}
 
-		if( !DeSerializeAttIds.Add( dsId ) )
+		string typeFullName = Analyzer.GetTypeIdentifier( type );
+		if( !deSerializeAttIds.TryAdd( dsId, typeFullName ) )
 		{
-			context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.IdentifierMustBeUnique, typeDeclarationLocation, attGuidValue ) );
+			string previousTypeFullName = deSerializeAttIds[ dsId ];
+			context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.IdentifierMustBeUnique, typeDeclarationLocation, attGuidValue, typeFullName, previousTypeFullName ) );
 		}
 	}
 
@@ -163,5 +168,13 @@ public class Analyzer : DiagnosticAnalyzer
 				context.ReportDiagnostic( Diagnostic.Create( DiagnosticsDescriptors.ParameterlessCtorAccessibility, typeDeclarationLocation, type.Name, paramLessCtor.DeclaredAccessibility, type.DeclaredAccessibility ) );
 			}
 		}
+	}
+
+	/// <summary>
+	///    Returns fully qualified type name
+	/// </summary>
+	private static string GetTypeIdentifier( ISymbol type )
+	{
+		return type.ContainingNamespace.Name + "." + type.Name;
 	}
 }

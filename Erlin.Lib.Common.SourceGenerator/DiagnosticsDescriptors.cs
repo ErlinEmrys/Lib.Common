@@ -48,6 +48,6 @@ public static class DiagnosticsDescriptors
 	public static readonly DiagnosticDescriptor IdentifierMustBeUnique
 		= new( "DeSerialize_006",
 			"DeSerializable attribute identifier is not unique",
-			"DeSerializable attribute identifier value '{0}' is not unique for specific class - duplicit identifier exists",
+			"DeSerializable attribute identifier value '{0}' is not unique it exists both on '{1}' and '{2}'",
 			CATEGORY, DiagnosticSeverity.Error, true );
 }
