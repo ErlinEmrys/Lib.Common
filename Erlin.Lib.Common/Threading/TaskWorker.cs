@@ -213,7 +213,7 @@ public sealed class TaskWorker< T > : IAsyncDisposable
 			return null;
 		}
 
-		Task work = ParallelHelper.Run( async token =>
+		Task work = ParallelHelper.Run( ( Func< CancellationToken, Task > )( async token =>
 		{
 			try
 			{
@@ -223,7 +223,7 @@ public sealed class TaskWorker< T > : IAsyncDisposable
 			{
 				Log.Err( e, "{Worker} failed task for item {Item}{NewLine}{Exception}", Name, item, Environment.NewLine, e.ToJson() );
 			}
-		}, _cancelSource.Token );
+		} ), _cancelSource.Token );
 
 		WorkItem< T > workItem = new( item, work );
 		workItem.Continuation = workItem.Work.ContinueWith( _ =>

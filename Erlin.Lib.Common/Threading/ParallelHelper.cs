@@ -283,6 +283,31 @@ public static class ParallelHelper
 	}
 
 	/// <summary>
+	///    Queues the specified asynchronous work to run asynchronously.
+	/// </summary>
+	/// <param name="action">The asynchronous work to execute.</param>
+	/// <param name="cancelToken">Token for cancellation of the task.</param>
+	/// <returns>A task that represents the asynchronous work.</returns>
+	public static Task Run( Func< Task > action, CancellationToken cancelToken = default )
+	{
+		string stackTrace = EnvHelper.GetStackTrace();
+		return Task.Run( async () =>
+		{
+			try
+			{
+				cancelToken.ThrowIfCancellationRequested();
+				await action();
+			}
+			catch( Exception ex )
+			{
+				ex.Data.Add( STACKTRACE_TASK, stackTrace );
+				Log.Err( ex, "Parallel task failed!" );
+				throw;
+			}
+		}, cancelToken );
+	}
+
+	/// <summary>
 	///    Queues the specified asynchronous work to run asynchronously
 	/// </summary>
 	/// <param name="action">The work to execute asynchronously</param>
@@ -295,6 +320,57 @@ public static class ParallelHelper
 		{
 			try
 			{
+				cancelToken.ThrowIfCancellationRequested();
+				await action( cancelToken );
+			}
+			catch( Exception ex )
+			{
+				ex.Data.Add( STACKTRACE_TASK, stackTrace );
+				Log.Err( ex, "Parallel task failed!" );
+				throw;
+			}
+		}, cancelToken );
+	}
+
+	/// <summary>
+	///    Queues the specified asynchronous work to run asynchronously.
+	/// </summary>
+	/// <param name="action">The asynchronous work to execute.</param>
+	/// <param name="cancelToken">Token for cancellation of the task.</param>
+	/// <returns>A task that represents the asynchronous work.</returns>
+	public static Task Run( Func< ValueTask > action, CancellationToken cancelToken = default )
+	{
+		string stackTrace = EnvHelper.GetStackTrace();
+		return Task.Run( async () =>
+		{
+			try
+			{
+				cancelToken.ThrowIfCancellationRequested();
+				await action();
+			}
+			catch( Exception ex )
+			{
+				ex.Data.Add( STACKTRACE_TASK, stackTrace );
+				Log.Err( ex, "Parallel task failed!" );
+				throw;
+			}
+		}, cancelToken );
+	}
+
+	/// <summary>
+	///    Queues the specified asynchronous work to run asynchronously
+	/// </summary>
+	/// <param name="action">The work to execute asynchronously</param>
+	/// <returns>A Task that represents a proxy for the Task returned by <paramref name="action"/>.</returns>
+	/// <param name="cancelToken">Token for cancellation of all concurrent tasks</param>
+	public static Task Run( Func< CancellationToken, ValueTask > action, CancellationToken cancelToken = default )
+	{
+		string stackTrace = EnvHelper.GetStackTrace();
+		return Task.Run( async () =>
+		{
+			try
+			{
+				cancelToken.ThrowIfCancellationRequested();
 				await action( cancelToken );
 			}
 			catch( Exception ex )
