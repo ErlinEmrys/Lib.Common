@@ -516,11 +516,7 @@ public static class ParallelHelper
 			tcs.TrySetResult( false );
 		}, cancelSource );
 
-		// Ignoring cancel token as this method is exactly about handling the cancellation
-#pragma warning disable CA2016
-		// ReSharper disable once MethodSupportsCancellation
-		Task delayTask = Task.Delay( delay, timeProvider );
-#pragma warning restore CA2016
+		Task delayTask = Task.Delay( delay, timeProvider, CancellationToken.None );
 
 		Task completedTask = await Task.WhenAny( delayTask, cancelSource.Task );
 
