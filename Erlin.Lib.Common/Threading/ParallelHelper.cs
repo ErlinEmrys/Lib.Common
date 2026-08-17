@@ -412,4 +412,120 @@ public static class ParallelHelper
 			}
 		}, cancelToken ) );
 	}
+
+	#region Delay methods
+
+	/// <summary>
+	///    Creates a Task that will complete after a time delay.
+	/// </summary>
+	/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned Task</param>
+	/// <returns>A task that represents the delay operation. The result is <see langword="true"/> if the full delay elapsed; otherwise, <see langword="false"/> if the delay was cancelled.</returns>
+	public static Task< bool > Delay( int millisecondsDelay )
+	{
+		return ParallelHelper.Delay( millisecondsDelay, CancellationToken.None );
+	}
+
+	/// <summary>
+	///    Creates a Task that will complete after a time delay.
+	/// </summary>
+	/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned Task</param>
+	/// <param name="cancellationToken">The cancellation token that will be checked prior to completing the returned Task</param>
+	/// <returns>A task that represents the delay operation. The result is <see langword="true"/> if the full delay elapsed; otherwise, <see langword="false"/> if the delay was cancelled.</returns>
+	public static Task< bool > Delay( int millisecondsDelay, CancellationToken cancellationToken )
+	{
+		return ParallelHelper.Delay( millisecondsDelay, EnvHelper.Time.Provider, cancellationToken );
+	}
+
+	/// <summary>
+	///    Creates a Task that will complete after a time delay.
+	/// </summary>
+	/// <param name="millisecondsDelay">The number of milliseconds to wait before completing the returned Task</param>
+	/// <param name="timeProvider">The <see cref="TimeProvider"/> with which to interpret <paramref name="millisecondsDelay"/>.</param>
+	/// <param name="cancellationToken">The cancellation token that will be checked prior to completing the returned Task</param>
+	/// <returns>A task that represents the delay operation. The result is <see langword="true"/> if the full delay elapsed; otherwise, <see langword="false"/> if the delay was cancelled.</returns>
+	public static Task< bool > Delay( int millisecondsDelay, TimeProvider timeProvider, CancellationToken cancellationToken )
+	{
+		return ParallelHelper.Delay( TimeSpan.FromMilliseconds( millisecondsDelay ), timeProvider, cancellationToken );
+	}
+
+	/// <summary>
+	///    Creates a Task that will complete after a time delay.
+	/// </summary>
+	/// <param name="delay">The time span to wait before completing the returned Task</param>
+	/// <returns>A task that represents the delay operation. The result is <see langword="true"/> if the full delay elapsed; otherwise, <see langword="false"/> if the delay was cancelled.</returns>
+	/// <exception cref="ArgumentOutOfRangeException">
+	///    The <paramref name="delay"/> is <see cref="Timeout.InfiniteTimeSpan"/>.
+	/// </exception>
+	public static Task< bool > Delay( TimeSpan delay )
+	{
+		return ParallelHelper.Delay( delay, EnvHelper.Time.Provider, CancellationToken.None );
+	}
+
+	/// <summary>Creates a task that completes after a specified time interval.</summary>
+	/// <param name="delay">The <see cref="TimeSpan"/> to wait before completing the returned task, or <see cref="Timeout.InfiniteTimeSpan"/> to wait indefinitely.</param>
+	/// <param name="timeProvider">The <see cref="TimeProvider"/> with which to interpret <paramref name="delay"/>.</param>
+	/// <returns>A task that represents the delay operation. The result is <see langword="true"/> if the full delay elapsed; otherwise, <see langword="false"/> if the delay was cancelled.</returns>
+	/// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is <see cref="Timeout.InfiniteTimeSpan"/> or the <see cref="TimeSpan.TotalMilliseconds"/> property is outside intiger range.</exception>
+	/// <exception cref="ArgumentNullException">The <paramref name="timeProvider"/> argument is null.</exception>
+	public static Task< bool > Delay( TimeSpan delay, TimeProvider timeProvider )
+	{
+		return ParallelHelper.Delay( delay, timeProvider, CancellationToken.None );
+	}
+
+	/// <summary>
+	///    Creates a Task that will complete after a time delay.
+	/// </summary>
+	/// <param name="delay">The time span to wait before completing the returned Task</param>
+	/// <param name="cancellationToken">The cancellation token that will be checked prior to completing the returned Task</param>
+	/// <returns>A task that represents the delay operation. The result is <see langword="true"/> if the full delay elapsed; otherwise, <see langword="false"/> if the delay was cancelled.</returns>
+	/// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is <see cref="Timeout.InfiniteTimeSpan"/> or the <see cref="TimeSpan.TotalMilliseconds"/> property is outside intiger range.</exception>
+	public static Task< bool > Delay( TimeSpan delay, CancellationToken cancellationToken )
+	{
+		return ParallelHelper.Delay( delay, EnvHelper.Time.Provider, cancellationToken );
+	}
+
+	/// <summary>Creates a cancellable task that completes after a specified time interval.</summary>
+	/// <param name="delay">The <see cref="TimeSpan"/> to wait before completing the returned task, or <see cref="Timeout.InfiniteTimeSpan"/> to wait indefinitely.</param>
+	/// <param name="timeProvider">The <see cref="TimeProvider"/> with which to interpret <paramref name="delay"/>.</param>
+	/// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+	/// <returns>A task that represents the delay operation. The result is <see langword="true"/> if the full delay elapsed; otherwise, <see langword="false"/> if the delay was cancelled.</returns>
+	/// <exception cref="ArgumentOutOfRangeException"><paramref name="delay"/> is <see cref="Timeout.InfiniteTimeSpan"/> or the <see cref="TimeSpan.TotalMilliseconds"/> property is outside intiger range.</exception>
+	/// <exception cref="ArgumentNullException">The <paramref name="timeProvider"/> argument is null.</exception>
+	public static async Task< bool > Delay( TimeSpan delay, TimeProvider timeProvider, CancellationToken cancellationToken )
+	{
+		if( delay == Timeout.InfiniteTimeSpan )
+		{
+			throw new ArgumentOutOfRangeException( nameof( delay ), delay, "Delay cannot be infinite." );
+		}
+
+		if( delay <= TimeSpan.Zero )
+		{
+			return true;
+		}
+
+		if( cancellationToken.IsCancellationRequested )
+		{
+			return false;
+		}
+
+		TaskCompletionSource< bool > cancelSource = new( TaskCreationOptions.RunContinuationsAsynchronously );
+
+		await using CancellationTokenRegistration registration = cancellationToken.Register( static state =>
+		{
+			TaskCompletionSource< bool > tcs = ( TaskCompletionSource< bool > )state!;
+			tcs.TrySetResult( false );
+		}, cancelSource );
+
+		// Ignoring cancel token as this method is exactly about handling the cancellation
+#pragma warning disable CA2016
+		// ReSharper disable once MethodSupportsCancellation
+		Task delayTask = Task.Delay( delay, timeProvider );
+#pragma warning restore CA2016
+
+		Task completedTask = await Task.WhenAny( delayTask, cancelSource.Task );
+
+		return completedTask == delayTask;
+	}
+
+	#endregion
 }

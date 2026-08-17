@@ -87,7 +87,7 @@ public class ExceptionJsonConverter : JsonConverter< Exception >
 			serializer.Serialize( writer, data, data.GetType() );
 		}
 
-		List< PropertyInfo > properties = exceptionType.GetProperties().ToList();
+		List< PropertyInfo > properties = [ .. exceptionType.GetProperties() ];
 
 		foreach( PropertyInfo fProperty in properties )
 		{

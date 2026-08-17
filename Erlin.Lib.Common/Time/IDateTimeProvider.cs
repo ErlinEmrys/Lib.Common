@@ -231,4 +231,9 @@ public interface IDateTimeProvider
 	/// </summary>
 	/// <returns>Current date and time</returns>
 	DateTime UtcNow { get; }
+
+	/// <summary>
+	///    Returns the provider object for the time
+	/// </summary>
+	TimeProvider Provider { get; }
 }

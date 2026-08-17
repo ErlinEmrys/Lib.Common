@@ -18,7 +18,7 @@ public static class EnvHelper
 	/// <summary>
 	///    Provider of date and time
 	/// </summary>
-	public static IDateTimeProvider DateTime { get; set; } = new SystemDateTimeProvider();
+	public static IDateTimeProvider Time { get; set; } = new SystemDateTimeProvider();
 
 	/// <summary>
 	///    Call .net garbage collector

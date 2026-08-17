@@ -358,7 +358,7 @@ public static class ExtensionMethods
 		left ??= new List< T >();
 		right ??= new List< T >();
 
-		List< T > tempRight = right.ToList();
+		List< T > tempRight = [ .. right ];
 		foreach( T fLeft in left )
 		{
 			T? fRight = tempRight.FirstOrDefault( t => equalityMethod( fLeft, t ) );
