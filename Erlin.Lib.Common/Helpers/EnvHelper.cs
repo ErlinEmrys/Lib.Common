@@ -42,10 +42,11 @@ public static class EnvHelper
 	/// <summary>
 	///    Returns current stack trace (without this method call)
 	/// </summary>
+	/// <param name="skipFrames">How much stack trace frames should be skipped</param>
 	/// <returns>Current stack trace</returns>
-	public static string GetStackTrace()
+	public static string GetStackTrace( int skipFrames = 1 )
 	{
-		StackTrace trace = new( 2, true );
+		StackTrace trace = new( skipFrames, true );
 		return trace.ToString();
 	}
 }
