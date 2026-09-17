@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Timers;
 
 using Timer = System.Timers.Timer;
@@ -37,6 +38,7 @@ public class SafeTimer : IDisposable
 		remove { _disposedHandler -= value; }
 	}
 
+	[ SetsRequiredMembers ]
 	public SafeTimer( string name, TimeSpan interval, bool autoReset = false, ElapsedEventHandler? onElapsed = null, EventHandler? onDisposed = null ) : this( name )
 	{
 		_timer.Interval = interval.TotalMilliseconds;
@@ -53,6 +55,7 @@ public class SafeTimer : IDisposable
 		}
 	}
 
+	[ SetsRequiredMembers ]
 	public SafeTimer( string name )
 	{
 		Name = name;
